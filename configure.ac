@@ -41,6 +41,5 @@ AC_SUBST([GTEST_CXXFLAGS])
 AC_CONFIG_FILES([Makefile])
                 
 AC_SUBST(AM_CPPFLAGS, "-Wall -Werror")
-AC_SUBST(AM_CXXFLAGS, "-std=c++0x")
 
 AC_OUTPUT
