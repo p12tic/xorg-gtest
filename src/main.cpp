@@ -23,7 +23,7 @@
 
 #include <gtest/gtest.h>
 
-#include "environment.h"
+#include "xorg/gtest/environment.h"
 
 namespace {
 

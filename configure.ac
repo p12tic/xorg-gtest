@@ -1,9 +1,9 @@
 # Initialize Autoconf
 AC_PREREQ([2.60])
-AC_INIT([Dummy X Testing Environment for Google Test],
+AC_INIT([Dummy X.org Testing Environment for Google Test],
         [0.1.0],
         [],
-        [x_testing_environment])
+        [xorg-gtest])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_MACRO_DIR([m4])
 

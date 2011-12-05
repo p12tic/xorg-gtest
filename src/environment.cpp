@@ -19,8 +19,9 @@
  *
  ****************************************************************************/
 
-#include "environment.h"
+#include "xorg/gtest/environment.h"
 
+#include <errno.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/types.h>
