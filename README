@@ -1,0 +1,12 @@
+X.Org dummy testing environment for Google Test
+===============================================
+
+Provides a Google Test environment for starting and stopping
+a dummy X server for headless testing purposes. The actual 
+environment is defined in header environment.h. Please refer to
+the Google test documentation for information on how to add a custom 
+environment.
+
+Moreover, a custom main()-function that takes care of setting up the 
+environment is provided in libxtestingenvironment_main.a. This library can be
+used as a replacement for libgtest_main.a 
