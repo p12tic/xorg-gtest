@@ -15,6 +15,9 @@ library_data_DATA=conf/dummy.conf
 libxorg_gtest_la_LDFLAGS = $(X11_LIBS)
 libxorg_gtest_main_la_LDFLAGS = $(X11_LIBS)
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = xorg-gtest.pc
+
 ACLOCAL_AMFLAGS = -I m4
 
 AM_CXXFLAGS = -Iinclude

@@ -36,7 +36,8 @@ AM_CONDITIONAL([HAVE_GTEST], [test "x$have_gtest" = xyes])
 AC_SUBST([GTEST_LDFLAGS])
 AC_SUBST([GTEST_CXXFLAGS])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+                 xorg-gtest.pc])
                 
 AC_SUBST(AM_CPPFLAGS, "-Wall -Werror")
 
