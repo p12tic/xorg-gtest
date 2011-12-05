@@ -49,6 +49,8 @@ int main(int argc, char *argv[]) {
   /* Default X display */
   int xorg_display = 133;
 
+  testing::InitGoogleTest(&argc, argv);
+
   /* Reset getopt state */
   optind = 0;
 
@@ -76,8 +78,6 @@ int main(int argc, char *argv[]) {
     std::cout << "    --xorg-display: xorg dummy display port\n";
     exit(-1);
   }
-
-  testing::InitGoogleTest(&argc, argv);
 
   if (!no_dummy_server) {
     testing::xorg::Environment* environment = new testing::xorg::Environment(
