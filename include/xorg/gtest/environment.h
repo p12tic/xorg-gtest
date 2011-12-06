@@ -19,20 +19,31 @@
  *
  ****************************************************************************/
 
+#include <string>
+
 #include <gtest/gtest.h>
 
-namespace testing {
 namespace xorg {
+namespace testing {
 
-class Environment : public testing::Environment {
+/**
+ * @brief Dummy Xorg Google Test environment.
+ *
+ * Starts up a dummy Xorg server for testing purposes on
+ * display :133. Either associate the environment manually
+ * with the overall testing framework or link to libxtestingenvironment_main.a.
+ */
+class Environment : public ::testing::Environment {
  public:
-  
+  Environment(const std::string& pathToConf, int display = 133);
+
   virtual void SetUp();
   virtual void TearDown();
-
  private:
-  pid_t child_pid;
+  std::string path_to_conf_;
+  int display_;
+  pid_t child_pid_;
 };
 
-} // namespace xorg
 } // namespace testing
+} // namespace xorg

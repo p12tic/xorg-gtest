@@ -23,7 +23,7 @@
 
 #include <gtest/gtest.h>
 
-#include "environment.h"
+#include "xorg/gtest/environment.h"
 
 namespace {
 
@@ -44,10 +44,12 @@ const struct option longopts[] = {
 
 int main(int argc, char *argv[]) {
   /* Default Xorg dummy conf path. */
-  std::string xorg_conf_path("x11/dummy.conf");
+  std::string xorg_conf_path(DUMMY_CONF_PATH);
 
   /* Default X display */
   int xorg_display = 133;
+
+  testing::InitGoogleTest(&argc, argv);
 
   /* Reset getopt state */
   optind = 0;
@@ -77,10 +79,8 @@ int main(int argc, char *argv[]) {
     exit(-1);
   }
 
-  testing::InitGoogleTest(&argc, argv);
-
   if (!no_dummy_server) {
-    testing::xorg::Environment* environment = new testing::xorg::Environment(
+    xorg::testing::Environment* environment = new xorg::testing::Environment(
         xorg_conf_path,
         xorg_display);
     testing::AddGlobalTestEnvironment(environment);

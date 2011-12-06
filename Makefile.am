@@ -1,22 +1,28 @@
-lib_LTLIBRARIES = libxtestingenvironment.la libxtestingenvironment_main.la
+lib_LTLIBRARIES = libxorg-gtest.la libxorg-gtest_main.la
 
-libxtestingenvironment_la_SOURCES = \
+libxorg_gtest_la_SOURCES = \
 	src/environment.cpp
 
-libxtestingenvironment_main_la_SOURCES = \
-	src/environment.cpp \
+libxorg_gtest_main_la_SOURCES = \
 	src/main.cpp
 
-library_includedir=$(includedir)/xtestingenvironment-1.0/xtestingenvironment
-library_include_HEADERS = src/environment.h
+library_includedir=$(includedir)/xorg/gtest
+library_include_HEADERS = include/xorg/gtest/environment.h
 
-library_datadir=$(datadir)/xtestingenvironment-1.0
+library_datadir=$(datadir)/xorg/gtest
 library_data_DATA=conf/dummy.conf
 
-libxtestingenvironment_la_LDFLAGS = $(X11_LIBS) $(GTEST_LDFLAGS)
-libxtestingenvironment_main_la_LDFLAGS = $(X11_LIBS) $(GTEST_LDFLAGS)
+libxorg_gtest_main_la_CPPFLAGS = $(AM_CPPFLAGS) -DDUMMY_CONF_PATH="\"$(library_datadir)/dummy.conf\""
+
+libxorg_gtest_la_LDFLAGS = $(X11_LIBS)
+libxorg_gtest_main_la_LDFLAGS = $(X11_LIBS)
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = xorg-gtest.pc
 
 ACLOCAL_AMFLAGS = -I m4
+
+AM_CXXFLAGS = -Iinclude
 
 .PHONY: ChangeLog INSTALL
 INSTALL:
