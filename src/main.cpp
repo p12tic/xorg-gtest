@@ -44,7 +44,7 @@ const struct option longopts[] = {
 
 int main(int argc, char *argv[]) {
   /* Default Xorg dummy conf path. */
-  std::string xorg_conf_path("x11/dummy.conf");
+  std::string xorg_conf_path(DUMMY_CONF_PATH);
 
   /* Default X display */
   int xorg_display = 133;

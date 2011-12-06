@@ -12,6 +12,8 @@ library_include_HEADERS = include/xorg/gtest/environment.h
 library_datadir=$(datadir)/xorg/gtest
 library_data_DATA=conf/dummy.conf
 
+libxorg_gtest_main_la_CPPFLAGS = $(AM_CPPFLAGS) -DDUMMY_CONF_PATH="\"$(library_datadir)/dummy.conf\""
+
 libxorg_gtest_la_LDFLAGS = $(X11_LIBS)
 libxorg_gtest_main_la_LDFLAGS = $(X11_LIBS)
 

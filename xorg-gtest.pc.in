@@ -2,9 +2,10 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
+datarootdir=@datarootdir@
 
 Name: xorg-gtest
 Description: X.org Google Test Environment
 Version: @PACKAGE_VERSION@
-Cflags: -I${includedir}
+Cflags: -I${includedir} -DDUMMY_CONF_PATH=@DUMMY_CONF_PATH@
 Libs: -L${libdir} -lxorg-gtest

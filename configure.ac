@@ -36,6 +36,8 @@ AM_CONDITIONAL([HAVE_GTEST], [test "x$have_gtest" = xyes])
 AC_SUBST([GTEST_LDFLAGS])
 AC_SUBST([GTEST_CXXFLAGS])
 
+AC_SUBST(DUMMY_CONF_PATH, "$datadir/xorg/gtest/dummy.conf")
+
 AC_CONFIG_FILES([Makefile
                  xorg-gtest.pc])
                 
