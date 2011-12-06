@@ -23,8 +23,8 @@
 
 #include <gtest/gtest.h>
 
-namespace testing {
 namespace xorg {
+namespace testing {
 
 /**
  * @brief Dummy Xorg Google Test environment.
@@ -33,7 +33,7 @@ namespace xorg {
  * display :133. Either associate the environment manually
  * with the overall testing framework or link to libxtestingenvironment_main.a.
  */
-class Environment : public testing::Environment {
+class Environment : public ::testing::Environment {
  public:
   Environment(const std::string& pathToConf, int display = 133);
 
@@ -45,5 +45,5 @@ class Environment : public testing::Environment {
   pid_t child_pid_;
 };
 
-} // namespace xorg
 } // namespace testing
+} // namespace xorg

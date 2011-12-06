@@ -32,14 +32,14 @@
 
 #include <X11/Xlib.h>
 
-testing::xorg::Environment::Environment(const std::string& path, int display)
+xorg::testing::Environment::Environment(const std::string& path, int display)
     : path_to_conf_(path),
       display_(display),
       child_pid_(-1) {
 
 }
 
-void testing::xorg::Environment::SetUp() {
+void xorg::testing::Environment::SetUp() {
   static char display_string[6];
   snprintf(display_string, 6, ":%d", display_);
 
@@ -90,7 +90,7 @@ void testing::xorg::Environment::SetUp() {
   }
 }
 
-void testing::xorg::Environment::TearDown() {
+void xorg::testing::Environment::TearDown() {
   if (child_pid_ && child_pid_ != -1) {
     if (kill(child_pid_, SIGTERM) < 0) {
       FAIL() << "Warning: Failed to terminate dummy Xorg server: "

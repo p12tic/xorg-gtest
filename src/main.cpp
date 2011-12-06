@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (!no_dummy_server) {
-    testing::xorg::Environment* environment = new testing::xorg::Environment(
+    xorg::testing::Environment* environment = new xorg::testing::Environment(
         xorg_conf_path,
         xorg_display);
     testing::AddGlobalTestEnvironment(environment);
