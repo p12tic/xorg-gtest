@@ -33,7 +33,7 @@ namespace testing {
  *
  * Starts up a dummy Xorg server for testing purposes on
  * display :133. Either associate the environment manually
- * with the overall testing framework or link to libxtestingenvironment_main.a.
+ * with the overall testing framework or link to libxorg-gtest_main.
  */
 class Environment : public ::testing::Environment {
  public:
