@@ -65,9 +65,8 @@ void xorg::testing::Environment::SetUp() {
       }
 
       int status;
-      int pid = d_->process.Wait(&status, WNOHANG); //waitpid(d_->child_pid_, &status, WNOHANG);
+      int pid = d_->process.Wait(&status, WNOHANG);
       if (pid == d_->process.pid()) {
-        // d_->child_pid_ = -1;
         FAIL() << "Dummy X server failed to start, did you run as root?";
         return;
       } else if (pid == 0) {
@@ -85,54 +84,6 @@ void xorg::testing::Environment::SetUp() {
 
     FAIL() << "Unable to open connection to dummy X server";
   }
-
-#if 0
-  d_->child_pid_ = vfork();
-  if (d_->child_pid_ == -1) {
-    FAIL() << "Failed to fork a process for dummy X server: "
-    << std::strerror(errno);
-  } else if (!d_->child_pid_) { /* Child */
-    close(0);
-    close(1);
-    close(2);
-
-    execlp("Xorg", "Xorg", display_string, "-config", d_->path_to_conf_.c_str(),
-        NULL);
-    perror("Failed to start dummy X server");
-    exit(-1);
-  } else { /* Parent */
-    setenv("DISPLAY", display_string, true);
-
-    for (int i = 0; i < 10; /*++i*/) {
-      Display* display = XOpenDisplay(NULL);
-
-      if (display) {
-        XCloseDisplay(display);
-        return;
-      }
-
-      int status;
-      int pid = waitpid(d_->child_pid_, &status, WNOHANG);
-      if (pid == d_->child_pid_) {
-        d_->child_pid_ = -1;
-        FAIL() << "Dummy X server failed to start, did you run as root?";
-        return;
-      } else if (pid == 0) {
-        sleep(1); /* Give the dummy X server some time to start */
-        continue;
-      } else if (pid == -1) {
-        FAIL() << "Could not get status of dummy X server process: "
-        << std::strerror(errno);
-        return;
-      } else {
-        FAIL() << "Invalid child PID returned by waitpid()";
-        return;
-      }
-    }
-
-    FAIL() << "Unable to open connection to dummy X server";
-  }
-#endif
 }
 
 void xorg::testing::Environment::TearDown() {
@@ -143,15 +94,4 @@ void xorg::testing::Environment::TearDown() {
       FAIL() << "Warning: Failed to kill dummy Xorg server: "
           << std::strerror(errno);
   }
-#if 0
-  if (d_->child_pid_ && d_->child_pid_ != -1) {
-    if (kill(d_->child_pid_, SIGTERM) < 0) {
-      FAIL() << "Warning: Failed to terminate dummy Xorg server: "
-      << std::strerror(errno);
-      if (kill(d_->child_pid_, SIGKILL))
-      FAIL() << "Warning: Failed to kill dummy Xorg server: "
-      << std::strerror(errno);
-    }
-  }
-#endif
 }
