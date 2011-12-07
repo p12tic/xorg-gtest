@@ -56,7 +56,7 @@ void xorg::testing::Environment::SetUp() {
   if (d_->process.Start("Xorg", display_string, d_->path_to_conf.c_str())) {
     setenv("DISPLAY", display_string, true);
 
-    for (int i = 0; i < 10; /*++i*/) {
+    for (int i = 0; i < 10; ++i) {
       Display* display = XOpenDisplay(NULL);
 
       if (display) {
