@@ -51,12 +51,12 @@ class Process {
   pid_t Pid() const;
 
  private:
+  struct Private;
+  Private* d_;
+
   // Disable copy c'tor, assignment operator
   Process(const Process&);
   Process& operator=(const Process&);
-
-  struct Private;
-  Private* d_;
 };
 
 } // xorg
