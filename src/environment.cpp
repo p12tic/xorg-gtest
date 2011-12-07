@@ -69,18 +69,16 @@ void xorg::testing::Environment::SetUp() {
 
     int status;
     int pid = waitpid(d_->process.Pid(), &status, WNOHANG);
-    if (pid == d_->process.Pid()) {
+    if (pid == d_->process.Pid())
       throw std::runtime_error("Dummy X server failed to start, did you run as "
                                "root?");
-    } else if (pid == 0) {
+    else if (pid == 0)
       sleep(1); /* Give the dummy X server some time to start */
-      continue;
-    } else if (pid == -1) {
+    else if (pid == -1)
       throw std::runtime_error("Could not get status of dummy X server "
                                "process");
-    } else {
+    else
       throw std::runtime_error("Invalid child PID returned by Process::Wait()");
-    }
   }
 
   throw std::runtime_error("Unable to open connection to dummy X server");
