@@ -31,12 +31,14 @@ int help = false;
 int no_dummy_server = false;
 int xorg_conf = false;
 int xorg_display_opt = false;
+int server = false;
 
 const struct option longopts[] = {
   { "help", no_argument, &help, true, },
   { "no-dummy-server", no_argument, &no_dummy_server, true, },
-  { "xorg-conf", optional_argument, &xorg_conf, true, },
-  { "xorg-display", optional_argument, &xorg_display_opt, true, },
+  { "xorg-conf", required_argument, &xorg_conf, true, },
+  { "xorg-display", required_argument, &xorg_display_opt, true, },
+  { "server", required_argument, &server, true, },
   { NULL, 0, NULL, 0 }
 };
 
@@ -49,32 +51,49 @@ int main(int argc, char *argv[]) {
   /* Default X display */
   int xorg_display = 133;
 
+  /* Default Xorg executable */
+  std::string server("Xorg");
+
   testing::InitGoogleTest(&argc, argv);
 
   /* Reset getopt state */
   optind = 0;
 
-  int ret;
-  do {
-    ret = getopt_long(argc, argv, "", longopts, NULL);
+  while (true) {
+    int ret;
+    int index;
+    ret = getopt_long(argc, argv, "", longopts, &index);
 
-    if (xorg_conf) {
-      xorg_conf_path = optarg;
+    if (ret == -1)
+      break;
+
+    if (ret == '?')
+      exit(-1);
+
+    switch (index) {
+      case 2:
+        xorg_conf_path = optarg;
+        break;
+
+      case 3:
+        xorg_display = atoi(optarg);
+        break;
+
+      case 4:
+        server = optarg;
+        break;
+
+      default:
+        break;
     }
-
-    if (xorg_display_opt) {
-      xorg_display = atoi(optarg);
-    }
-  } while (ret == 0);
-
-  if (ret != -1)
-    exit(-1);
+  }
 
   if (help) {
     std::cout << "\nAdditional options:\n";
     std::cout << "    --no-dummy-server: Use the currently running X server "
         "for testing\n";
     std::cout << "    --xorg-conf: Path to xorg dummy configuration file\n";
+    std::cout << "    --server: Path to X server executable\n";
     std::cout << "    --xorg-display: xorg dummy display port\n";
     exit(-1);
   }
@@ -82,6 +101,7 @@ int main(int argc, char *argv[]) {
   if (!no_dummy_server) {
     xorg::testing::Environment* environment = new xorg::testing::Environment(
         xorg_conf_path,
+        server,
         xorg_display);
     testing::AddGlobalTestEnvironment(environment);
   }

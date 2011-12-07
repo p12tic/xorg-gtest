@@ -36,13 +36,17 @@
 
 struct xorg::testing::Environment::Private {
   std::string path_to_conf;
+  std::string path_to_server;
   int display;
   Process process;
 };
 
-xorg::testing::Environment::Environment(const std::string& path, int display)
+xorg::testing::Environment::Environment(const std::string& path_to_conf,
+                                        const std::string& path_to_server,
+                                        int display)
     : d_(new Private) {
-  d_->path_to_conf = path;
+  d_->path_to_conf = path_to_conf;
+  d_->path_to_server = path_to_server;
   d_->display = display;
 }
 
@@ -54,8 +58,8 @@ void xorg::testing::Environment::SetUp() {
   static char display_string[6];
   snprintf(display_string, 6, ":%d", d_->display);
 
-  d_->process.Start("Xorg", "Xorg", display_string, "-config",
-                    d_->path_to_conf.c_str(), NULL);
+  d_->process.Start(d_->path_to_server.c_str(), d_->path_to_server.c_str(),
+                    display_string, "-config", d_->path_to_conf.c_str(), NULL);
 
   setenv("DISPLAY", display_string, true);
 

@@ -37,7 +37,8 @@ namespace testing {
  */
 class Environment : public ::testing::Environment {
  public:
-  Environment(const std::string& pathToConf, int display = 133);
+  Environment(const std::string& path_to_conf,
+              const std::string& path_to_server = "Xorg", int display = 133);
   ~Environment();
 
   virtual void SetUp();
