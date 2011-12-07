@@ -45,8 +45,7 @@ class Process {
   bool Terminate();
   bool Kill();
 
-  bool SetEnv(const char* name, const char* value, SetEnvBehaviour behaviour =
-                  DONT_OVERWRITE_EXISTING_VALUE);
+  void SetEnv(const char* name, const char* value, bool overwrite);
   const char * GetEnv(const char* name);
 
   pid_t Pid() const;
