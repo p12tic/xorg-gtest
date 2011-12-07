@@ -80,13 +80,6 @@ void xorg::testing::Process::Start(const std::string& program, ...) {
   va_end(list); /* Shouldn't get here */
 }
 
-int xorg::testing::Process::Wait(int* status, int options) {
-  if (d_->pid == -1 || d_->pid == 0)
-    return false;
-
-  return waitpid(d_->pid, status, options);
-}
-
 bool xorg::testing::Process::Terminate() {
   if (d_->pid == -1) {
     return false;

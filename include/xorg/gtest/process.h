@@ -42,8 +42,6 @@ class Process {
   void Start(const std::string& program, va_list args);
   void Start(const std::string& program, ...);
 
-  int Wait(int* status, int options);
-
   bool Terminate();
   bool Kill();
 
