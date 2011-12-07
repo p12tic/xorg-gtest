@@ -33,24 +33,16 @@
 
 #include <X11/Xlib.h>
 
-namespace xorg {
-namespace testing {
-struct Environment::Private {
-  Private(const std::string& path, int display)
-      : path_to_conf_(path),
-        display_(display) {
-  }
-
-  std::string path_to_conf_;
-  int display_;
-  Process process_;
+struct xorg::testing::Environment::Private {
+  std::string path_to_conf;
+  int display;
+  Process process;
 };
-} // namespace testing
-} // namespace xorg
 
 xorg::testing::Environment::Environment(const std::string& path, int display)
-    : d_(new Private(path, display)) {
-
+    : d_(new Private) {
+  d_->path_to_conf = path;
+  d_->display = display;
 }
 
 xorg::testing::Environment::~Environment() {
@@ -59,9 +51,9 @@ xorg::testing::Environment::~Environment() {
 
 void xorg::testing::Environment::SetUp() {
   static char display_string[6];
-  snprintf(display_string, 6, ":%d", d_->display_);
+  snprintf(display_string, 6, ":%d", d_->display);
 
-  if (d_->process_.Start("Xorg", display_string, d_->path_to_conf_.c_str())) {
+  if (d_->process.Start("Xorg", display_string, d_->path_to_conf.c_str())) {
     setenv("DISPLAY", display_string, true);
 
     for (int i = 0; i < 10; /*++i*/) {
@@ -73,8 +65,8 @@ void xorg::testing::Environment::SetUp() {
       }
 
       int status;
-      int pid = d_->process_.Wait(&status, WNOHANG); //waitpid(d_->child_pid_, &status, WNOHANG);
-      if (pid == d_->process_.pid()) {
+      int pid = d_->process.Wait(&status, WNOHANG); //waitpid(d_->child_pid_, &status, WNOHANG);
+      if (pid == d_->process.pid()) {
         // d_->child_pid_ = -1;
         FAIL() << "Dummy X server failed to start, did you run as root?";
         return;
@@ -144,10 +136,10 @@ void xorg::testing::Environment::SetUp() {
 }
 
 void xorg::testing::Environment::TearDown() {
-  if (!d_->process_.Terminate()) {
+  if (!d_->process.Terminate()) {
     FAIL() << "Warning: Failed to terminate dummy Xorg server: "
         << std::strerror(errno);
-    if (!d_->process_.Kill())
+    if (!d_->process.Kill())
       FAIL() << "Warning: Failed to kill dummy Xorg server: "
           << std::strerror(errno);
   }

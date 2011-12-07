@@ -43,12 +43,12 @@ class Environment : public ::testing::Environment {
   virtual void SetUp();
   virtual void TearDown();
  private:
+  struct Private;
+  Private* d_;
+
   /* Disable copy c'tor & assignment op. */
   Environment(const Environment&);
   Environment& operator=(const Environment&);
-
-  struct Private;
-  Private* d_;
 };
 
 } // namespace testing
