@@ -51,7 +51,8 @@ class Process {
                   DONT_OVERWRITE_EXISTING_VALUE);
   const char * GetEnv(const char* name);
 
-  pid_t pid() const;
+  pid_t Pid() const;
+
  private:
   // Disable copy c'tor, assignment operator
   Process(const Process&);

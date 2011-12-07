@@ -69,7 +69,7 @@ void xorg::testing::Environment::SetUp() {
 
     int status;
     int pid = d_->process.Wait(&status, WNOHANG);
-    if (pid == d_->process.pid()) {
+    if (pid == d_->process.Pid()) {
       throw std::runtime_error("Dummy X server failed to start, did you run as "
                                "root?");
     } else if (pid == 0) {

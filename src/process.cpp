@@ -129,6 +129,6 @@ const char* xorg::testing::Process::GetEnv(const char* name) {
   return getenv(name);
 }
 
-pid_t xorg::testing::Process::pid() const {
+pid_t xorg::testing::Process::Pid() const {
   return d_->pid;
 }
