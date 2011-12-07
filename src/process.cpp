@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <stdarg.h>
+#include <string.h>
 
 #include <cstdio>
 #include <stdexcept>
@@ -23,25 +23,61 @@ xorg::testing::Process::~Process() {
   delete d_;
 }
 
-bool xorg::testing::Process::Start(const std::string& program, ...) {
-  if (d_->pid == -1) {
-    d_->pid = vfork();
+void xorg::testing::Process::Start(const std::string& program, va_list args) {
+  if (d_->pid != -1)
+    throw std::runtime_error("Attempting to start an already started process");
 
-    if (d_->pid == -1) {
-      return false;
-    } else if (d_->pid == 0) { /* Child */
-      close(0);
-      close(1);
-      close(2);
-      va_list list;
-      va_start(list, program);
-      execlp(program.c_str(), program.c_str(), list, NULL);
-      perror("Failed to run process.");
-      exit(-1);
+  d_->pid = vfork();
+
+  if (d_->pid == -1) {
+    throw std::runtime_error("Failed to fork child process");
+  } else if (d_->pid == 0) { /* Child */
+    close(0);
+    close(1);
+    close(2);
+
+    char** argv = reinterpret_cast<char**>(malloc(sizeof(char*)));
+    if (!argv)
+      throw std::bad_alloc();
+
+    int argv_size = 1;
+
+    while (true) {
+      char* arg = va_arg(args, char*);
+      if (!arg)
+        break;
+
+      char** tmp = reinterpret_cast<char**>(
+          realloc(argv, ++argv_size * sizeof(char*)));
+      if (!tmp) {
+        free(argv);
+        throw std::bad_alloc();
+      }
+
+      argv = tmp;
+      argv[argv_size - 2] = strdup(arg);
+      if (!argv[argv_size - 2]) {
+        free(argv);
+        throw std::bad_alloc();
+      }
     }
-    return true;
+
+    argv[argv_size - 1] = NULL;
+
+    execvp(program.c_str(), argv);
+
+    for (int i = 0; i < argv_size; ++i)
+      free(argv[i]);
+    free(argv);
+    throw std::runtime_error("Failed to start process");
   }
-  return false;
+}
+
+void xorg::testing::Process::Start(const std::string& program, ...) {
+  va_list list;
+  va_start(list, program);
+  Start(program, list);
+  va_end(list); /* Shouldn't get here */
 }
 
 int xorg::testing::Process::Wait(int* status, int options) {

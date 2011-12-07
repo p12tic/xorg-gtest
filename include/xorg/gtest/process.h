@@ -21,6 +21,8 @@
 #ifndef XORG_GTEST_PROCESS_H
 #define XORG_GTEST_PROCESS_H
 
+#include <stdarg.h>
+
 #include <string>
 
 namespace xorg {
@@ -37,7 +39,8 @@ class Process {
   Process();
   ~Process();
 
-  bool Start(const std::string& program, ...);
+  void Start(const std::string& program, va_list args);
+  void Start(const std::string& program, ...);
 
   int Wait(int* status, int options);
 

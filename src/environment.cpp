@@ -30,6 +30,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 
 #include <X11/Xlib.h>
 
@@ -53,37 +54,36 @@ void xorg::testing::Environment::SetUp() {
   static char display_string[6];
   snprintf(display_string, 6, ":%d", d_->display);
 
-  if (d_->process.Start("Xorg", display_string, d_->path_to_conf.c_str())) {
-    setenv("DISPLAY", display_string, true);
+  d_->process.Start("Xorg", "Xorg", display_string, "-config",
+                    d_->path_to_conf.c_str(), NULL);
 
-    for (int i = 0; i < 10; ++i) {
-      Display* display = XOpenDisplay(NULL);
+  setenv("DISPLAY", display_string, true);
 
-      if (display) {
-        XCloseDisplay(display);
-        return;
-      }
+  for (int i = 0; i < 10; ++i) {
+    Display* display = XOpenDisplay(NULL);
 
-      int status;
-      int pid = d_->process.Wait(&status, WNOHANG);
-      if (pid == d_->process.pid()) {
-        FAIL() << "Dummy X server failed to start, did you run as root?";
-        return;
-      } else if (pid == 0) {
-        sleep(1); /* Give the dummy X server some time to start */
-        continue;
-      } else if (pid == -1) {
-        FAIL() << "Could not get status of dummy X server process: "
-            << std::strerror(errno);
-        return;
-      } else {
-        FAIL() << "Invalid child PID returned by waitpid()";
-        return;
-      }
+    if (display) {
+      XCloseDisplay(display);
+      return;
     }
 
-    FAIL() << "Unable to open connection to dummy X server";
+    int status;
+    int pid = d_->process.Wait(&status, WNOHANG);
+    if (pid == d_->process.pid()) {
+      throw std::runtime_error("Dummy X server failed to start, did you run as "
+                               "root?");
+    } else if (pid == 0) {
+      sleep(1); /* Give the dummy X server some time to start */
+      continue;
+    } else if (pid == -1) {
+      throw std::runtime_error("Could not get status of dummy X server "
+                               "process");
+    } else {
+      throw std::runtime_error("Invalid child PID returned by Process::Wait()");
+    }
   }
+
+  throw std::runtime_error("Unable to open connection to dummy X server");
 }
 
 void xorg::testing::Environment::TearDown() {
