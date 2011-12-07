@@ -1,13 +1,14 @@
 lib_LTLIBRARIES = libxorg-gtest.la libxorg-gtest_main.la
 
 libxorg_gtest_la_SOURCES = \
-	src/environment.cpp
+	src/environment.cpp \
+	src/process.cpp
 
 libxorg_gtest_main_la_SOURCES = \
 	src/main.cpp
 
 library_includedir=$(includedir)/xorg/gtest
-library_include_HEADERS = include/xorg/gtest/environment.h
+library_include_HEADERS = include/xorg/gtest/environment.h include/xorg/gtest/process.h
 
 library_datadir=$(datadir)/xorg/gtest
 library_data_DATA=conf/dummy.conf

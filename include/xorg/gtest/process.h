@@ -18,40 +18,47 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ****************************************************************************/
-#ifndef XORG_GTEST_ENVIRONMENT_H
-#define XORG_GTEST_ENVIRONMENT_H
+#ifndef XORG_GTEST_PROCESS_H
+#define XORG_GTEST_PROCESS_H
 
 #include <string>
-
-#include <gtest/gtest.h>
 
 namespace xorg {
 namespace testing {
 
-/**
- * @brief Dummy Xorg Google Test environment.
- *
- * Starts up a dummy Xorg server for testing purposes on
- * display :133. Either associate the environment manually
- * with the overall testing framework or link to libxtestingenvironment_main.a.
- */
-class Environment : public ::testing::Environment {
+class Process {
  public:
-  Environment(const std::string& pathToConf, int display = 133);
-  ~Environment();
 
-  virtual void SetUp();
-  virtual void TearDown();
+  enum SetEnvBehaviour {
+    DONT_OVERWRITE_EXISTING_VALUE = 0,
+    OVERWRITE_EXISTING_VALUE = 1
+  };
+
+  Process();
+  ~Process();
+
+  bool Start(const std::string& program, ...);
+
+  int Wait(int* status, int options);
+
+  bool Terminate();
+  bool Kill();
+
+  bool SetEnv(const char* name, const char* value, SetEnvBehaviour behaviour =
+                  DONT_OVERWRITE_EXISTING_VALUE);
+  const char * GetEnv(const char* name);
+
+  pid_t pid() const;
  private:
-  /* Disable copy c'tor & assignment op. */
-  Environment(const Environment&);
-  Environment& operator=(const Environment&);
+  // Disable copy c'tor, assignment operator
+  Process(const Process&);
+  Process& operator=(const Process&);
 
   struct Private;
   Private* d_;
 };
 
-} // namespace testing
-} // namespace xorg
+} // xorg
+} // testing
 
-#endif // XORG_GTEST_ENVIRONMENT_H
+#endif // XORG_GTEST_PROCESS_H
