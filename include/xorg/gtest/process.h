@@ -54,7 +54,7 @@ class Process {
   struct Private;
   Private* d_;
 
-  // Disable copy c'tor, assignment operator
+  /* Disable copy c'tor, assignment operator */
   Process(const Process&);
   Process& operator=(const Process&);
 };

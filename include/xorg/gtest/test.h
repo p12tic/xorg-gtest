@@ -45,7 +45,7 @@ class Test : public ::testing::Test {
   Private* d_;
 
  private:
-  // Disable copy c'tor, assignment operator
+  /* Disable copy c'tor, assignment operator */
   Test(const Test&);
   Test& operator=(const Test&);
 };
