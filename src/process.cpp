@@ -35,24 +35,13 @@ void xorg::testing::Process::Start(const std::string& program, va_list args) {
     close(2);
 
     std::vector<char*> argv;
-    char* arg;
-    do {
-      arg = va_arg(args, char*);
 
-      if (arg) {
-        arg = strdup(arg);
-        if (!arg) {
-          std::for_each(argv.begin(), argv.end(), free);
-          throw std::bad_alloc();
-        }
-      }
-
-      argv.push_back(arg);
-    } while (arg);
+    do
+      argv.push_back(va_arg(args, char*));
+    while (argv.back());
 
     execvp(program.c_str(), &argv[0]);
 
-    std::for_each(argv.begin(), argv.end(), free);
     throw std::runtime_error("Failed to start process");
   }
 }
