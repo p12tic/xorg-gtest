@@ -58,7 +58,7 @@ void xorg::testing::Environment::SetUp() {
   static char display_string[6];
   snprintf(display_string, 6, ":%d", d_->display);
 
-  d_->process.Start(d_->path_to_server.c_str(), d_->path_to_server.c_str(),
+  d_->process.Start(d_->path_to_server, d_->path_to_server.c_str(),
                     display_string, "-config", d_->path_to_conf.c_str(), NULL);
 
   setenv("DISPLAY", display_string, true);
