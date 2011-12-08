@@ -1,14 +1,14 @@
 #include "xorg/gtest/process.h"
 
-#include <errno.h>
-#include <signal.h>
-#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <string.h>
 
+#include <cerrno>
+#include <csignal>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <stdexcept>
 
 struct xorg::testing::Process::Private {

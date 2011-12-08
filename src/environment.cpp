@@ -22,12 +22,12 @@
 #include "xorg/gtest/environment.h"
 #include "xorg/gtest/process.h"
 
-#include <errno.h>
-#include <signal.h>
-#include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <cerrno>
+#include <csignal>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
