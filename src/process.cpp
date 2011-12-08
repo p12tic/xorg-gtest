@@ -4,12 +4,14 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <cerrno>
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <stdexcept>
+#include <vector>
 
 struct xorg::testing::Process::Private {
   pid_t pid;
@@ -32,39 +34,25 @@ void xorg::testing::Process::Start(const std::string& program, va_list args) {
     close(1);
     close(2);
 
-    char** argv = reinterpret_cast<char**>(malloc(sizeof(char*)));
-    if (!argv)
-      throw std::bad_alloc();
+    std::vector<char*> argv;
+    char* arg;
+    do {
+      arg = va_arg(args, char*);
 
-    int argv_size = 1;
-
-    while (true) {
-      char* arg = va_arg(args, char*);
-      if (!arg)
-        break;
-
-      char** tmp = reinterpret_cast<char**>(
-          realloc(argv, ++argv_size * sizeof(char*)));
-      if (!tmp) {
-        free(argv);
-        throw std::bad_alloc();
+      if (arg) {
+        arg = strdup(arg);
+        if (!arg) {
+          std::for_each(argv.begin(), argv.end(), free);
+          throw std::bad_alloc();
+        }
       }
 
-      argv = tmp;
-      argv[argv_size - 2] = strdup(arg);
-      if (!argv[argv_size - 2]) {
-        free(argv);
-        throw std::bad_alloc();
-      }
-    }
+      argv.push_back(arg);
+    } while (arg);
 
-    argv[argv_size - 1] = NULL;
+    execvp(program.c_str(), &argv[0]);
 
-    execvp(program.c_str(), argv);
-
-    for (int i = 0; i < argv_size; ++i)
-      free(argv[i]);
-    free(argv);
+    std::for_each(argv.begin(), argv.end(), free);
     throw std::runtime_error("Failed to start process");
   }
 }
