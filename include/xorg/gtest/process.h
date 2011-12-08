@@ -31,12 +31,6 @@ namespace testing {
 
 class Process {
  public:
-
-  enum SetEnvBehaviour {
-    DONT_OVERWRITE_EXISTING_VALUE = 0,
-    OVERWRITE_EXISTING_VALUE = 1
-  };
-
   Process();
 
   void Start(const std::string& program, va_list args);
