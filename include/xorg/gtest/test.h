@@ -22,6 +22,8 @@
 #ifndef XORG_GTEST_TEST_H_
 #define XORG_GTEST_TEST_H_
 
+#include <memory>
+
 #include <gtest/gtest.h>
 #include <X11/Xlib.h>
 
@@ -33,7 +35,6 @@ namespace testing {
 class Test : public ::testing::Test {
  public:
   Test();
-  virtual ~Test();
 
   virtual void SetUp();
   virtual void TearDown();
@@ -42,7 +43,7 @@ class Test : public ::testing::Test {
   ::Display* Display() const;
 
   struct Private;
-  Private* d_;
+  std::auto_ptr<Private> d_;
 
  private:
   /* Disable copy c'tor, assignment operator */

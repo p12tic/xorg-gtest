@@ -44,7 +44,3 @@ void xorg::testing::Test::TearDown() {
 ::Display* xorg::testing::Test::Display() const {
   return d_->display;
 }
-
-xorg::testing::Test::~Test() {
-  delete d_;
-}
