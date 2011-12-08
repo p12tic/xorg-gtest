@@ -91,9 +91,9 @@ void xorg::testing::Environment::SetUp() {
 void xorg::testing::Environment::TearDown() {
   if (!d_->process.Terminate()) {
     std::cerr << "Warning: Failed to terminate dummy Xorg server: "
-              << std::strerror(errno);
+              << std::strerror(errno) << "\n";
     if (!d_->process.Kill())
       std::cerr << "Warning: Failed to kill dummy Xorg server: "
-                << std::strerror(errno);
+                << std::strerror(errno) << "\n";
   }
 }
