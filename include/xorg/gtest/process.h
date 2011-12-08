@@ -23,6 +23,7 @@
 
 #include <stdarg.h>
 
+#include <memory>
 #include <string>
 
 namespace xorg {
@@ -37,7 +38,6 @@ class Process {
   };
 
   Process();
-  ~Process();
 
   void Start(const std::string& program, va_list args);
   void Start(const std::string& program, ...);
@@ -52,7 +52,7 @@ class Process {
 
  private:
   struct Private;
-  Private* d_;
+  std::auto_ptr<Private> d_;
 
   /* Disable copy c'tor, assignment operator */
   Process(const Process&);

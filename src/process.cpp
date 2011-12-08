@@ -19,10 +19,6 @@ xorg::testing::Process::Process() : d_(new Private) {
   d_->pid = -1;
 }
 
-xorg::testing::Process::~Process() {
-  delete d_;
-}
-
 void xorg::testing::Process::Start(const std::string& program, va_list args) {
   if (d_->pid != -1)
     throw std::runtime_error("Attempting to start an already started process");

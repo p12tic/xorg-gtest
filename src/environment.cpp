@@ -50,10 +50,6 @@ xorg::testing::Environment::Environment(const std::string& path_to_conf,
   d_->display = display;
 }
 
-xorg::testing::Environment::~Environment() {
-  delete d_;
-}
-
 void xorg::testing::Environment::SetUp() {
   static char display_string[6];
   snprintf(display_string, 6, ":%d", d_->display);

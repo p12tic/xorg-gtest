@@ -21,6 +21,7 @@
 #ifndef XORG_GTEST_ENVIRONMENT_H
 #define XORG_GTEST_ENVIRONMENT_H
 
+#include <memory>
 #include <string>
 
 #include <gtest/gtest.h>
@@ -39,13 +40,12 @@ class Environment : public ::testing::Environment {
  public:
   Environment(const std::string& path_to_conf,
               const std::string& path_to_server = "Xorg", int display = 133);
-  ~Environment();
 
   virtual void SetUp();
   virtual void TearDown();
  private:
   struct Private;
-  Private* d_;
+  std::auto_ptr<Private> d_;
 
   /* Disable copy c'tor & assignment op. */
   Environment(const Environment&);
