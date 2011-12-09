@@ -1,6 +1,6 @@
 /*****************************************************************************
  *
- * utouch-frame - Touch Frame Library
+ * X testing environment - Google Test environment feat. dummy x server
  *
  * Copyright (C) 2011 Canonical Ltd.
  *
@@ -27,16 +27,30 @@
 #include <gtest/gtest.h>
 #include <X11/Xlib.h>
 
-#include "utouch/frame.h"
-
 namespace xorg {
 namespace testing {
 
+/**
+ * @brief Fixture checking for running XServer.
+ */
 class Test : public ::testing::Test {
  public:
+
+  /**
+   * @brief Default c'tor.
+   */
   Test();
 
+  /**
+   * @brief Tries to connect to an XServer instance.
+   *
+   * Asserts if no XServer is running.
+   */
   virtual void SetUp();
+
+  /**
+   * @brief Closes the display if not NULL.
+   */
   virtual void TearDown();
 
  protected:

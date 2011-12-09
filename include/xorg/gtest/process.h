@@ -1,6 +1,6 @@
 /*****************************************************************************
  *
- * utouch-frame - Touch Frame Library
+ * X testing environment - Google Test environment feat. dummy x server
  *
  * Copyright (C) 2011 Canonical Ltd.
  *
@@ -29,19 +29,79 @@
 namespace xorg {
 namespace testing {
 
+/**
+ * @brief Class that abstracts process handling.
+ */
 class Process {
  public:
+  /**
+   * @brief Default c'tor.
+   */
   Process();
 
+  /**
+   * @brief Starts a program as a child process.
+   *
+   * @param program The program to start.
+   * @args Variadic list of arguments passed to the program.
+   *
+   * @throws std::runtime_error on failure.
+   */
   void Start(const std::string& program, va_list args);
+
+  /**
+     * @brief Starts a program as a child process.
+     *
+     * @param program The program to start.
+     *
+     * @throws std::runtime_error on failure.
+     */
   void Start(const std::string& program, ...);
 
+  /**
+   * @brief Terminates (SIGTERM) this child process.
+   *
+   * @throws std::runtime_error if child tries to terminate itself.
+   *
+   * @returns true if termination succeeded, false otherwise.
+   *
+   */
   bool Terminate();
+
+  /**
+   * @brief Kills (SIGKILL) this child process.
+   *
+   * @throws std::runtime_error if child tries to kill itself.
+   *
+   * @returns true if kill succeeded, false otherwise.
+   */
   bool Kill();
 
+  /**
+   * @brief Adjusts the environment of the child process.
+   *
+   * @param name Name of the environment variable, must not be NULL.
+   * @param value Value of the environment variable, must not be NULL.
+   * @param overwrite Whether to overwrite the value of existing env variables.
+   *
+   * @throws std::runtime_error if adjusting the environment does not succeed.
+   */
   void SetEnv(const char* name, const char* value, bool overwrite);
+
+  /**
+   * @brief Queries the environment of the child process.
+   *
+   * @param name The name of the environment variable, must not be NULL.
+   *
+   * @returns The value of the environment variable, or NULL.
+   */
   const char * GetEnv(const char* name);
 
+  /**
+   * @brief Accesses the pid of the child process.
+   *
+   * @returns The pid of the child process.
+   */
   pid_t Pid() const;
 
  private:

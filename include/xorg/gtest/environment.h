@@ -1,6 +1,6 @@
 /*****************************************************************************
  *
- * utouch-frame - Touch Frame Library
+ * xorg-gtest - Google test addon for dummy xserver setup
  *
  * Copyright (C) 2011 Canonical Ltd.
  *
@@ -38,11 +38,27 @@ namespace testing {
  */
 class Environment : public ::testing::Environment {
  public:
+  /**
+   * @brief C'tor.
+   * @param path_to_conf Path to xserver configuration.
+   * @param path_to_server Path to xserver executable.
+   * @param display Display port of dummy xserver instance.
+   */
   Environment(const std::string& path_to_conf,
               const std::string& path_to_server = "Xorg", int display = 133);
 
+  /**
+   * @brief Starts the dummy xserver.
+   *
+   * @throws std::runtime_error if dummy xserver cannot be started.
+   */
   virtual void SetUp();
+
+  /**
+   * @brief Stops the dummy xserver.
+   */
   virtual void TearDown();
+
  private:
   struct Private;
   std::auto_ptr<Private> d_;

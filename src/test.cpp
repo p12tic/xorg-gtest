@@ -1,6 +1,6 @@
 /*****************************************************************************
  *
- * utouch-frame - Touch Frame Library
+ * X testing environment - Google Test environment feat. dummy x server
  *
  * Copyright (C) 2011 Canonical Ltd.
  *
