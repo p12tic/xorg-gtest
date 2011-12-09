@@ -21,6 +21,8 @@
 
 #include "xorg/gtest/test.h"
 
+#include <stdexcept>
+
 #include <X11/Xlib.h>
 
 struct xorg::testing::Test::Private {
@@ -33,7 +35,8 @@ xorg::testing::Test::Test() : d_(new Private) {
 
 void xorg::testing::Test::SetUp() {
   d_->display = XOpenDisplay(NULL);
-  ASSERT_TRUE(d_->display != NULL) << "Failed to open connection to display";
+  if (!d_->display)
+    throw std::runtime_error("Failed to open connection to display");
 }
 
 void xorg::testing::Test::TearDown() {
