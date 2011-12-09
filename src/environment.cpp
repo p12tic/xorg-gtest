@@ -35,19 +35,20 @@
 #include <X11/Xlib.h>
 
 struct xorg::testing::Environment::Private {
-  std::string path_to_conf;
-  std::string path_to_server;
-  int display;
+  Private(const std::string& conf, const std::string& server, int display_num)
+      : path_to_conf(conf), path_to_server(server), display(display_num) {
+  }
+
+  const std::string path_to_conf;
+  const std::string path_to_server;
+  const int display;
   Process process;
 };
 
 xorg::testing::Environment::Environment(const std::string& path_to_conf,
                                         const std::string& path_to_server,
                                         int display)
-    : d_(new Private) {
-  d_->path_to_conf = path_to_conf;
-  d_->path_to_server = path_to_server;
-  d_->display = display;
+    : d_(new Private(path_to_conf, path_to_server, display)) {
 }
 
 void xorg::testing::Environment::SetUp() {
