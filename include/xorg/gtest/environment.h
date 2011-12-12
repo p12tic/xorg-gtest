@@ -60,7 +60,7 @@ namespace testing {
  * or link to libxorg-gtest_main.
  */
 class Environment : public ::testing::Environment {
-public:
+ public:
   /**
    * Constructs an object to provide a global X server dummy environment.
    * @param path_to_conf Path to xserver configuration.
@@ -68,7 +68,7 @@ public:
    * @param display Display port of dummy xserver instance.
    */
   Environment(const std::string& path_to_conf,
-      const std::string& path_to_server = "Xorg", int display = 133);
+              const std::string& path_to_server = "Xorg", int display = 133);
 
   /**
    * Starts the dummy X server.
@@ -87,7 +87,7 @@ public:
    */
   virtual void TearDown();
 
-private:
+ private:
   struct Private;
   std::auto_ptr<Private> d_;
 
