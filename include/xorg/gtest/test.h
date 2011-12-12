@@ -18,41 +18,40 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ****************************************************************************/
-#ifndef XORG_GTEST_ENVIRONMENT_H
-#define XORG_GTEST_ENVIRONMENT_H
+
+#ifndef XORG_GTEST_TEST_H_
+#define XORG_GTEST_TEST_H_
 
 #include <memory>
-#include <string>
 
 #include <gtest/gtest.h>
+#include <X11/Xlib.h>
+
+#include "utouch/frame.h"
 
 namespace xorg {
 namespace testing {
 
-/**
- * @brief Dummy Xorg Google Test environment.
- *
- * Starts up a dummy Xorg server for testing purposes on
- * display :133. Either associate the environment manually
- * with the overall testing framework or link to libxorg-gtest_main.
- */
-class Environment : public ::testing::Environment {
+class Test : public ::testing::Test {
  public:
-  Environment(const std::string& path_to_conf,
-              const std::string& path_to_server = "Xorg", int display = 133);
+  Test();
 
   virtual void SetUp();
   virtual void TearDown();
- private:
+
+ protected:
+  ::Display* Display() const;
+
   struct Private;
   std::auto_ptr<Private> d_;
 
-  /* Disable copy c'tor & assignment op. */
-  Environment(const Environment&);
-  Environment& operator=(const Environment&);
+ private:
+  /* Disable copy c'tor, assignment operator */
+  Test(const Test&);
+  Test& operator=(const Test&);
 };
 
 } // namespace testing
 } // namespace xorg
 
-#endif // XORG_GTEST_ENVIRONMENT_H
+#endif // XORG_GTEST_TEST_H_
