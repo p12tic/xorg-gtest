@@ -1,3 +1,5 @@
+SUBDIRS = doc
+
 lib_LTLIBRARIES = libxorg-gtest.la libxorg-gtest_main.la
 
 libxorg_gtest_la_SOURCES = \

@@ -31,34 +31,45 @@ namespace xorg {
 namespace testing {
 
 /**
- * @brief Fixture checking for running XServer.
+ * @class Test test.h xorg/gtest/test.h
+ *
+ * Google test fixture checking for running XServer.
+ *
+ * Checks whether an X server is running and establishes
+ * a connection to the instance by opening up a display. Rely
+ * on Google test's TEST_F macro to use this fixture for your
+ * own tests or sublcass it and override the SetUp and TearDown
+ * methods.
  */
 class Test : public ::testing::Test {
  public:
 
-  /**
-   * @brief Default c'tor.
-   */
   Test();
 
   /**
-   * @brief Tries to connect to an XServer instance.
+   * Tries to connect to an X server instance.
    *
-   * Asserts if no XServer is running.
+   * Fails if no X server is running.
+   * Reimplemented from ::testing::Test, must not be called directly.
+   *
+   * @throws std::runtime_error if no X server is running.
    */
   virtual void SetUp();
 
   /**
-   * @brief Closes the display if not NULL.
+   * Closes the display.
+   *
+   * Reimplemented from ::testing::Test, must not be called directly.
    */
   virtual void TearDown();
 
  protected:
+  /** @cond Implementation */
   ::Display* Display() const;
 
   struct Private;
   std::auto_ptr<Private> d_;
-
+  /** @endcond Implementation */
  private:
   /* Disable copy c'tor, assignment operator */
   Test(const Test&);

@@ -1,6 +1,6 @@
 /*****************************************************************************
  *
- * xorg-gtest - Google test addon for dummy xserver setup
+ * X testing environment - Google Test environment feat. dummy x server
  *
  * Copyright (C) 2011 Canonical Ltd.
  *
@@ -30,40 +30,68 @@ namespace xorg {
 namespace testing {
 
 /**
- * @brief Dummy Xorg Google Test environment.
+ * \mainpage X.org Google Test Framework
  *
- * Starts up a dummy Xorg server for testing purposes on
- * display :133. Either associate the environment manually
- * with the overall testing framework or link to libxorg-gtest_main.
+ * Xorg-gtest makes it easy to write test cases
+ * for a dummy headless X.org server. It can also run tests
+ * using a running X11 server.
+ *
+ */
+
+/**
+ * @class Environment environment.h xorg/gtest/environment.h
+ *
+ * Global Google test environment providing a dummy X server.
+ *
+ * Starts up a dummy X server for testing purposes.
+ * Either associate the environment manually
+ * with the overall testing framework like
+ * @code
+ * std::string xorg_conf_path("conf/dummy.conf");
+ * int xorg_display = 133;
+ * std::string server("Xorg");
+ *
+ * xorg::testing::Environment* environment = new xorg::testing::Environment(
+ *       xorg_conf_path,
+ *       server,
+ *       xorg_display);
+ * testing::AddGlobalTestEnvironment(environment);
+ * @endcode
+ * or link to libxorg-gtest_main.
  */
 class Environment : public ::testing::Environment {
- public:
+public:
   /**
-   * @brief C'tor.
+   * Constructs an object to provide a global X server dummy environment.
    * @param path_to_conf Path to xserver configuration.
    * @param path_to_server Path to xserver executable.
    * @param display Display port of dummy xserver instance.
    */
   Environment(const std::string& path_to_conf,
-              const std::string& path_to_server = "Xorg", int display = 133);
+      const std::string& path_to_server = "Xorg", int display = 133);
 
   /**
-   * @brief Starts the dummy xserver.
+   * Starts the dummy X server.
    *
-   * @throws std::runtime_error if dummy xserver cannot be started.
+   * Reimplemented from ::testing::Environment. Must not be called directly.
+   *
+   * @throws std::runtime_error if a dummy X server cannot be started.
    */
   virtual void SetUp();
 
   /**
-   * @brief Stops the dummy xserver.
+   * Stops the dummy X server.
+   *
+   * Reimplemented from ::testing::Environment. Must not be called directly.
+   *
    */
   virtual void TearDown();
 
- private:
+private:
   struct Private;
   std::auto_ptr<Private> d_;
 
-  /* Disable copy c'tor & assignment op. */
+  /* Disable copy constructor & assignment operator */
   Environment(const Environment&);
   Environment& operator=(const Environment&);
 };

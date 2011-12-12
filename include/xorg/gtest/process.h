@@ -1,6 +1,6 @@
 /*****************************************************************************
  *
- * X testing environment - Google Test environment feat. dummy x server
+ * X testing environment - Google Test environment featuring dummy x server
  *
  * Copyright (C) 2011 Canonical Ltd.
  *
@@ -30,36 +30,59 @@ namespace xorg {
 namespace testing {
 
 /**
- * @brief Class that abstracts process handling.
+ * @class Process test.h xorg/gtest/process.h
+ *
+ * Class that abstracts child process creation and termination.
+ *
+ * This class allows for forking, running and terminating child processes.
+ * In addition, manipulation of the child process' environment is supported.
+ * For example, starting an X server instance on display port 133 as a child
+ * process can be realized with the following code snippet:
+ * @code
+ * Process xorgServer;
+ * try {
+ *   xorgServer.Start("Xorg", "Xorg", ":133");
+ * } catch (const std::runtime_error&e) {
+ *   std::cerr << "Problem starting the X server: " << e.what() << std::endl;
+ * }
+ * ...
+ * if (!xorgServer.Terminate()) {
+ *   std::cerr << "Problem terminating server ... killing now ..." << std::endl;
+ *   if (!xorgServer.Kill())
+ *     std::cerr << "Problem killing server" << std::endl;
+ * }
+ * @endcode
  */
 class Process {
  public:
   /**
-   * @brief Default c'tor.
+   * Creates a child-process that is in a terminated state.
    */
   Process();
 
   /**
-   * @brief Starts a program as a child process.
+   * Starts a program as a child process.
    *
    * @param program The program to start.
-   * @args Variadic list of arguments passed to the program.
+   * @param args Variadic list of arguments passed to the program.
    *
    * @throws std::runtime_error on failure.
    */
   void Start(const std::string& program, va_list args);
 
   /**
-     * @brief Starts a program as a child process.
-     *
-     * @param program The program to start.
-     *
-     * @throws std::runtime_error on failure.
-     */
+   * Starts a program as a child process.
+   *
+   * Takes a variadic list of arguments passed to the program.
+   *
+   * @param program The program to start.
+   *
+   * @throws std::runtime_error on failure.
+   */
   void Start(const std::string& program, ...);
 
   /**
-   * @brief Terminates (SIGTERM) this child process.
+   * Terminates (SIGTERM) this child process.
    *
    * @throws std::runtime_error if child tries to terminate itself.
    *
@@ -69,7 +92,7 @@ class Process {
   bool Terminate();
 
   /**
-   * @brief Kills (SIGKILL) this child process.
+   * Kills (SIGKILL) this child process.
    *
    * @throws std::runtime_error if child tries to kill itself.
    *
@@ -78,7 +101,7 @@ class Process {
   bool Kill();
 
   /**
-   * @brief Adjusts the environment of the child process.
+   * Adjusts the environment of the child process.
    *
    * @param name Name of the environment variable, must not be NULL.
    * @param value Value of the environment variable, must not be NULL.
@@ -89,7 +112,7 @@ class Process {
   void SetEnv(const char* name, const char* value, bool overwrite);
 
   /**
-   * @brief Queries the environment of the child process.
+   * Queries the environment of the child process.
    *
    * @param name The name of the environment variable, must not be NULL.
    *
@@ -98,7 +121,7 @@ class Process {
   const char * GetEnv(const char* name);
 
   /**
-   * @brief Accesses the pid of the child process.
+   * Accesses the pid of the child process.
    *
    * @returns The pid of the child process.
    */
@@ -108,7 +131,7 @@ class Process {
   struct Private;
   std::auto_ptr<Private> d_;
 
-  /* Disable copy c'tor, assignment operator */
+  /* Disable copy constructor, assignment operator */
   Process(const Process&);
   Process& operator=(const Process&);
 };
