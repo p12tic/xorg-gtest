@@ -63,6 +63,8 @@ class Process {
   /**
    * Starts a program as a child process.
    *
+   * See 'man execvp' for further information on the variadic argument list.
+   *
    * @param program The program to start.
    * @param args Variadic list of arguments passed to the program.
    *
@@ -74,6 +76,7 @@ class Process {
    * Starts a program as a child process.
    *
    * Takes a variadic list of arguments passed to the program.
+   * See 'man execvp' for further information on the variadic argument list.
    *
    * @param program The program to start.
    *
@@ -136,7 +139,7 @@ class Process {
   Process& operator=(const Process&);
 };
 
-} // xorg
 } // testing
+} // xorg
 
 #endif // XORG_GTEST_PROCESS_H
