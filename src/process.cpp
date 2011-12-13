@@ -38,7 +38,8 @@ struct xorg::testing::Process::Private {
   pid_t pid;
 };
 
-xorg::testing::Process::Process() : d_(new Private) {
+xorg::testing::Process::Process()
+    : d_(new Private) {
   d_->pid = -1;
 }
 
@@ -58,8 +59,9 @@ void xorg::testing::Process::Start(const std::string& program, va_list args) {
     std::vector<char*> argv;
 
     do
-      argv.push_back(va_arg(args, char*));
-    while (argv.back());
+    argv.push_back(va_arg(args, char*));
+    while (argv.back())
+      ;
 
     execvp(program.c_str(), &argv[0]);
 
@@ -82,10 +84,10 @@ bool xorg::testing::Process::Terminate() {
     throw std::runtime_error("Child process tried to terminate itself");
   } else { /* Parent */
     if (kill(d_->pid, SIGTERM) < 0) {
-      d_->pid_ = -1;
+      d_->pid = -1;
       return false;
     }
-    d_->pid_ = -1;
+    d_->pid = -1;
   }
   return true;
 }
@@ -98,24 +100,29 @@ bool xorg::testing::Process::Kill() {
     throw std::runtime_error("Child process tried to kill itself");
   } else { /* Parent */
     if (kill(d_->pid, SIGKILL) < 0) {
-      d_->pid_ = -1;
+      d_->pid = -1;
       return false;
     }
-    d_->pid_ = -1;
+    d_->pid = -1;
   }
   return true;
 }
 
-void xorg::testing::Process::SetEnv(const std::string& name, const std::string& value,
-                                    bool overwrite) {
+void xorg::testing::Process::SetEnv(const std::string& name,
+                                    const std::string& value, bool overwrite) {
   if (setenv(name.c_str(), value.c_str(), overwrite) != 0)
     throw std::runtime_error("Failed to set environment variable in process");
 
   return;
 }
 
-std::string xorg::testing::Process::GetEnv(const std::string& name) const{
-  return std::string(getenv(name.c_str()));
+std::string xorg::testing::Process::GetEnv(const std::string& name,
+                                           bool* exists) const {
+  const char* var = getenv(name.c_str());
+  if (exists != NULL)
+    *exists = var != NULL;
+
+  return std::string(var);
 }
 
 pid_t xorg::testing::Process::Pid() const {

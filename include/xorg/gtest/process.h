@@ -97,8 +97,8 @@ class Process {
    *
    * @returns true if termination succeeded, false otherwise.
    *
-   * @post Child process terminated.
-   * @post Subsequent calls to Pid() return -1.
+   * @post If successful: Child process terminated.
+   * @post If successful: Subsequent calls to Pid() return -1.
    */
   bool Terminate();
 
@@ -109,8 +109,8 @@ class Process {
    *
    * @returns true if kill succeeded, false otherwise.
    *
-   * @post Child process killed.
-   * @post Subsequent calls to Pid() return -1.
+   * @post If successful: Child process killed.
+   * @post If successful: Subsequent calls to Pid() return -1.
    */
   bool Kill();
 
@@ -129,10 +129,11 @@ class Process {
    * Queries the environment of the child process.
    *
    * @param [in] name The name of the environment variable.
-   *
+   * @param [out] exists If not NULL, the variable will be set to true if the
+   * environment variable exists and to false otherwise.
    * @returns The value of the environment variable, or an empty string.
    */
-  std::string GetEnv(const std::string& name) const;
+  std::string GetEnv(const std::string& name, bool* exists = NULL) const;
 
   /**
    * Accesses the pid of the child process.
