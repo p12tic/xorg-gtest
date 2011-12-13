@@ -71,6 +71,7 @@ class Process {
    * @throws std::runtime_error on failure.
    *
    * @post If successful: Child process forked and program started.
+   * @post If successful: Subsequent calls to Pid() return child process pid.
    */
   void Start(const std::string& program, va_list args);
 
@@ -85,6 +86,7 @@ class Process {
    * @throws std::runtime_error on failure.
    *
    * @post If successful: Child process forked and program started.
+   * @post If successful: Subsequent calls to Pid() return child process pid.
    */
   void Start(const std::string& program, ...);
 
@@ -96,7 +98,7 @@ class Process {
    * @returns true if termination succeeded, false otherwise.
    *
    * @post Child process terminated.
-   *
+   * @post Subsequent calls to Pid() return -1.
    */
   bool Terminate();
 
@@ -108,6 +110,7 @@ class Process {
    * @returns true if kill succeeded, false otherwise.
    *
    * @post Child process killed.
+   * @post Subsequent calls to Pid() return -1.
    */
   bool Kill();
 
@@ -134,7 +137,7 @@ class Process {
   /**
    * Accesses the pid of the child process.
    *
-   * @returns The pid of the child process.
+   * @returns The pid of the child process or -1.
    */
   pid_t Pid() const;
 

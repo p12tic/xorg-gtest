@@ -82,8 +82,10 @@ bool xorg::testing::Process::Terminate() {
     throw std::runtime_error("Child process tried to terminate itself");
   } else { /* Parent */
     if (kill(d_->pid, SIGTERM) < 0) {
+      d_->pid_ = -1;
       return false;
     }
+    d_->pid_ = -1;
   }
   return true;
 }
@@ -96,8 +98,10 @@ bool xorg::testing::Process::Kill() {
     throw std::runtime_error("Child process tried to kill itself");
   } else { /* Parent */
     if (kill(d_->pid, SIGKILL) < 0) {
+      d_->pid_ = -1;
       return false;
     }
+    d_->pid_ = -1;
   }
   return true;
 }
