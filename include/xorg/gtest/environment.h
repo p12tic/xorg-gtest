@@ -73,17 +73,24 @@ class Environment : public ::testing::Environment {
   /**
    * Starts the dummy X server.
    *
-   * Reimplemented from ::testing::Environment. Must not be called directly.
+   * Reimplemented from ::testing::Environment. Should only be called by subclasses.
+   * See Google %Test documentation for details.
    *
    * @throws std::runtime_error if a dummy X server cannot be started.
+   *
+   * @post If successful: subsequent connections to the dummy X server succeed.
+   * @post If successful: %Environment variable DISPLAY contains the
+   * display port for connecting to the dummy X server.
    */
   virtual void SetUp();
 
   /**
    * Stops the dummy X server.
    *
-   * Reimplemented from ::testing::Environment. Must not be called directly.
+   * Reimplemented from ::testing::Environment. Should only be called by subclasses.
+   * See Google %Test documentation for details.
    *
+   * @post Dummy X server stopped.
    */
   virtual void TearDown();
 

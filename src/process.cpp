@@ -102,16 +102,16 @@ bool xorg::testing::Process::Kill() {
   return true;
 }
 
-void xorg::testing::Process::SetEnv(const char* name, const char* value,
+void xorg::testing::Process::SetEnv(const std::string& name, const std::string& value,
                                     bool overwrite) {
-  if (setenv(name, value, overwrite) != 0)
+  if (setenv(name.c_str(), value.c_str(), overwrite) != 0)
     throw std::runtime_error("Failed to set environment variable in process");
 
   return;
 }
 
-const char* xorg::testing::Process::GetEnv(const char* name) {
-  return getenv(name);
+std::string xorg::testing::Process::GetEnv(const std::string& name) const{
+  return std::string(getenv(name.c_str()));
 }
 
 pid_t xorg::testing::Process::Pid() const {

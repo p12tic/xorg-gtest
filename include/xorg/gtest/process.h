@@ -69,6 +69,8 @@ class Process {
    * @param args Variadic list of arguments passed to the program.
    *
    * @throws std::runtime_error on failure.
+   *
+   * @post If successful: Child process forked and program started.
    */
   void Start(const std::string& program, va_list args);
 
@@ -81,6 +83,8 @@ class Process {
    * @param program The program to start.
    *
    * @throws std::runtime_error on failure.
+   *
+   * @post If successful: Child process forked and program started.
    */
   void Start(const std::string& program, ...);
 
@@ -91,6 +95,8 @@ class Process {
    *
    * @returns true if termination succeeded, false otherwise.
    *
+   * @post Child process terminated.
+   *
    */
   bool Terminate();
 
@@ -100,28 +106,30 @@ class Process {
    * @throws std::runtime_error if child tries to kill itself.
    *
    * @returns true if kill succeeded, false otherwise.
+   *
+   * @post Child process killed.
    */
   bool Kill();
 
   /**
    * Adjusts the environment of the child process.
    *
-   * @param name Name of the environment variable, must not be NULL.
-   * @param value Value of the environment variable, must not be NULL.
-   * @param overwrite Whether to overwrite the value of existing env variables.
+   * @param [in] name Name of the environment variable.
+   * @param [in] value Value of the environment variable.
+   * @param [in] overwrite Whether to overwrite the value of existing env variables.
    *
    * @throws std::runtime_error if adjusting the environment does not succeed.
    */
-  void SetEnv(const char* name, const char* value, bool overwrite);
+  void SetEnv(const std::string& name, const std::string& value, bool overwrite);
 
   /**
    * Queries the environment of the child process.
    *
-   * @param name The name of the environment variable, must not be NULL.
+   * @param [in] name The name of the environment variable.
    *
-   * @returns The value of the environment variable, or NULL.
+   * @returns The value of the environment variable, or an empty string.
    */
-  const char * GetEnv(const char* name);
+  std::string GetEnv(const std::string& name) const;
 
   /**
    * Accesses the pid of the child process.
