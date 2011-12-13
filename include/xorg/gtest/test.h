@@ -33,7 +33,7 @@ namespace testing {
 /**
  * @class Test test.h xorg/gtest/test.h
  *
- * Google test fixture providing an Xlib connection to an X11 server.
+ * Google %Test fixture providing an Xlib connection to an X11 server.
  *
  * Sets up and tears down an XLib connection to an X11 server.
  * Rely on Google %Test's TEST_F macro to use this fixture for your
