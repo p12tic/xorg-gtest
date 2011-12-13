@@ -33,11 +33,11 @@ namespace testing {
 /**
  * @class Test test.h xorg/gtest/test.h
  *
- * Google test fixture checking for running XServer.
+ * Google %Test fixture checking for running XServer.
  *
  * Checks whether an X server is running and establishes
  * a connection to the instance by opening up a display. Rely
- * on Google test's TEST_F macro to use this fixture for your
+ * on Google %Test's TEST_F macro to use this fixture for your
  * own tests or sublcass it and override the SetUp and TearDown
  * methods.
  */

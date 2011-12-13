@@ -30,7 +30,7 @@ namespace xorg {
 namespace testing {
 
 /**
- * \mainpage X.org Google Test Framework
+ * \mainpage X.org Google %Test Framework
  *
  * Xorg-gtest makes it easy to write test cases
  * for a dummy headless X.org server. It can also run tests
@@ -41,7 +41,7 @@ namespace testing {
 /**
  * @class Environment environment.h xorg/gtest/environment.h
  *
- * Global Google test environment providing a dummy X server.
+ * Global Google %Test environment providing a dummy X server.
  *
  * Starts up a dummy X server for testing purposes.
  * Either associate the environment manually
