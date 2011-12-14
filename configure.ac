@@ -31,6 +31,9 @@ PKG_CHECK_MODULES( XSERVER, x11 [xorg-server] )
 # Check for Google Test
 AC_CHECK_GTEST
 
+AS_IF([test "x$ac_cv_lib_gtest_main" != xyes],
+      AC_MSG_ERROR([package 'gtest' not found]))
+
 AC_SUBST([GTEST_LDFLAGS])
 AC_SUBST([GTEST_CXXFLAGS])
 

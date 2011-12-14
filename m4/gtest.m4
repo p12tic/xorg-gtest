@@ -18,8 +18,6 @@ AC_DEFUN([AC_CHECK_GTEST],
 
   AC_LANG_CPLUSPLUS
 
-  AC_CHECK_LIB([gtest], [main], [have_gtest=yes],
-               AC_MSG_ERROR([package 'gtest' not found]))
-
+  AC_CHECK_LIB([gtest], [main])
 ]) # AC_CHECK_GTEST
 
