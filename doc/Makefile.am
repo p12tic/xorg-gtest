@@ -39,9 +39,11 @@ doc-man-doxygen:
 doc-pdf-doxygen:
 	doxygen 
 
-install-data-local: api/html
-	$(INSTALL) -d $(DESTDIR)$(docdir) 
-	cp -a api/html $(DESTDIR)$(docdir) 
+install-data-local:
+	if [ -d api/html ]; then \
+		$(INSTALL) -d $(DESTDIR)$(docdir); \
+		cp -a api/html $(DESTDIR)$(docdir); \
+	fi
 
 clean-local:
 	-rm -rf *.pdf *.html api
