@@ -16,9 +16,10 @@ AC_DEFUN([AC_CHECK_GTEST],
   [GTEST_LDFLAGS="-L$withval -lpthread"],
   [GTEST_LDFLAGS='-lgtest -lpthread'])
 
-  AC_HAVE_LIBRARY( [gtest], 
-                [have_gtest=yes], 
-                 AC_MSG_WARN([package 'gtest' not found: tests disabled]))
+  AC_LANG_CPLUSPLUS
+
+  AC_CHECK_LIB([gtest], [main], [have_gtest=yes],
+               AC_MSG_ERROR([package 'gtest' not found]))
 
 ]) # AC_CHECK_GTEST
 
