@@ -19,33 +19,21 @@
  *
  ****************************************************************************/
 
-#include "xorg/gtest/test.h"
+#include <xorg/gtest/test.h>
 
-#include <stdexcept>
+using namespace xorg::testing;
 
-#include <X11/Xlib.h>
+/**
+ * @example xorg-gtest.cpp
+ *
+ * This is an example for using the fixture
+ * xorg::testing::Test for your own tests. Please
+ * make sure that you have the X.org dummy display
+ * driver installed on your system and that you execute
+ * the test with root privileges.
+ */
+TEST_F(Test, DummyXorgServerTest) {
 
-struct xorg::testing::Test::Private {
-  ::Display* display;
-};
+  EXPECT_NE(0, DefaultRootWindow(Display()));
 
-xorg::testing::Test::Test() : d_(new Private) {
-  d_->display = NULL;
-}
-
-xorg::testing::Test::~Test() {}
-
-void xorg::testing::Test::SetUp() {
-  d_->display = XOpenDisplay(NULL);
-  if (!d_->display)
-    throw std::runtime_error("Failed to open connection to display");
-}
-
-void xorg::testing::Test::TearDown() {
-  XCloseDisplay(d_->display);
-  d_->display = NULL;
-}
-
-::Display* xorg::testing::Test::Display() const {
-  return d_->display;
 }

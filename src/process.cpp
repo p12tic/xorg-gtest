@@ -1,3 +1,24 @@
+/*****************************************************************************
+ *
+ * X testing environment - Google Test environment feat. dummy x server
+ *
+ * Copyright (C) 2011 Canonical Ltd.
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ****************************************************************************/
+
 #include "xorg/gtest/process.h"
 
 #include <sys/types.h>
@@ -61,8 +82,10 @@ bool xorg::testing::Process::Terminate() {
     throw std::runtime_error("Child process tried to terminate itself");
   } else { /* Parent */
     if (kill(d_->pid, SIGTERM) < 0) {
+      d_->pid = -1;
       return false;
     }
+    d_->pid = -1;
   }
   return true;
 }
@@ -75,22 +98,29 @@ bool xorg::testing::Process::Kill() {
     throw std::runtime_error("Child process tried to kill itself");
   } else { /* Parent */
     if (kill(d_->pid, SIGKILL) < 0) {
+      d_->pid = -1;
       return false;
     }
+    d_->pid = -1;
   }
   return true;
 }
 
-void xorg::testing::Process::SetEnv(const char* name, const char* value,
-                                    bool overwrite) {
-  if (setenv(name, value, overwrite) != 0)
+void xorg::testing::Process::SetEnv(const std::string& name,
+                                    const std::string& value, bool overwrite) {
+  if (setenv(name.c_str(), value.c_str(), overwrite) != 0)
     throw std::runtime_error("Failed to set environment variable in process");
 
   return;
 }
 
-const char* xorg::testing::Process::GetEnv(const char* name) {
-  return getenv(name);
+std::string xorg::testing::Process::GetEnv(const std::string& name,
+                                           bool* exists) const {
+  const char* var = getenv(name.c_str());
+  if (exists != NULL)
+    *exists = (var != NULL);
+
+  return std::string(var);
 }
 
 pid_t xorg::testing::Process::Pid() const {

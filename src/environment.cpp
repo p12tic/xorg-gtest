@@ -51,6 +51,8 @@ xorg::testing::Environment::Environment(const std::string& path_to_conf,
     : d_(new Private(path_to_conf, path_to_server, display)) {
 }
 
+xorg::testing::Environment::~Environment() {}
+
 void xorg::testing::Environment::SetUp() {
   static char display_string[6];
   snprintf(display_string, 6, ":%d", d_->display);

@@ -1,6 +1,6 @@
 /*****************************************************************************
  *
- * utouch-frame - Touch Frame Library
+ * X testing environment - Google Test environment feat. dummy x server
  *
  * Copyright (C) 2011 Canonical Ltd.
  *
@@ -27,24 +27,66 @@
 #include <gtest/gtest.h>
 #include <X11/Xlib.h>
 
-#include "utouch/frame.h"
-
 namespace xorg {
 namespace testing {
 
+/**
+ * @class Test test.h xorg/gtest/test.h
+ *
+ * Google %Test fixture providing an Xlib connection to an X11 server.
+ *
+ * Sets up and tears down an XLib connection to an X11 server.
+ * Rely on Google %Test's TEST_F macro to use this fixture for your
+ * own tests or subclass it and override the SetUp and TearDown
+ * methods.
+ *
+ * @remark The display port is read from the environment variable DISPLAY.
+ */
 class Test : public ::testing::Test {
  public:
+
   Test();
 
+  virtual ~Test();
+
+  /**
+   * Tries to connect to an X server instance.
+   *
+   * Fails if no X server is running. Updates the display object.
+   * Reimplemented from ::testing::Test, should only be called by subclasses.
+   * See Google %Test documentation for details.
+   *
+   * @post Subsequent calls to Display() return a valid pointer or NULL if an error occured.
+   *
+   * @throws std::runtime_error if no X server is running.
+   */
   virtual void SetUp();
+
+  /**
+   * Closes the display.
+   *
+   * Reimplemented from ::testing::Test, should only be called by subclasses.
+   * See Google %Test documentation for details.
+   *
+   * @post Subsequent calls to Display() return NULL.
+   */
   virtual void TearDown();
 
  protected:
+
+  /**
+   * Accesses the display representing an Xlib connection.
+   *
+   * Accessible by subclasses and test cases relying on this fixture.
+   *
+   * @returns Pointer to a display or NULL.
+   */
   ::Display* Display() const;
 
+  /** @cond Implementation */
   struct Private;
   std::auto_ptr<Private> d_;
-
+  /** @endcond Implementation */
  private:
   /* Disable copy c'tor, assignment operator */
   Test(const Test&);
