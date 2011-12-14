@@ -31,8 +31,6 @@ PKG_CHECK_MODULES( XSERVER, x11 [xorg-server] )
 # Check for Google Test
 AC_CHECK_GTEST
 
-AM_CONDITIONAL([HAVE_GTEST], [test "x$have_gtest" = xyes])
-
 AC_SUBST([GTEST_LDFLAGS])
 AC_SUBST([GTEST_CXXFLAGS])
 
