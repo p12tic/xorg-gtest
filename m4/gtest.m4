@@ -16,9 +16,15 @@ AC_DEFUN([AC_CHECK_GTEST],
   [GTEST_LDFLAGS="-L$withval -lpthread"],
   [GTEST_LDFLAGS='-lgtest -lpthread'])
 
-  AC_HAVE_LIBRARY( [gtest], 
-                [have_gtest=yes], 
-                 AC_MSG_WARN([package 'gtest' not found: tests disabled]))
+  AC_LANG_PUSH(C++)
 
+  # We need to get to the 5th arg to link with -lpthread too. Mimic the default
+  # AC_CHECK_LIB action when found.
+  AC_CHECK_LIB([gtest], [main],
+               [AC_DEFINE(HAVE_LIBGTEST) LIBS="-lgtest $LIBS"],
+               [],
+               [-lpthread])
+
+  AC_LANG_POP
 ]) # AC_CHECK_GTEST
 
