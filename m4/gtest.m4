@@ -18,6 +18,11 @@ AC_DEFUN([AC_CHECK_GTEST],
 
   AC_LANG_CPLUSPLUS
 
-  AC_CHECK_LIB([gtest], [main])
+  # We need to get to the 5th arg to link with -lpthread too. Mimic the default
+  # AC_CHECK_LIB action when found.
+  AC_CHECK_LIB([gtest], [main],
+               [AC_DEFINE(HAVE_LIBGTEST) LIBS="-lgtest $LIBS"],
+               [],
+               [-lpthread])
 ]) # AC_CHECK_GTEST
 
