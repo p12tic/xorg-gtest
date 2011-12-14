@@ -115,7 +115,7 @@ void xorg::testing::Process::SetEnv(const std::string& name,
 }
 
 std::string xorg::testing::Process::GetEnv(const std::string& name,
-                                           bool* exists) const {
+                                           bool* exists) {
   const char* var = getenv(name.c_str());
   if (exists != NULL)
     *exists = (var != NULL);
