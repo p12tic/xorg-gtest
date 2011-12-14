@@ -24,8 +24,6 @@
 dist_doc_DATA = \
 	Doxyfile 
 
-# dist_man_MANS = geistest.1
-
 doc-html: doc-html-doxygen 
 
 doc-man: doc-man-doxygen
