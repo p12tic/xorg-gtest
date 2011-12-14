@@ -22,4 +22,8 @@ noinst_PROGRAMS = xorg_gtest_example
 
 xorg_gtest_example_SOURCES = xorg-gtest.cpp
 
+xorg_gtest_example_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	$(GTEST_CPPFLAGS)
+
 xorg_gtest_example_LDFLAGS = -lxorg-gtest -lxorg-gtest_main -lgtest -lpthread -lX11

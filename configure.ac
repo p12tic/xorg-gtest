@@ -34,8 +34,7 @@ AC_CHECK_GTEST
 AS_IF([test "x$ac_cv_lib_gtest_main" != xyes],
       AC_MSG_ERROR([package 'gtest' not found]))
 
-AC_SUBST([GTEST_LDFLAGS])
-AC_SUBST([GTEST_CXXFLAGS])
+AC_SUBST([GTEST_CPPFLAGS])
 
 AC_SUBST(DUMMY_CONF_PATH, "$datadir/xorg/gtest/dummy.conf")
 
