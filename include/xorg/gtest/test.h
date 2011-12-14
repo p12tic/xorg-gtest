@@ -47,6 +47,8 @@ class Test : public ::testing::Test {
 
   Test();
 
+  virtual ~Test();
+
   /**
    * Tries to connect to an X server instance.
    *

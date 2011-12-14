@@ -11,7 +11,7 @@ libxorg_gtest_main_la_SOURCES = \
 	src/main.cpp
 
 library_includedir = $(includedir)/xorg/gtest
-library_include_HEADERS =
+library_include_HEADERS = \
 	include/xorg/gtest/environment.h \
 	include/xorg/gtest/process.h \
 	include/xorg/gtest/test.h

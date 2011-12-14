@@ -70,6 +70,7 @@ class Environment : public ::testing::Environment {
   Environment(const std::string& path_to_conf,
               const std::string& path_to_server = "Xorg", int display = 133);
 
+  virtual ~Environment();
   /**
    * Starts the dummy X server.
    *
