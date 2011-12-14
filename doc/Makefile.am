@@ -21,7 +21,7 @@
 ## <http://www.gnu.org/licenses/>.
 ##
 
-dist_doc_DATA = \
+EXTRA_DIST = \
 	Doxyfile 
 
 doc-html: doc-html-doxygen 
