@@ -8,17 +8,16 @@ AC_DEFUN([AC_CHECK_GTEST],
   AC_ARG_WITH([gtest-include-path],
   [AS_HELP_STRING([--with-gtest-include-path],
     [location of the Google test headers, defaults to /usr/include])],
-  [GTEST_CXXFLAGS="-I$withval"],
-  [GTEST_CXXFLAGS='-I/usr/include'])
+  [GTEST_CPPFLAGS="-I$withval"])
 
   AC_ARG_WITH([gtest-lib-path],
   [AS_HELP_STRING([--with-gtest-lib-path], [location of the Google test libraries])],
   [GTEST_LDFLAGS="-L$withval -lpthread"],
-  [GTEST_LDFLAGS='-lgtest -lpthread'])
+  [GTEST_LDFLAGS='-lpthread'])
 
   AC_LANG_PUSH(C++)
 
-  AC_CHECK_LIB([gtest], [main], [:], [:], [-lpthread])
+  AC_CHECK_LIB([gtest], [main], [:], [:], [$GTEST_LDFLAGS])
 
   AC_LANG_POP
 ]) # AC_CHECK_GTEST

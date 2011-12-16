@@ -49,12 +49,13 @@ class Test : public ::testing::Test {
 
   virtual ~Test();
 
+ protected:
   /**
    * Tries to connect to an X server instance.
    *
    * Fails if no X server is running. Updates the display object.
-   * Reimplemented from ::testing::Test, should only be called by subclasses.
-   * See Google %Test documentation for details.
+   * Reimplemented from ::testing::Test. See Google %Test documentation for
+   * details.
    *
    * @post Subsequent calls to Display() return a valid pointer or NULL if an error occured.
    *
@@ -65,14 +66,12 @@ class Test : public ::testing::Test {
   /**
    * Closes the display.
    *
-   * Reimplemented from ::testing::Test, should only be called by subclasses.
-   * See Google %Test documentation for details.
+   * Reimplemented from ::testing::Test. See Google %Test documentation for
+   * details.
    *
    * @post Subsequent calls to Display() return NULL.
    */
   virtual void TearDown();
-
- protected:
 
   /**
    * Accesses the display representing an Xlib connection.

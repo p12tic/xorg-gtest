@@ -56,6 +56,29 @@ namespace testing {
 class Process {
  public:
   /**
+   * Helper function to adjust the environment of the current process.
+   *
+   * @param [in] name Name of the environment variable.
+   * @param [in] value Value of the environment variable.
+   * @param [in] overwrite Whether to overwrite the value of existing env
+   *             variables.
+   *
+   * @throws std::runtime_error if adjusting the environment does not succeed.
+   */
+  static void SetEnv(const std::string& name, const std::string& value,
+                     bool overwrite);
+
+  /**
+   * Helper function to query the environment of the current process.
+   *
+   * @param [in] name The name of the environment variable.
+   * @param [out] exists If not NULL, the variable will be set to true if the
+   *              environment variable exists and to false otherwise.
+   * @returns The value of the environment variable, or an empty string.
+   */
+  static std::string GetEnv(const std::string& name, bool* exists = NULL);
+
+  /**
    * Creates a child-process that is in a terminated state.
    */
   Process();
@@ -113,27 +136,6 @@ class Process {
    * @post If successful: Subsequent calls to Pid() return -1.
    */
   bool Kill();
-
-  /**
-   * Adjusts the environment of the child process.
-   *
-   * @param [in] name Name of the environment variable.
-   * @param [in] value Value of the environment variable.
-   * @param [in] overwrite Whether to overwrite the value of existing env variables.
-   *
-   * @throws std::runtime_error if adjusting the environment does not succeed.
-   */
-  void SetEnv(const std::string& name, const std::string& value, bool overwrite);
-
-  /**
-   * Queries the environment of the child process.
-   *
-   * @param [in] name The name of the environment variable.
-   * @param [out] exists If not NULL, the variable will be set to true if the
-   * environment variable exists and to false otherwise.
-   * @returns The value of the environment variable, or an empty string.
-   */
-  std::string GetEnv(const std::string& name, bool* exists = NULL) const;
 
   /**
    * Accesses the pid of the child process.

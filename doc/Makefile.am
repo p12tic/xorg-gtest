@@ -21,10 +21,8 @@
 ## <http://www.gnu.org/licenses/>.
 ##
 
-dist_doc_DATA = \
+EXTRA_DIST = \
 	Doxyfile 
-
-# dist_man_MANS = geistest.1
 
 doc-html: doc-html-doxygen 
 
@@ -41,9 +39,11 @@ doc-man-doxygen:
 doc-pdf-doxygen:
 	doxygen 
 
-install-data-local: api/html
-	$(INSTALL) -d $(DESTDIR)$(docdir) 
-	cp -a api/html $(DESTDIR)$(docdir) 
+install-data-local:
+	if [ -d api/html ]; then \
+		$(INSTALL) -d $(DESTDIR)$(docdir); \
+		cp -a api/html $(DESTDIR)$(docdir); \
+	fi
 
 clean-local:
 	-rm -rf *.pdf *.html api

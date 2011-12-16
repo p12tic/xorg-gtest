@@ -71,11 +71,13 @@ class Environment : public ::testing::Environment {
               const std::string& path_to_server = "Xorg", int display = 133);
 
   virtual ~Environment();
+
+ protected:
   /**
    * Starts the dummy X server.
    *
-   * Reimplemented from ::testing::Environment. Should only be called by subclasses.
-   * See Google %Test documentation for details.
+   * Reimplemented from ::testing::Environment. See Google %Test documentation
+   * for details.
    *
    * @throws std::runtime_error if a dummy X server cannot be started.
    *
@@ -88,8 +90,8 @@ class Environment : public ::testing::Environment {
   /**
    * Stops the dummy X server.
    *
-   * Reimplemented from ::testing::Environment. Should only be called by subclasses.
-   * See Google %Test documentation for details.
+   * Reimplemented from ::testing::Environment. See Google %Test documentation
+   * for details.
    *
    * @post Dummy X server stopped.
    */
