@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-noinst_PROGRAMS = xorg_gtest_example
+noinst_PROGRAMS = xorg-gtest-example
 
 xorg_gtest_example_SOURCES = xorg-gtest.cpp
 

@@ -14,7 +14,7 @@ AM_INIT_AUTOMAKE([1.11 foreign dist-bzip2])
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE
 
-LIB_VERSION=0:1:0
+LIB_VERSION=0:0:0
 AC_SUBST([LIB_VERSION])
 
 # Initialize libtool

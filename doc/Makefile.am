@@ -24,25 +24,17 @@
 EXTRA_DIST = \
 	Doxyfile 
 
-doc-html: doc-html-doxygen 
-
-doc-man: doc-man-doxygen
-
-doc-pdf: doc-pdf-doxygen
-
-doc-html-doxygen:
-	doxygen 
-
-doc-man-doxygen:
-	doxygen 
-
-doc-pdf-doxygen:
-	doxygen 
+doc:
+	doxygen
 
 install-data-local:
 	if [ -d api/html ]; then \
 		$(INSTALL) -d $(DESTDIR)$(docdir); \
 		cp -a api/html $(DESTDIR)$(docdir); \
+	fi
+	if [ -d api/man ]; then \
+		$(INSTALL) -d $(DESTDIR)$(mandir)/man3; \
+		$(INSTALL) api/man/man3/* $(DESTDIR)$(mandir)/man3; \
 	fi
 
 clean-local:
