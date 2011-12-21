@@ -42,7 +42,8 @@ AM_CXXFLAGS = -Iinclude
 INSTALL:
 	$(INSTALL_CMD)
 
-doc-%:
+.PHONY: doc
+doc:
 	$(MAKE) -C doc $@
 
 dist-hook: ChangeLog INSTALL

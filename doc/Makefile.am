@@ -24,20 +24,8 @@
 EXTRA_DIST = \
 	Doxyfile 
 
-doc-html: doc-html-doxygen 
-
-doc-man: doc-man-doxygen
-
-doc-pdf: doc-pdf-doxygen
-
-doc-html-doxygen:
-	doxygen 
-
-doc-man-doxygen:
-	doxygen 
-
-doc-pdf-doxygen:
-	doxygen 
+doc:
+	doxygen
 
 install-data-local:
 	if [ -d api/html ]; then \
