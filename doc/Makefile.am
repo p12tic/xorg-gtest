@@ -44,6 +44,10 @@ install-data-local:
 		$(INSTALL) -d $(DESTDIR)$(docdir); \
 		cp -a api/html $(DESTDIR)$(docdir); \
 	fi
+	if [ -d api/man ]; then \
+		$(INSTALL) -d $(DESTDIR)$(mandir)/man3; \
+		$(INSTALL) api/man/man3/* $(DESTDIR)$(mandir)/man3; \
+	fi
 
 clean-local:
 	-rm -rf *.pdf *.html api
