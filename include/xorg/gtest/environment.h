@@ -48,6 +48,7 @@ namespace testing {
  * with the overall testing framework like
  * @code
  * std::string xorg_conf_path("conf/dummy.conf");
+ * std::string xorg_log_file_path("/tmp/MyDummyXorg.log");
  * int xorg_display = 133;
  * std::string server("Xorg");
  *
@@ -55,6 +56,7 @@ namespace testing {
  *       xorg_conf_path,
  *       server,
  *       xorg_display);
+ * environment->set_log_file(xorg_log_file_path);
  * testing::AddGlobalTestEnvironment(environment);
  * @endcode
  * or link to libxorg-gtest_main.
@@ -71,6 +73,19 @@ class Environment : public ::testing::Environment {
               const std::string& path_to_server = "Xorg", int display = 133);
 
   virtual ~Environment();
+
+  /**
+   * Sets the path where the xserver log file will be created.
+   * @param path_to_log_file Path to xserver logfile.
+   */
+  void set_log_file(const std::string& path_to_log_file);
+
+  /**
+   * Returns the path where the xserver log file will be created.
+   * Its default value is "/tmp/Xorg.GTest.log"
+   * @return Path to xserver logfile.
+   */
+  const std::string& log_file() const;
 
  protected:
   /**

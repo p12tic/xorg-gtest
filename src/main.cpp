@@ -24,6 +24,7 @@
 #include <gtest/gtest.h>
 
 #include "xorg/gtest/environment.h"
+#include "defines.h"
 
 namespace {
 
@@ -31,6 +32,7 @@ int help = false;
 int no_dummy_server = false;
 int xorg_conf = false;
 int xorg_display_opt = false;
+int xorg_logfile_specified = false;
 int server = false;
 
 const struct option longopts[] = {
@@ -38,6 +40,7 @@ const struct option longopts[] = {
   { "no-dummy-server", no_argument, &no_dummy_server, true, },
   { "xorg-conf", required_argument, &xorg_conf, true, },
   { "xorg-display", required_argument, &xorg_display_opt, true, },
+  { "xorg-logfile", required_argument, &xorg_logfile_specified, true, },
   { "server", required_argument, &server, true, },
   { NULL, 0, NULL, 0 }
 };
@@ -47,6 +50,7 @@ const struct option longopts[] = {
 int main(int argc, char *argv[]) {
   /* Default Xorg dummy conf path. */
   std::string xorg_conf_path(DUMMY_CONF_PATH);
+  std::string xorg_log_file_path;
 
   /* Default X display */
   int xorg_display = 133;
@@ -80,6 +84,10 @@ int main(int argc, char *argv[]) {
         break;
 
       case 4:
+        xorg_log_file_path = optarg;
+        break;
+
+      case 5:
         server = optarg;
         break;
 
@@ -95,6 +103,8 @@ int main(int argc, char *argv[]) {
     std::cout << "    --xorg-conf: Path to xorg dummy configuration file\n";
     std::cout << "    --server: Path to X server executable\n";
     std::cout << "    --xorg-display: xorg dummy display port\n";
+    std::cout << "    --xorg-logfile: xorg logfile filename. See -logfile in \"man Xorg\".\n"
+                 "                    Its default value is "DEFAULT_XORG_LOGFILE".\n";
     exit(-1);
   }
 
@@ -103,6 +113,10 @@ int main(int argc, char *argv[]) {
         xorg_conf_path,
         server,
         xorg_display);
+
+    if (xorg_logfile_specified)
+        environment->set_log_file(xorg_log_file_path);
+
     testing::AddGlobalTestEnvironment(environment);
   }
 

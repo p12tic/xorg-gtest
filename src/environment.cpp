@@ -21,6 +21,7 @@
 
 #include "xorg/gtest/environment.h"
 #include "xorg/gtest/process.h"
+#include "defines.h"
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -36,10 +37,12 @@
 
 struct xorg::testing::Environment::Private {
   Private(const std::string& conf, const std::string& server, int display_num)
-      : path_to_conf(conf), path_to_server(server), display(display_num) {
+      : path_to_conf(conf), path_to_log_file(DEFAULT_XORG_LOGFILE),
+        path_to_server(server), display(display_num) {
   }
 
   const std::string path_to_conf;
+  std::string path_to_log_file;
   const std::string path_to_server;
   const int display;
   Process process;
@@ -53,12 +56,25 @@ xorg::testing::Environment::Environment(const std::string& path_to_conf,
 
 xorg::testing::Environment::~Environment() {}
 
+void xorg::testing::Environment::set_log_file(const std::string& path_to_log_file)
+{
+  d_->path_to_log_file = path_to_log_file;
+}
+
+const std::string& xorg::testing::Environment::log_file() const
+{
+  return d_->path_to_log_file;
+}
+
 void xorg::testing::Environment::SetUp() {
   static char display_string[6];
   snprintf(display_string, 6, ":%d", d_->display);
 
   d_->process.Start(d_->path_to_server, d_->path_to_server.c_str(),
-                    display_string, "-config", d_->path_to_conf.c_str(), NULL);
+                    display_string,
+                    "-logfile", d_->path_to_log_file.c_str(),
+                    "-config", d_->path_to_conf.c_str(),
+                    NULL);
 
   Process::SetEnv("DISPLAY", display_string, true);
 
