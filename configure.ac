@@ -12,7 +12,7 @@ m4_include([m4/gtest.m4])
 # Initialize Automake
 AM_INIT_AUTOMAKE([1.11 foreign dist-bzip2])
 AM_SILENT_RULES([yes])
-AM_MAINTAINER_MODE
+AM_MAINTAINER_MODE([enable])
 
 LIB_VERSION=0:0:0
 AC_SUBST([LIB_VERSION])
@@ -43,6 +43,6 @@ AC_CONFIG_FILES([Makefile
                 
 AC_SUBST(AM_CPPFLAGS, "-Wall -Werror")
 
-AC_CONFIG_FILES([doc/Makefile examples/Makefile])
+AC_CONFIG_FILES([doc/Makefile examples/Makefile src/Makefile])
 
 AC_OUTPUT

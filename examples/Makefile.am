@@ -24,6 +24,8 @@ xorg_gtest_example_SOURCES = xorg-gtest.cpp
 
 xorg_gtest_example_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
-	$(GTEST_CPPFLAGS)
+	$(GTEST_CPPFLAGS) \
+	-I$(top_srcdir)/include
 
-xorg_gtest_example_LDFLAGS = -lxorg-gtest -lxorg-gtest_main -lgtest -lpthread -lX11
+xorg_gtest_example_LDADD = $(top_builddir)/src/libxorg-gtest.la $(top_builddir)/src/libxorg-gtest_main.la -lgtest -lpthread -lX11
+
