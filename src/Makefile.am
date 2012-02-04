@@ -10,6 +10,7 @@ libxorg_gtest_la_CPPFLAGS = \
 	$(GTEST_CPPFLAGS)
 
 libxorg_gtest_main_la_SOURCES = \
+	defines.h \
 	main.cpp
 
 library_includedir = $(includedir)/xorg/gtest
