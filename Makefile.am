@@ -14,3 +14,5 @@ doc:
 	$(MAKE) -C doc $@
 
 dist-hook: ChangeLog INSTALL
+
+EXTRA_DIST = conf
