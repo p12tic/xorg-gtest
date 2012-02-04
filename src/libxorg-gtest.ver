@@ -1,0 +1,15 @@
+XORG_GTEST_1.0 {
+    global:
+        extern "C++" {
+            xorg::testing::*;
+            "typeinfo for xorg::testing::Environment";
+            "typeinfo for xorg::testing::Test";
+            "typeinfo name for xorg::testing::Environment";
+            "typeinfo name for xorg::testing::Test";
+            "vtable for xorg::testing::Environment";
+            "vtable for xorg::testing::Test";
+        };
+
+    local:
+        *;
+};

@@ -26,7 +26,11 @@ libxorg_gtest_main_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(GTEST_CPPFLAGS)
 
-libxorg_gtest_la_LDFLAGS = $(X11_LIBS)
-libxorg_gtest_main_la_LDFLAGS = $(X11_LIBS)
+libxorg_gtest_la_LDFLAGS = $(X11_LIBS) -Wl,--version-script=libxorg-gtest.ver
+libxorg_gtest_main_la_LDFLAGS = \
+	$(X11_LIBS) \
+	-Wl,--version-script=libxorg-gtest_main.ver
 
 AM_CXXFLAGS = -I$(top_srcdir)/include
+
+EXTRA_DIST = libxorg-gtest.ver libxorg-gtest_main.ver
