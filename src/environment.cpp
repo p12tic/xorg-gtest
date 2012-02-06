@@ -36,22 +36,20 @@
 #include <X11/Xlib.h>
 
 struct xorg::testing::Environment::Private {
-  Private(const std::string& conf, const std::string& server, int display_num)
-      : path_to_conf(conf), path_to_log_file(DEFAULT_XORG_LOGFILE),
-        path_to_server(server), display(display_num) {
+  Private()
+      : path_to_conf(DUMMY_CONF_PATH), path_to_log_file(DEFAULT_XORG_LOGFILE),
+        path_to_server(DEFAULT_XORG_SERVER), display(DEFAULT_DISPLAY) {
   }
 
-  const std::string path_to_conf;
+  std::string path_to_conf;
   std::string path_to_log_file;
-  const std::string path_to_server;
-  const int display;
+  std::string path_to_server;
+  int display;
   Process process;
 };
 
-xorg::testing::Environment::Environment(const std::string& path_to_conf,
-                                        const std::string& path_to_server,
-                                        int display)
-    : d_(new Private(path_to_conf, path_to_server, display)) {
+xorg::testing::Environment::Environment()
+    : d_(new Private) {
 }
 
 xorg::testing::Environment::~Environment() {}
@@ -64,6 +62,36 @@ void xorg::testing::Environment::set_log_file(const std::string& path_to_log_fil
 const std::string& xorg::testing::Environment::log_file() const
 {
   return d_->path_to_log_file;
+}
+
+void xorg::testing::Environment::set_conf_file(const std::string& path_conf_file)
+{
+  d_->path_to_conf = path_conf_file;
+}
+
+const std::string& xorg::testing::Environment::conf_file() const
+{
+  return d_->path_to_conf;
+}
+
+void xorg::testing::Environment::set_server(const std::string& path_to_server)
+{
+  d_->path_to_server = path_to_server;
+}
+
+const std::string& xorg::testing::Environment::server() const
+{
+  return d_->path_to_server;
+}
+
+void xorg::testing::Environment::set_display(int display_num)
+{
+  d_->display = display_num;
+}
+
+int xorg::testing::Environment::display() const
+{
+  return d_->display;
 }
 
 void xorg::testing::Environment::SetUp() {

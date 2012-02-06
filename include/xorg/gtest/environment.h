@@ -47,16 +47,11 @@ namespace testing {
  * Either associate the environment manually
  * with the overall testing framework like
  * @code
- * std::string xorg_conf_path("conf/dummy.conf");
- * std::string xorg_log_file_path("/tmp/MyDummyXorg.log");
- * int xorg_display = 133;
- * std::string server("Xorg");
- *
- * xorg::testing::Environment* environment = new xorg::testing::Environment(
- *       xorg_conf_path,
- *       server,
- *       xorg_display);
- * environment->set_log_file(xorg_log_file_path);
+ * xorg::testing::Environment* environment = new xorg::testing::Environment;
+ * environment->set_server("Xorg");
+ * environment->set_display(133);
+ * environment->set_conf_file("conf/dummy.conf");
+ * environment->set_log_file("/tmp/MyDummyXorg.log");
  * testing::AddGlobalTestEnvironment(environment);
  * @endcode
  * or link to libxorg-gtest_main.
@@ -65,27 +60,77 @@ class Environment : public ::testing::Environment {
  public:
   /**
    * Constructs an object to provide a global X server dummy environment.
-   * @param path_to_conf Path to xserver configuration.
-   * @param path_to_server Path to xserver executable.
-   * @param display Display port of dummy xserver instance.
    */
-  Environment(const std::string& path_to_conf,
-              const std::string& path_to_server = "Xorg", int display = 133);
+  Environment();
 
   virtual ~Environment();
 
   /**
-   * Sets the path where the xserver log file will be created.
-   * @param path_to_log_file Path to xserver logfile.
+   * Sets the path where the server log file will be created.
+   *
+   * The path will be passed on to the server via the command line argument
+   * "-logfile". The default value is "/tmp/Xorg.GTest.log".
+   *
+   * @param path_to_log_file Path to server logfile.
    */
   void set_log_file(const std::string& path_to_log_file);
 
   /**
-   * Returns the path where the xserver log file will be created.
-   * Its default value is "/tmp/Xorg.GTest.log"
-   * @return Path to xserver logfile.
+   * Returns the path where the server log file will be created.
+   *
+   * @return Path to server logfile.
    */
   const std::string& log_file() const;
+
+  /**
+   * Sets the path to the desired server configuration file.
+   *
+   * The path will be passed on to the server via the command line argument
+   * "-config". The default value is "[datadir]/xorg/gtest/dummy.conf".
+   *
+   * @param path_conf_file Path to a Xorg X server .conf file.
+   */
+  void set_conf_file(const std::string& path_conf_file);
+
+  /**
+   * Returns the path of the server configuration file to be used.
+   *
+   * @return File path of the server configuration currently set
+   */
+  const std::string& conf_file() const;
+
+  /**
+   * Sets the path to the server executable
+   *
+   * The default value is "Xorg".
+   *
+   * @param path_to_server Path to an X.org server executable
+   */
+  void set_server(const std::string& path_to_server);
+
+  /**
+   * Returns the path of the server executable to be used.
+   *
+   * @return Path to server executable.
+   */
+  const std::string& server() const;
+
+  /**
+   * Sets the display number that the server will use.
+   *
+   * The display number will be passed on to the server via the command line.
+   * The default value is 133.
+   *
+   * @param diplay_num A display number.
+   */
+  void set_display(int display_num);
+
+  /**
+   * Returns the display number of the server instance.
+   *
+   * @return Display number of the server.
+   */
+  int display() const;
 
  protected:
   /**

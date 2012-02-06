@@ -30,33 +30,28 @@ namespace {
 
 int help = false;
 int no_dummy_server = false;
-int xorg_conf = false;
-int xorg_display_opt = false;
+int xorg_conf_specified = false;
+int xorg_display_specified = false;
 int xorg_logfile_specified = false;
-int server = false;
+int server_specified = false;
 
 const struct option longopts[] = {
   { "help", no_argument, &help, true, },
   { "no-dummy-server", no_argument, &no_dummy_server, true, },
-  { "xorg-conf", required_argument, &xorg_conf, true, },
-  { "xorg-display", required_argument, &xorg_display_opt, true, },
+  { "xorg-conf", required_argument, &xorg_conf_specified, true, },
+  { "xorg-display", required_argument, &xorg_display_specified, true, },
   { "xorg-logfile", required_argument, &xorg_logfile_specified, true, },
-  { "server", required_argument, &server, true, },
+  { "server", required_argument, &server_specified, true, },
   { NULL, 0, NULL, 0 }
 };
 
 } // namespace
 
 int main(int argc, char *argv[]) {
-  /* Default Xorg dummy conf path. */
-  std::string xorg_conf_path(DUMMY_CONF_PATH);
+  std::string xorg_conf_path;
   std::string xorg_log_file_path;
-
-  /* Default X display */
-  int xorg_display = 133;
-
-  /* Default Xorg executable */
-  std::string server("Xorg");
+  int xorg_display = -1;
+  std::string server;
 
   testing::InitGoogleTest(&argc, argv);
 
@@ -109,10 +104,16 @@ int main(int argc, char *argv[]) {
   }
 
   if (!no_dummy_server) {
-    xorg::testing::Environment* environment = new xorg::testing::Environment(
-        xorg_conf_path,
-        server,
-        xorg_display);
+    xorg::testing::Environment* environment = new xorg::testing::Environment;
+
+    if (xorg_conf_specified)
+      environment->set_conf_file(xorg_conf_path);
+
+    if (server_specified)
+      environment->set_server(server);
+
+    if (xorg_display_specified)
+      environment->set_display(xorg_display);
 
     if (xorg_logfile_specified)
         environment->set_log_file(xorg_log_file_path);

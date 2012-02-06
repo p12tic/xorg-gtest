@@ -2,5 +2,7 @@
 #define XORGGTEST_DEFINES
 
 #define DEFAULT_XORG_LOGFILE "/tmp/Xorg.GTest.log"
+#define DEFAULT_XORG_SERVER "Xorg"
+#define DEFAULT_DISPLAY 133
 
 #endif
