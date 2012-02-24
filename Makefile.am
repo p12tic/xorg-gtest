@@ -6,6 +6,11 @@ pkgconfig_DATA = xorg-gtest.pc
 ACLOCAL_AMFLAGS = -I m4
 
 .PHONY: ChangeLog INSTALL
+ChangeLog:
+	cd ${top_srcdir} && \
+	mkdir -p ${distdir} && \
+	git log > ${distdir}/ChangeLog
+
 INSTALL:
 	$(INSTALL_CMD)
 
