@@ -1,7 +1,7 @@
 # Initialize Autoconf
 AC_PREREQ([2.60])
 AC_INIT([Dummy X.org Testing Environment for Google Test],
-        [0.1.0],
+        [0.1.1],
         [],
         [xorg-gtest])
 AC_CONFIG_SRCDIR([Makefile.am])
