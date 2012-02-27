@@ -28,10 +28,10 @@ libxorg_gtest_main_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(GTEST_CPPFLAGS)
 
-libxorg_gtest_la_LDFLAGS = $(XSERVER_LIBS) -Wl,--version-script=libxorg-gtest.ver
+libxorg_gtest_la_LDFLAGS = $(XSERVER_LIBS) -Wl,--version-script=$(top_srcdir)/src/libxorg-gtest.ver
 libxorg_gtest_main_la_LDFLAGS = \
 	$(XSERVER_LIBS) \
-	-Wl,--version-script=libxorg-gtest_main.ver
+	-Wl,--version-script=$(top_srcdir)/src/libxorg-gtest_main.ver
 
 AM_CXXFLAGS = -I$(top_srcdir)/include $(XSERVER_CFLAGS)
 
