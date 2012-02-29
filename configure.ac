@@ -7,8 +7,6 @@ AC_INIT([Dummy X.org Testing Environment for Google Test],
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_MACRO_DIR([m4])
 
-m4_include([m4/gtest.m4])
-
 # Initialize Automake
 AM_INIT_AUTOMAKE([1.11 foreign dist-bzip2])
 AM_SILENT_RULES([yes])
