@@ -18,15 +18,18 @@ AC_SUBST([LIB_VERSION])
 # Initialize libtool
 AC_PROG_LIBTOOL
 
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_INSTALL
+
+AC_LANG([C++])
+
 # Require X.Org macros 1.16 or later for XORG_TESTSET_CFLAG
 m4_ifndef([XORG_MACROS_VERSION],
 	  [m4_fatal([must install xorg-macros 1.16 or later before running autoconf/autogen])])
 XORG_MACROS_VERSION(1.16)
 XORG_DEFAULT_OPTIONS
-
-# Checks for programs.
-AC_PROG_CXX
-AC_PROG_INSTALL
 
 PKG_CHECK_MODULES(XSERVER, x11)
  

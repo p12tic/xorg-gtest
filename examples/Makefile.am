@@ -29,7 +29,7 @@ noinst_PROGRAMS = xorg-gtest-example
 xorg_gtest_example_SOURCES = xorg-gtest.cpp
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
-AM_CXXFLAGS = $(XSERVER_CFLAGS) $(GTEST_CPPFLAGS)
+AM_CXXFLAGS = $(XSERVER_CFLAGS) $(GTEST_CPPFLAGS) $(BASE_CXXFLAGS)
 
 xorg_gtest_example_LDADD = $(top_builddir)/src/libxorg-gtest.la $(top_builddir)/src/libxorg-gtest_main.la -lgtest -lpthread -lX11
 

@@ -113,10 +113,10 @@ void xorg::testing::Environment::SetUp() {
   Process::SetEnv("DISPLAY", display_string, true);
 
   for (int i = 0; i < 10; ++i) {
-    Display* display = XOpenDisplay(NULL);
+    Display* test_display = XOpenDisplay(NULL);
 
-    if (display) {
-      XCloseDisplay(display);
+    if (test_display) {
+      XCloseDisplay(test_display);
       return;
     }
 
