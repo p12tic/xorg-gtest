@@ -18,8 +18,6 @@ AC_SUBST([LIB_VERSION])
 # Initialize libtool
 AC_PROG_LIBTOOL
 
-LT_INIT
-
 # Require X.Org macros 1.16 or later for XORG_TESTSET_CFLAG
 m4_ifndef([XORG_MACROS_VERSION],
 	  [m4_fatal([must install xorg-macros 1.16 or later before running autoconf/autogen])])
