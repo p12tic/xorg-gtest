@@ -23,7 +23,7 @@
 # SOFTWARE.
 #
 
-SUBDIRS = src doc examples
+SUBDIRS = data doc include src examples
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xorg-gtest.pc
@@ -45,4 +45,4 @@ doc:
 
 dist-hook: ChangeLog INSTALL
 
-EXTRA_DIST = conf
+EXTRA_DIST = data

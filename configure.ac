@@ -45,6 +45,10 @@ AC_CONFIG_FILES([Makefile
                 
 AC_SUBST(AM_CPPFLAGS, "-Wall -Werror")
 
-AC_CONFIG_FILES([doc/Makefile examples/Makefile src/Makefile])
+AC_CONFIG_FILES([data/Makefile
+                 doc/Makefile
+                 examples/Makefile
+                 include/Makefile
+                 src/Makefile])
 
 AC_OUTPUT

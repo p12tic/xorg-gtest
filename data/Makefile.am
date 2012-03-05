@@ -1,7 +1,7 @@
 #
 # Makefile for the src subdirectory of xorg-gtest
 #
-# Copyright (C) 2011, 2012 Canonical, Ltd.
+# Copyright (C) 2012 Canonical, Ltd.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,33 +23,4 @@
 # SOFTWARE.
 #
 
-lib_LTLIBRARIES = libxorg-gtest.la libxorg-gtest_main.la
-
-libxorg_gtest_la_SOURCES = \
-	environment.cpp \
-	process.cpp \
-	test.cpp
-
-libxorg_gtest_la_CPPFLAGS = \
-	$(AM_CPPFLAGS) \
-	$(GTEST_CPPFLAGS) \
-	-DDUMMY_CONF_PATH="\"$(library_datadir)/dummy.conf\""
-
-libxorg_gtest_main_la_SOURCES = \
-	defines.h \
-	main.cpp
-
-libxorg_gtest_main_la_LIBADD = libxorg-gtest.la
-
-libxorg_gtest_main_la_CPPFLAGS = \
-	$(AM_CPPFLAGS) \
-	$(GTEST_CPPFLAGS)
-
-libxorg_gtest_la_LDFLAGS = $(XSERVER_LIBS) -Wl,--version-script=$(top_srcdir)/src/libxorg-gtest.ver
-libxorg_gtest_main_la_LDFLAGS = \
-	$(XSERVER_LIBS) \
-	-Wl,--version-script=$(top_srcdir)/src/libxorg-gtest_main.ver
-
-AM_CXXFLAGS = -I$(top_srcdir)/include $(XSERVER_CFLAGS)
-
-EXTRA_DIST = libxorg-gtest.ver libxorg-gtest_main.ver
+nobase_data_DATA = xorg/gtest/dummy.conf
