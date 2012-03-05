@@ -25,6 +25,10 @@
 
 lib_LTLIBRARIES = libxorg-gtest.la libxorg-gtest_main.la
 
+AM_CPPFLAGS = $(WARNING_FLAGS)
+
+AM_CXXFLAGS = -I$(top_srcdir)/include $(XSERVER_CFLAGS) $(BASE_CXXFLAGS)
+
 libxorg_gtest_la_SOURCES = \
 	environment.cpp \
 	process.cpp \
@@ -49,7 +53,5 @@ libxorg_gtest_la_LDFLAGS = $(XSERVER_LIBS) -Wl,--version-script=$(top_srcdir)/sr
 libxorg_gtest_main_la_LDFLAGS = \
 	$(XSERVER_LIBS) \
 	-Wl,--version-script=$(top_srcdir)/src/libxorg-gtest_main.ver
-
-AM_CXXFLAGS = -I$(top_srcdir)/include $(XSERVER_CFLAGS) $(BASE_CXXFLAGS)
 
 EXTRA_DIST = libxorg-gtest.ver libxorg-gtest_main.ver
