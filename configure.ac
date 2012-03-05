@@ -41,6 +41,19 @@ AS_IF([test "x$ac_cv_lib_gtest_main" != xyes],
 
 AC_SUBST([GTEST_CPPFLAGS])
 
+# Check if we should include support for utouch-evemu
+AC_ARG_WITH([evemu],
+            [AS_HELP_STRING([--with-evemu],
+                            [support Linux input device recording playback (default: enabled if available)])],
+            [],
+            [with_evemu=check])
+
+AS_IF([test "x$with_evemu" == xyes],
+      [PKG_CHECK_MODULES(EVEMU, utouch-evemu, [have_evemu=yes])],
+      [test "x$with_evemu" == xcheck],
+      [PKG_CHECK_MODULES(EVEMU, utouch-evemu, [have_evemu=yes], [:])])
+AM_CONDITIONAL([HAVE_EVEMU], [test "x$have_evemu" = "xyes"])
+
 AC_SUBST(DUMMY_CONF_PATH, "$datadir/xorg/gtest/dummy.conf")
 
 AC_CONFIG_FILES([Makefile

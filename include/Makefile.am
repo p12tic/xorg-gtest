@@ -27,3 +27,7 @@ nobase_include_HEADERS = \
 	xorg/gtest/environment.h \
 	xorg/gtest/process.h \
 	xorg/gtest/test.h
+
+if HAVE_EVEMU
+nobase_include_HEADERS += xorg/gtest/evemu/device.h
+endif

@@ -1,7 +1,9 @@
 XORG_GTEST_1.0 {
     global:
         extern "C++" {
-            xorg::testing::*;
+            xorg::testing::Environment::*;
+            xorg::testing::Process::*;
+            xorg::testing::Test::*;
             "typeinfo for xorg::testing::Environment";
             "typeinfo for xorg::testing::Test";
             "typeinfo name for xorg::testing::Environment";
@@ -13,3 +15,10 @@ XORG_GTEST_1.0 {
     local:
         *;
 };
+
+XORG_GTEST_1.1 {
+    global:
+        extern "C++" {
+            xorg::testing::evemu::*;
+        };
+} XORG_GTEST_1.0;

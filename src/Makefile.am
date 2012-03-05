@@ -54,4 +54,10 @@ libxorg_gtest_main_la_LDFLAGS = \
 	$(XSERVER_LIBS) \
 	-Wl,--version-script=$(top_srcdir)/src/libxorg-gtest_main.ver
 
+if HAVE_EVEMU
+libxorg_gtest_la_SOURCES += device.cpp
+
+libxorg_gtest_la_LIBADD = $(EVEMU_LIBS)
+endif
+
 EXTRA_DIST = libxorg-gtest.ver libxorg-gtest_main.ver
