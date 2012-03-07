@@ -37,7 +37,7 @@ libxorg_gtest_la_SOURCES = \
 libxorg_gtest_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	$(GTEST_CPPFLAGS) \
-	-DDUMMY_CONF_PATH="\"$(library_datadir)/dummy.conf\""
+	-DDUMMY_CONF_PATH="\"$(datadir)/xorg/gtest/dummy.conf\""
 
 libxorg_gtest_main_la_SOURCES = \
 	defines.h \
