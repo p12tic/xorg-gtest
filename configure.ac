@@ -51,6 +51,7 @@ AS_IF([test "x$with_evemu" == xyes],
       [test "x$with_evemu" == xcheck],
       [PKG_CHECK_MODULES(EVEMU, utouch-evemu, [have_evemu=yes], [:])])
 AM_CONDITIONAL([HAVE_EVEMU], [test "x$have_evemu" = "xyes"])
+AS_IF([test "x$have_evemu" = xyes], [AC_DEFINE([HAVE_EVEMU])])
 
 AC_CONFIG_FILES([Makefile
                  data/Makefile
