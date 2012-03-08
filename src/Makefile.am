@@ -39,7 +39,7 @@ libxorg_gtest_la_CPPFLAGS = \
 
 libxorg_gtest_main_la_SOURCES = \
 	defines.h \
-	main.cpp
+	xorg-gtest_main.cpp
 
 libxorg_gtest_main_la_LIBADD = libxorg-gtest.la
 
