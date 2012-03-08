@@ -21,7 +21,6 @@ AC_PROG_LIBTOOL
 
 # Checks for programs.
 AC_PROG_CXX
-AC_PROG_INSTALL
 
 AC_LANG([C++])
 
