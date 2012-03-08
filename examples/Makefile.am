@@ -26,7 +26,7 @@
 
 noinst_PROGRAMS = xorg-gtest-example
 
-xorg_gtest_example_SOURCES = xorg-gtest.cpp
+xorg_gtest_example_SOURCES = xorg-gtest-example.cpp
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
 AM_CXXFLAGS = $(XSERVER_CFLAGS) $(GTEST_CPPFLAGS) $(BASE_CXXFLAGS)
