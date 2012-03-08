@@ -1,7 +1,0 @@
-XORG_GTEST_1.0 {
-    global:
-        main;
-
-    local:
-        *;
-};

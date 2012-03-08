@@ -11,13 +11,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE([enable])
 
-LIB_VERSION=0:0:0
-AC_SUBST([LIB_VERSION])
-
-# Initialize libtool
-AC_PROG_LIBTOOL
-
-
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_RANLIB
@@ -54,6 +47,9 @@ AS_IF([test "x$with_evemu" == xyes],
       [PKG_CHECK_MODULES(EVEMU, utouch-evemu, [have_evemu=yes], [:])])
 AM_CONDITIONAL([HAVE_EVEMU], [test "x$have_evemu" = "xyes"])
 AS_IF([test "x$have_evemu" = xyes], [AC_DEFINE([HAVE_EVEMU])])
+
+AC_SUBST(SOURCEDIR, ['${prefix}/src/xorg-gtest'])
+AC_SUBST(DUMMY_CONF_PATH, ['${datarootdir}/xorg/gtest/dummy.conf'])
 
 # Check if we can build integration tests
 AS_IF([test "x$enable_integration_tests" != xno],

@@ -23,39 +23,16 @@
 # SOFTWARE.
 #
 
-lib_LTLIBRARIES = libxorg-gtest.la libxorg-gtest_main.la
+libxorg_gtest_sources = \
+	environment.cpp \
+	device.cpp \
+	process.cpp \
+	test.cpp \
+	xorg-gtest-all.cpp
 
-AM_CXXFLAGS = -I$(top_srcdir)/include $(XSERVER_CFLAGS) $(BASE_CXXFLAGS)
-
-libxorg_gtest_la_SOURCES = xorg-gtest-all.cpp
-
-libxorg_gtest_la_CPPFLAGS = \
-	$(AM_CPPFLAGS) \
-	$(GTEST_CPPFLAGS) \
-	-DDUMMY_CONF_PATH="\"$(datadir)/xorg/gtest/dummy.conf\""
-
-libxorg_gtest_main_la_SOURCES = \
+libxorg_gtest_main_sources = \
 	defines.h \
 	xorg-gtest_main.cpp
 
-libxorg_gtest_main_la_LIBADD = libxorg-gtest.la
-
-libxorg_gtest_main_la_CPPFLAGS = \
-	$(AM_CPPFLAGS) \
-	$(GTEST_CPPFLAGS)
-
-libxorg_gtest_la_LDFLAGS = $(XSERVER_LIBS) -Wl,--version-script=$(top_srcdir)/src/libxorg-gtest.ver
-libxorg_gtest_main_la_LDFLAGS = \
-	$(XSERVER_LIBS) \
-	-Wl,--version-script=$(top_srcdir)/src/libxorg-gtest_main.ver
-
-if HAVE_EVEMU
-libxorg_gtest_la_SOURCES += device.cpp
-
-libxorg_gtest_la_LIBADD = $(EVEMU_LIBS)
-endif
-
 srcinstalldir = $(prefix)/src/xorg-gtest/src
-dist_srcinstall_DATA = $(libxorg_gtest_la_SOURCES) $(libxorg_gtest_main_la_SOURCES)
-
-EXTRA_DIST = libxorg-gtest.ver libxorg-gtest_main.ver
+dist_srcinstall_DATA = $(libxorg_gtest_sources) $(libxorg_gtest_main_sources)
