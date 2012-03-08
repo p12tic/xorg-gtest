@@ -74,6 +74,7 @@ AS_IF([test "x$enable_integration_tests" = xyes -a \
 AM_CONDITIONAL(ENABLE_XORG_GTEST_TESTS, [test "x$have_dummy_module" = xyes ])
 
 AC_CONFIG_FILES([Makefile
+                 aclocal/Makefile
                  data/Makefile
                  doc/Makefile
                  examples/Makefile

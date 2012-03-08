@@ -1,7 +1,7 @@
 #
 # Makefile for the src subdirectory of xorg-gtest
 #
-# Copyright (C) 2011, 2012 Canonical, Ltd.
+# Copyright (C) 2012 Canonical, Ltd.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,19 +23,5 @@
 # SOFTWARE.
 #
 
-libxorg_gtest_sources = \
-	environment.cpp \
-	device.cpp \
-	process.cpp \
-	test.cpp \
-	xorg-gtest-all.cpp
-
-libxorg_gtest_main_sources = \
-	defines.h \
-	xorg-gtest_main.cpp
-
-srcinstalldir = $(prefix)/src/xorg-gtest/src
-dist_srcinstall_DATA = \
-	Makefile-xorg-gtest.am \
-	$(libxorg_gtest_sources) \
-	$(libxorg_gtest_main_sources)
+aclocaldir = $(datadir)/aclocal
+dist_aclocal_DATA = xorg-gtest.m4

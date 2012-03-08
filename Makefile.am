@@ -23,7 +23,7 @@
 # SOFTWARE.
 #
 
-SUBDIRS = data doc include src examples
+SUBDIRS = aclocal data doc include src examples
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = xorg-gtest.pc

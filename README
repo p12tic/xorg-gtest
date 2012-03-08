@@ -1,4 +1,4 @@
-X.Org dummy testing environment for Google Test
+X.Org GTest testing environment for Google Test
 ===============================================
 
 Provides a Google Test environment for starting and stopping
@@ -7,6 +7,70 @@ environment is defined in header environment.h. Please refer to
 the Google test documentation for information on how to add a custom 
 environment.
 
-Moreover, a custom main()-function that takes care of setting up the 
-environment is provided in libxtestingenvironment_main.a. This library can be
-used as a replacement for libgtest_main.a 
+Moreover, a custom main() function that takes care of setting up the
+environment is provided in xorg-gtest_main.cpp. This can be used as a
+replacement for libgtest_main.a
+
+Using X.org GTest in a project
+==============================
+
+The X.org GTest does not provide precompiled libraries. Each project must build
+the X.org GTest sources. To facilitate this, aclocal and automake include files
+are provided. Perform the following to integrate xorg-gtest into an autotools-
+based project.
+
+Add the following line to the top level Makefile.am for your project:
+
+ACLOCAL_AMFLAGS = -I m4 --install
+
+This will ensure the latest xorg-gtest.m4 macro installed on your system is
+copied into aclocal/. If a user runs autoreconf, they will already have the
+macro even if they don't have xorg-gtest installed.
+
+Call CHECK_XORG_GTEST from configure.ac This will set the value of
+$have_xorg_gtest and set $(XORG_GTEST_CPPFLAGS) and $(XORG_GTEST_CXXFLAGS).
+
+The last step is to modify your test automake rules for compiling and using
+xorg-gtest. There are two methods to do this: simplified or manual.
+
+Simplified
+----------
+
+This method requires less changes to your Makefile.am, but has a few drawbacks:
+
+* xorg-gtest is compiled only once. If you need multiple versions of xorg-gtest
+  or gtest compiled with different flags, you will need to use the manual
+  method.
+* The flags used to compile xorg-gtest must be the same as the flags used to
+  compile the tests. This means any flags other than XORG_GTEST_CPPFLAGS and
+  XORG_GTEST_CXXFLAGS must be provided through the AM_CPPFLAGS and AM_CXXFLAGS
+  variables.
+
+Copy Makefile-xorg-gtest.am into your project.
+
+In your test Makefile.am, add:
+
+include $(top_srcdir)/path/to/Makefile-xorg-gtest.am
+
+Append $(XORG_GTEST_BUILD_LIBS) to check_LIBRARIES.
+
+Append CPPFLAGS with $(XORG_GTEST_CPPFLAGS) and CXXFLAGS with
+$(XORG_GTEST_CXXFLAGS) for any testing source objects.
+
+Finally, link against $(XORG_GTEST_LIBS). If you want the xorg-gtest main()
+integration, link against $(XORG_GTEST_MAIN_LIBS) as well.
+
+Manual
+------
+
+This method is more flexible, but it requires the user to modify the Makefile.am
+file manually. It is recommended that the user be familiar with automake before
+attempting.
+
+Copy the contents of Makefile-xorg-gtest.am into your Makefile.am file. Adjust
+the compilation flags as needed, keeping in mind that all non-warning flags must
+match the flags used when compiling the test cases. Remove the gtest and/or
+xorg-gtest main() library targets if you will not use them. Copy the gtest and
+xorg-gtest library targets if multiple builds with different compilation flags
+are needed. Finally, link the tests with the appropriate gtest and xorg-gtest
+libraries and their dependencies: libpthread and libX11.
