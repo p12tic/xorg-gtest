@@ -24,12 +24,44 @@
 # SOFTWARE.
 #
 
-noinst_PROGRAMS = xorg-gtest-example
+check_LIBRARIES = libgtest.a libxorg-gtest.a libxorg-gtest_main.a
+
+AM_CPPFLAGS = $(GTEST_CPPFLAGS)
+AM_CXXFLAGS = $(XSERVER_CFLAGS) $(BASE_CXXFLAGS)
+
+nodist_libgtest_a_SOURCES = $(GTEST_SOURCE)/src/gtest-all.cc
+libgtest_a_CPPFLAGS = $(AM_CPPFLAGS) -w
+libgtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
+
+libxorg_gtest_a_SOURCES = $(top_srcdir)/src/xorg-gtest-all.cpp
+libxorg_gtest_a_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-I$(top_srcdir)/include \
+	-I$(top_srcdir) \
+	-DDUMMY_CONF_PATH="\"$(top_srcdir)/data/xorg/gtest/dummy.conf\""
+libxorg_gtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
+
+libxorg_gtest_main_a_SOURCES = $(top_srcdir)/src/xorg-gtest_main.cpp
+libxorg_gtest_main_a_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-I$(top_srcdir)/include \
+	-I$(top_srcdir)
+libxorg_gtest_main_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
+
+check_PROGRAMS = xorg-gtest-example
+
+if ENABLE_XORG_GTEST_TESTS
+TESTS = $(check_PROGRAMS)
+endif
 
 xorg_gtest_example_SOURCES = xorg-gtest-example.cpp
 
-AM_CPPFLAGS = -I$(top_srcdir)/include
-AM_CXXFLAGS = $(XSERVER_CFLAGS) $(GTEST_CPPFLAGS) $(BASE_CXXFLAGS)
+xorg_gtest_example_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
 
-xorg_gtest_example_LDADD = $(top_builddir)/src/libxorg-gtest.la $(top_builddir)/src/libxorg-gtest_main.la -lgtest -lpthread -lX11
-
+xorg_gtest_example_LDADD = \
+	libgtest.a \
+	libxorg-gtest.a \
+	libxorg-gtest_main.a \
+	-lpthread \
+	$(XSERVER_LIBS) \
+	$(EVEMU_LIBS)
