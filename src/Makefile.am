@@ -25,8 +25,6 @@
 
 lib_LTLIBRARIES = libxorg-gtest.la libxorg-gtest_main.la
 
-AM_CPPFLAGS = $(WARNING_FLAGS)
-
 AM_CXXFLAGS = -I$(top_srcdir)/include $(XSERVER_CFLAGS) $(BASE_CXXFLAGS)
 
 libxorg_gtest_la_SOURCES = \

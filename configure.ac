@@ -57,8 +57,6 @@ AC_SUBST(DUMMY_CONF_PATH, "$datadir/xorg/gtest/dummy.conf")
 AC_CONFIG_FILES([Makefile
                  xorg-gtest.pc])
                 
-AC_SUBST(WARNING_CPPFLAGS, "-Wall -Werror")
-
 AC_CONFIG_FILES([data/Makefile
                  doc/Makefile
                  examples/Makefile
