@@ -52,8 +52,6 @@ AS_IF([test "x$with_evemu" == xyes],
       [PKG_CHECK_MODULES(EVEMU, utouch-evemu, [have_evemu=yes], [:])])
 AM_CONDITIONAL([HAVE_EVEMU], [test "x$have_evemu" = "xyes"])
 
-AC_SUBST(DUMMY_CONF_PATH, "$datadir/xorg/gtest/dummy.conf")
-
 AC_CONFIG_FILES([Makefile
                  xorg-gtest.pc])
                 
