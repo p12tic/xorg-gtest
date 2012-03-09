@@ -53,12 +53,11 @@ AS_IF([test "x$with_evemu" == xyes],
 AM_CONDITIONAL([HAVE_EVEMU], [test "x$have_evemu" = "xyes"])
 
 AC_CONFIG_FILES([Makefile
-                 xorg-gtest.pc])
-                
-AC_CONFIG_FILES([data/Makefile
+                 data/Makefile
                  doc/Makefile
                  examples/Makefile
                  include/Makefile
-                 src/Makefile])
+                 src/Makefile
+                 xorg-gtest.pc])
 
 AC_OUTPUT
