@@ -23,4 +23,6 @@
 # SOFTWARE.
 #
 
-nobase_data_DATA = xorg/gtest/dummy.conf
+nobase_data_DATA = \
+	xorg/gtest/dummy.conf \
+	X11/xorg.conf.d/99-virtual-test-devices.conf
