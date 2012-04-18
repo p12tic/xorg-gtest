@@ -27,6 +27,8 @@
 
 #include <getopt.h>
 
+#include <csignal>
+
 #include <gtest/gtest.h>
 
 #include "xorg/gtest/environment.h"
@@ -53,11 +55,63 @@ const struct option longopts[] = {
 
 } // namespace
 
+xorg::testing::Environment* environment = NULL;
+
+static void signal_handler(int signum) {
+  if (environment)
+    environment->Kill();
+  
+  /* This will call the default handler because we used SA_RESETHAND */
+  raise(signum);
+}
+
+static void setup_signal_handlers() {
+  static const int signals[] = {
+    SIGHUP,
+    SIGTERM,
+    SIGQUIT,
+    SIGILL,
+    SIGABRT,
+    SIGFPE,
+    SIGSEGV,
+    SIGPIPE,
+    SIGALRM,
+    SIGTERM,
+    SIGUSR1,
+    SIGUSR2,
+    SIGBUS,
+    SIGPOLL,
+    SIGPROF,
+    SIGSYS,
+    SIGTRAP,
+    SIGVTALRM,
+    SIGXCPU,
+    SIGXFSZ,
+    SIGIOT,
+    SIGSTKFLT,
+    SIGIO,
+    SIGPWR,
+    SIGUNUSED,
+  };
+
+  struct sigaction action;
+  action.sa_handler = signal_handler;
+  sigemptyset(&action.sa_mask);
+  action.sa_flags = SA_RESETHAND;
+
+  for (unsigned i = 0; i < sizeof(signals) / sizeof(signals[0]); ++i)
+    if (sigaction(signals[i], &action, NULL))
+      std::cerr << "Warning: Failed to set signal handler for signal "
+                << signals[i] << "\n";
+}
+
 int main(int argc, char *argv[]) {
   std::string xorg_conf_path;
   std::string xorg_log_file_path;
   int xorg_display = -1;
   std::string server;
+
+  setup_signal_handlers();
 
   testing::InitGoogleTest(&argc, argv);
 
@@ -110,7 +164,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (!no_dummy_server) {
-    xorg::testing::Environment* environment = new xorg::testing::Environment;
+    environment = new xorg::testing::Environment;
 
     if (xorg_conf_specified)
       environment->set_conf_file(xorg_conf_path);
