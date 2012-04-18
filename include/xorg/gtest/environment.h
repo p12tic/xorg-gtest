@@ -139,6 +139,11 @@ class Environment : public ::testing::Environment {
    */
   int display() const;
 
+  /**
+   * Kill the dummy Xorg server with SIGKILL.
+   */
+  void Kill();
+
  protected:
   /**
    * Starts the dummy X server.
