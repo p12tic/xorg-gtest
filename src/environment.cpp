@@ -144,17 +144,35 @@ void xorg::testing::Environment::SetUp() {
 }
 
 void xorg::testing::Environment::TearDown() {
-  if (!d_->process.Terminate()) {
-    std::cerr << "Warning: Failed to terminate dummy Xorg server: "
-              << std::strerror(errno) << "\n";
-    if (!d_->process.Kill())
-      std::cerr << "Warning: Failed to kill dummy Xorg server: "
-                << std::strerror(errno) << "\n";
+  if (d_->process.Terminate()) {
+    for (int i = 0; i < 10; i++) {
+      int status;
+      int pid = waitpid(d_->process.Pid(), &status, WNOHANG);
+
+      if (pid == d_->process.Pid())
+        return;
+
+      sleep(1); /* Give the dummy X server more time to shut down */
+    }
   }
+
+  Kill();
 }
 
 void xorg::testing::Environment::Kill() {
   if (!d_->process.Kill())
     std::cerr << "Warning: Failed to kill dummy Xorg server: "
               << std::strerror(errno) << "\n";
+
+  for (int i = 0; i < 10; i++) {
+    int status;
+    int pid = waitpid(d_->process.Pid(), &status, WNOHANG);
+
+    if (pid == d_->process.Pid())
+      return;
+
+      sleep(1); /* Give the dummy X server more time to shut down */
+  }
+
+  std::cerr << "Warning: Dummy X server did not shut down\n";
 }
