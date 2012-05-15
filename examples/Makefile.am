@@ -48,10 +48,10 @@ libxorg_gtest_main_a_CPPFLAGS = \
 	-I$(top_srcdir)
 libxorg_gtest_main_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 
-check_PROGRAMS = xorg-gtest-example
+noinst_PROGRAMS = xorg-gtest-example
 
 if ENABLE_XORG_GTEST_TESTS
-TESTS = $(check_PROGRAMS)
+TESTS = $(noinst_PROGRAMS)
 endif
 
 xorg_gtest_example_SOURCES = xorg-gtest-example.cpp
