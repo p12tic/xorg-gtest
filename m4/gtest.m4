@@ -25,16 +25,16 @@
 # source location respectively.
 AC_DEFUN([CHECK_GTEST],
 [
+  AC_ARG_WITH([gtest-source-path],
+              [AS_HELP_STRING([--with-gtest-source-path],
+                              [location of the Google test sources, defaults to /usr/src/gtest])],
+              [GTEST_SOURCE="$withval"; GTEST_CPPFLAGS="-I$withval/include"],
+              [GTEST_SOURCE="/usr/src/gtest"])
+
   AC_ARG_WITH([gtest-include-path],
               [AS_HELP_STRING([--with-gtest-include-path],
                               [location of the Google test headers])],
               [GTEST_CPPFLAGS="-I$withval"])
-
-  AC_ARG_WITH([gtest-source-path],
-              [AS_HELP_STRING([--with-gtest-source-path],
-                              [location of the Google test sources, defaults to /usr/src/gtest])],
-              [GTEST_SOURCE="$withval"],
-              [GTEST_SOURCE="/usr/src/gtest"])
 
   GTEST_CPPFLAGS="$GTEST_CPPFLAGS -I$GTEST_SOURCE"
 
