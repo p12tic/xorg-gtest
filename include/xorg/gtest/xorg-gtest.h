@@ -25,10 +25,10 @@
  *
  ******************************************************************************/
 
-#include "environment.h"
-#include "process.h"
-#include "test.h"
+#include "xorg-gtest_environment.h"
+#include "xorg-gtest_process.h"
+#include "xorg-gtest_test.h"
 
 #ifdef HAVE_EVEMU
-#include "evemu/device.h"
+#include "evemu/xorg-gtest_device.h"
 #endif
