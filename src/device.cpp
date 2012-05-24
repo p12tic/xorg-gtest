@@ -25,7 +25,7 @@
  *
  ******************************************************************************/
 
-#include "xorg/gtest/evemu/device.h"
+#include "xorg/gtest/evemu/xorg-gtest_device.h"
 
 #include <fcntl.h>
 
