@@ -1,4 +1,4 @@
-#include <xorg/gtest/test.h>
+#include <xorg/gtest/xorg-gtest.h>
 
 using namespace xorg::testing;
 
