@@ -36,6 +36,7 @@
 #include <csignal>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
 
@@ -111,6 +112,31 @@ void xorg::testing::Environment::SetUp() {
     message += "A server is already running on ";
     message += display_string;
     message += ".";
+    throw std::runtime_error(message);
+  }
+
+  /* The Xorg server won't start unless the log file and the old log file are
+   * writable. */
+  std::ofstream log_test;
+  log_test.open(d_->path_to_log_file.c_str(), std::ofstream::out);
+  log_test.close();
+  if (log_test.fail()) {
+    std::string message;
+    message += "X.org server log file ";
+    message += d_->path_to_log_file;
+    message += " is not writable.";
+    throw std::runtime_error(message);
+  }
+
+  std::string old_log_file = d_->path_to_log_file.c_str();
+  old_log_file += ".old";
+  log_test.open(old_log_file.c_str(), std::ofstream::out);
+  log_test.close();
+  if (log_test.fail()) {
+    std::string message;
+    message += "X.org old server log file ";
+    message += old_log_file;
+    message += " is not writable.";
     throw std::runtime_error(message);
   }
 
