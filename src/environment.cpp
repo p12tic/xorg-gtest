@@ -104,6 +104,16 @@ void xorg::testing::Environment::SetUp() {
   static char display_string[6];
   snprintf(display_string, 6, ":%d", d_->display);
 
+  Display* test_display = XOpenDisplay(display_string);
+  if (test_display) {
+    XCloseDisplay(test_display);
+    std::string message;
+    message += "A server is already running on ";
+    message += display_string;
+    message += ".";
+    throw std::runtime_error(message);
+  }
+
   d_->process.Start(d_->path_to_server, d_->path_to_server.c_str(),
                     display_string,
                     "-logfile", d_->path_to_log_file.c_str(),
@@ -113,7 +123,7 @@ void xorg::testing::Environment::SetUp() {
   Process::SetEnv("DISPLAY", display_string, true);
 
   for (int i = 0; i < 10; ++i) {
-    Display* test_display = XOpenDisplay(NULL);
+    test_display = XOpenDisplay(NULL);
 
     if (test_display) {
       XCloseDisplay(test_display);
