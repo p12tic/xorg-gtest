@@ -124,8 +124,10 @@ void xorg::testing::Environment::SetUp() {
     int pid = waitpid(d_->process.Pid(), &status, WNOHANG);
     if (pid == d_->process.Pid()) {
       std::string message;
-      message += "X server failed to start. Ensure that the \"dummy\" video "
-                 "driver is installed. If the X.org server is older than 1.12, "
+      message += "X server failed to start on display ";
+      message += display_string;
+      message += ". Ensure that the \"dummy\" video driver is installed. "
+                 "If the X.org server is older than 1.12, "
                  "tests will need to be run as root. Check ";
       message += d_->path_to_log_file;
       message += " for any errors";
