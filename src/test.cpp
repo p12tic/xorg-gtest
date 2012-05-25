@@ -48,7 +48,8 @@ void xorg::testing::Test::SetUp() {
 }
 
 void xorg::testing::Test::TearDown() {
-  XCloseDisplay(d_->display);
+  if (d_->display)
+    XCloseDisplay(d_->display);
   d_->display = NULL;
 }
 
