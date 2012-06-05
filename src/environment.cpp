@@ -142,6 +142,7 @@ void xorg::testing::Environment::SetUp() {
 
   d_->process.Start(d_->path_to_server, d_->path_to_server.c_str(),
                     display_string,
+                    "-logverbose", "10",
                     "-logfile", d_->path_to_log_file.c_str(),
                     "-config", d_->path_to_conf.c_str(),
                     NULL);
