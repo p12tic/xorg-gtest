@@ -29,10 +29,12 @@ check_LIBRARIES = libgtest.a libxorg-gtest.a libxorg-gtest_main.a
 AM_CPPFLAGS = $(GTEST_CPPFLAGS)
 AM_CXXFLAGS = $(XSERVER_CFLAGS) $(BASE_CXXFLAGS)
 
+# build googletest as static lib
 nodist_libgtest_a_SOURCES = $(GTEST_SOURCE)/src/gtest-all.cc
 libgtest_a_CPPFLAGS = $(AM_CPPFLAGS) -w
 libgtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 
+# build xorg-gtest as static lib
 libxorg_gtest_a_SOURCES = $(top_srcdir)/src/xorg-gtest-all.cpp
 libxorg_gtest_a_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
@@ -41,6 +43,7 @@ libxorg_gtest_a_CPPFLAGS = \
 	-DDUMMY_CONF_PATH="\"$(top_srcdir)/data/xorg/gtest/dummy.conf\""
 libxorg_gtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 
+# build xorg-gtest's main as separate lib for those that need it
 libxorg_gtest_main_a_SOURCES = $(top_srcdir)/src/xorg-gtest_main.cpp
 libxorg_gtest_main_a_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
