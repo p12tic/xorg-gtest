@@ -27,6 +27,7 @@
 
 #include "xorg/gtest/xorg-gtest-environment.h"
 #include "xorg/gtest/xorg-gtest-process.h"
+#include "xorg/gtest/xorg-gtest-xserver.h"
 #include "defines.h"
 
 #include <sys/types.h>
@@ -52,7 +53,7 @@ struct xorg::testing::Environment::Private {
   std::string path_to_log_file;
   std::string path_to_server;
   int display;
-  Process process;
+  XServer server;
 };
 
 xorg::testing::Environment::Environment()
@@ -140,7 +141,8 @@ void xorg::testing::Environment::SetUp() {
     throw std::runtime_error(message);
   }
 
-  d_->process.Start(d_->path_to_server, d_->path_to_server.c_str(),
+  d_->server.SetDisplayNumber(d_->display);
+  d_->server.Start(d_->path_to_server, d_->path_to_server.c_str(),
                     display_string,
                     "-logverbose", "10",
                     "-logfile", d_->path_to_log_file.c_str(),
@@ -158,8 +160,8 @@ void xorg::testing::Environment::SetUp() {
     }
 
     int status;
-    int pid = waitpid(d_->process.Pid(), &status, WNOHANG);
-    if (pid == d_->process.Pid()) {
+    int pid = waitpid(d_->server.Pid(), &status, WNOHANG);
+    if (pid == d_->server.Pid()) {
       std::string message;
       message += "X server failed to start on display ";
       message += display_string;
@@ -183,12 +185,12 @@ void xorg::testing::Environment::SetUp() {
 }
 
 void xorg::testing::Environment::TearDown() {
-  if (d_->process.Terminate()) {
+  if (d_->server.Terminate()) {
     for (int i = 0; i < 10; i++) {
       int status;
-      int pid = waitpid(d_->process.Pid(), &status, WNOHANG);
+      int pid = waitpid(d_->server.Pid(), &status, WNOHANG);
 
-      if (pid == d_->process.Pid())
+      if (pid == d_->server.Pid())
         return;
 
       sleep(1); /* Give the dummy X server more time to shut down */
@@ -199,15 +201,15 @@ void xorg::testing::Environment::TearDown() {
 }
 
 void xorg::testing::Environment::Kill() {
-  if (!d_->process.Kill())
+  if (!d_->server.Kill())
     std::cerr << "Warning: Failed to kill dummy Xorg server: "
               << std::strerror(errno) << "\n";
 
   for (int i = 0; i < 10; i++) {
     int status;
-    int pid = waitpid(d_->process.Pid(), &status, WNOHANG);
+    int pid = waitpid(d_->server.Pid(), &status, WNOHANG);
 
-    if (pid == d_->process.Pid())
+    if (pid == d_->server.Pid())
       return;
 
       sleep(1); /* Give the dummy X server more time to shut down */

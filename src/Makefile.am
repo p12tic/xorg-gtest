@@ -29,6 +29,7 @@ libxorg_gtest_sources = \
 	device.cpp \
 	process.cpp \
 	test.cpp \
+	xserver.cpp \
 	xorg-gtest-all.cpp
 
 libxorg_gtest_main_sources = \

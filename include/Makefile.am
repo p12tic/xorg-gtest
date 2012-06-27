@@ -34,6 +34,7 @@ nobase_include_HEADERS = \
 	xorg/gtest/xorg-gtest-environment.h \
 	xorg/gtest/xorg-gtest-process.h \
 	xorg/gtest/xorg-gtest-test.h \
+	xorg/gtest/xorg-gtest-xserver.h \
 	xorg/gtest/evemu/xorg-gtest-device.h \
 	xorg/gtest/xorg-gtest.h \
 	$(compat_headers)

@@ -27,6 +27,7 @@
 
 #include "xorg-gtest-environment.h"
 #include "xorg-gtest-process.h"
+#include "xorg-gtest-xserver.h"
 #include "xorg-gtest-test.h"
 
 #ifdef HAVE_EVEMU

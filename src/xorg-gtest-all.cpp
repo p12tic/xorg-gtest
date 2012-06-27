@@ -27,6 +27,7 @@
 
 #include "src/environment.cpp"
 #include "src/process.cpp"
+#include "src/xserver.cpp"
 #include "src/test.cpp"
 
 #ifdef HAVE_EVEMU
