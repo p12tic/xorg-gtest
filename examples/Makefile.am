@@ -27,7 +27,7 @@
 check_LIBRARIES = libgtest.a libxorg-gtest.a libxorg-gtest_main.a
 
 AM_CPPFLAGS = $(GTEST_CPPFLAGS)
-AM_CXXFLAGS = $(XSERVER_CFLAGS) $(BASE_CXXFLAGS)
+AM_CXXFLAGS = $(X11_CFLAGS) $(BASE_CXXFLAGS)
 
 # build googletest as static lib
 nodist_libgtest_a_SOURCES = $(GTEST_SOURCE)/src/gtest-all.cc
@@ -66,5 +66,5 @@ xorg_gtest_example_LDADD = \
 	libxorg-gtest.a \
 	libxorg-gtest_main.a \
 	-lpthread \
-	$(XSERVER_LIBS) \
+	$(X11_LIBS) \
 	$(EVEMU_LIBS)
