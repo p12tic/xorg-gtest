@@ -47,6 +47,14 @@ class XServer : public xorg::testing::Process {
     XServer();
 
     /**
+     * Start a new server. If no binary is given, the server started is the
+     * default compiled-in server binary.
+     *
+     * @param [in] program Path to the XServer binary
+     */
+    void Start(const std::string &program = "");
+
+    /**
      * Waits until this server is ready to take connections.
      */
     void WaitForConnections(void);

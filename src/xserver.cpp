@@ -247,6 +247,22 @@ void xorg::testing::XServer::WaitForConnections(void) {
   throw std::runtime_error("Unable to open connection to dummy X server");
 }
 
+void xorg::testing::XServer::Start(const std::string &program) {
+  std::vector<std::string> args;
+  std::map<std::string, std::string>::iterator it;
+
+  args.push_back(program);
+  args.push_back(std::string(GetDisplayString()));
+
+  for (it = d_->options.begin(); it != d_->options.end(); it++) {
+    args.push_back(it->first);
+    if (!it->second.empty())
+      args.push_back(it->second);
+  }
+
+  Process::Start(program.empty() ? d_->path_to_server : program, args);
+}
+
 void xorg::testing::XServer::SetOption(const std::string &key, const std::string &value) {
   d_->options[key] = value;
 }
