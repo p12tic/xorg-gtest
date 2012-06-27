@@ -163,9 +163,9 @@ void xorg::testing::Environment::SetUp() {
       std::string message;
       message += "X server failed to start on display ";
       message += display_string;
-      message += ". Ensure that the \"dummy\" video driver is installed. "
+      message += ". Ensure that the \"dummy\" video driver is installed.\n"
                  "If the X.org server is older than 1.12, "
-                 "tests will need to be run as root. Check ";
+                 "tests will need to be run as root.\nCheck ";
       message += d_->path_to_log_file;
       message += " for any errors";
       throw std::runtime_error(message);
