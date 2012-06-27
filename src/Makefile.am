@@ -23,6 +23,7 @@
 # SOFTWARE.
 #
 
+# NOTE: source files added here must be included in xorg-gtest-all.cpp
 libxorg_gtest_sources = \
 	environment.cpp \
 	device.cpp \
