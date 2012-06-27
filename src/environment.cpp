@@ -28,7 +28,6 @@
 #include "xorg/gtest/xorg-gtest-environment.h"
 #include "xorg/gtest/xorg-gtest-process.h"
 #include "xorg/gtest/xorg-gtest-xserver.h"
-#include "defines.h"
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -43,11 +42,8 @@
 #include <X11/Xlib.h>
 
 struct xorg::testing::Environment::Private {
-  Private()
-      : path_to_conf(DUMMY_CONF_PATH), path_to_log_file(DEFAULT_XORG_LOGFILE),
-        path_to_server(DEFAULT_XORG_SERVER), display(DEFAULT_DISPLAY) {
+  Private() : display(-1) {
   }
-
   std::string path_to_conf;
   std::string path_to_log_file;
   std::string path_to_server;
@@ -102,16 +98,16 @@ void xorg::testing::Environment::SetDisplayNumber(int display_num)
 }
 
 void xorg::testing::Environment::SetUp() {
-  static char display_string[6];
-  snprintf(display_string, 6, ":%d", d_->display);
-
-  d_->server.SetDisplayNumber(d_->display);
-  d_->server.SetOption("-logfile", d_->path_to_log_file);
-  d_->server.SetOption("-config", d_->path_to_conf);
+  if (d_->display >= 0)
+    d_->server.SetDisplayNumber(d_->display);
+  if (d_->path_to_log_file.length())
+    d_->server.SetOption("-logfile", d_->path_to_log_file);
+  if (d_->path_to_conf.length())
+    d_->server.SetOption("-config", d_->path_to_log_file);
   d_->server.Start(d_->path_to_server);
   d_->server.WaitForConnections();
 
-  Process::SetEnv("DISPLAY", display_string, true);
+  Process::SetEnv("DISPLAY", d_->server.GetDisplayString(), true);
 }
 
 void xorg::testing::Environment::TearDown() {
