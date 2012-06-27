@@ -105,6 +105,18 @@ static void setup_signal_handlers() {
                 << signals[i] << "\n";
 }
 
+static int usage(int exitcode) {
+  std::cout << "\nAdditional options:\n";
+  std::cout << "    --no-dummy-server: Use the currently running X server "
+               "for testing\n";
+  std::cout << "    --xorg-conf: Path to xorg dummy configuration file\n";
+  std::cout << "    --server: Path to X server executable\n";
+  std::cout << "    --xorg-display: xorg dummy display port\n";
+  std::cout << "    --xorg-logfile: xorg logfile filename. See -logfile in \"man Xorg\".\n"
+               "                    Its default value is "DEFAULT_XORG_LOGFILE".\n";
+  return exitcode;
+}
+
 int main(int argc, char *argv[]) {
   std::string xorg_conf_path;
   std::string xorg_log_file_path;
@@ -151,17 +163,8 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if (help) {
-    std::cout << "\nAdditional options:\n";
-    std::cout << "    --no-dummy-server: Use the currently running X server "
-        "for testing\n";
-    std::cout << "    --xorg-conf: Path to xorg dummy configuration file\n";
-    std::cout << "    --server: Path to X server executable\n";
-    std::cout << "    --xorg-display: xorg dummy display port\n";
-    std::cout << "    --xorg-logfile: xorg logfile filename. See -logfile in \"man Xorg\".\n"
-                 "                    Its default value is "DEFAULT_XORG_LOGFILE".\n";
-    exit(-1);
-  }
+  if (help)
+    return usage(-1);
 
   if (!no_dummy_server) {
     environment = new xorg::testing::Environment;
