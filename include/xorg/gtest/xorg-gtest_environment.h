@@ -128,7 +128,7 @@ class Environment : public ::testing::Environment {
    * The display number will be passed on to the server via the command line.
    * The default value is 133.
    *
-   * @param diplay_num A display number.
+   * @param display_num A display number.
    */
   void set_display(int display_num);
 
