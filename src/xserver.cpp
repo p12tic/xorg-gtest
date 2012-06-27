@@ -27,6 +27,7 @@
  ******************************************************************************/
 
 #include "xorg/gtest/xorg-gtest-xserver.h"
+#include "defines.h"
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -40,12 +41,23 @@
 #include <cstring>
 #include <stdexcept>
 #include <vector>
+#include <map>
 
 #include <X11/extensions/XInput2.h>
 
 struct xorg::testing::XServer::Private {
+  Private()
+      : display_number(DEFAULT_DISPLAY),
+        path_to_server(DEFAULT_XORG_SERVER) {
+
+    options["-config"] = DUMMY_CONF_PATH;
+    options["-logfile"] = DEFAULT_XORG_LOGFILE;
+  }
+
   unsigned int display_number;
   std::string display_string;
+  std::string path_to_server;
+  std::map<std::string, std::string> options;
 };
 
 xorg::testing::XServer::XServer() : d_(new Private) {
@@ -67,6 +79,10 @@ unsigned int xorg::testing::XServer::GetDisplayNumber(void) {
 
 const std::string& xorg::testing::XServer::GetDisplayString(void) {
   return d_->display_string;
+}
+
+void xorg::testing::XServer::SetServerPath(const std::string &path_to_server) {
+  d_->path_to_server = path_to_server;
 }
 
 bool xorg::testing::XServer::WaitForEvent(::Display *display, time_t timeout)
@@ -194,4 +210,8 @@ bool xorg::testing::XServer::WaitForDevice(::Display *display, const std::string
     }
 
     return false;
+}
+
+void xorg::testing::XServer::SetOption(const std::string &key, const std::string &value) {
+  d_->options[key] = value;
 }

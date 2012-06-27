@@ -142,6 +142,8 @@ void xorg::testing::Environment::SetUp() {
   }
 
   d_->server.SetDisplayNumber(d_->display);
+  d_->server.SetOption("-logfile", d_->path_to_log_file);
+  d_->server.SetOption("-config", d_->path_to_conf);
   d_->server.Start(d_->path_to_server, d_->path_to_server.c_str(),
                     display_string,
                     "-logverbose", "10",

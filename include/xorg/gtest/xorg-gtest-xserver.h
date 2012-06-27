@@ -56,6 +56,14 @@ class XServer : public xorg::testing::Process {
     void SetDisplayNumber(unsigned int display_number);
 
     /**
+     * Set the path to the server binary to be started. Optional call, if
+     * not invoked the built-in default path is chosen.
+     *
+     * @param [in] path_to_server The path to the binary
+     */
+    void SetServerPath(const std::string &path_to_server);
+
+    /**
      * Get the display number from this server. If the server was not
      * started yet, this function returns the display number the server will
      * be started on.
@@ -71,6 +79,17 @@ class XServer : public xorg::testing::Process {
      * @return The display string used for XOpenDisplay() to this server.
      */
     const std::string& GetDisplayString(void);
+
+    /**
+     * Set startup options for the server.
+     *
+     * For arguments that do not take/need a value, use the empty string as
+     * value.
+     *
+     * @param [in] key Commandline option
+     * @param [in] value Option value (if any)
+     */
+    void SetOption(const std::string &key, const std::string &value);
 
     /**
      * Wait for a specific device to be added to the server.
