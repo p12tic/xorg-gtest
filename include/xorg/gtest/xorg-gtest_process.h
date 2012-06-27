@@ -37,7 +37,7 @@ namespace xorg {
 namespace testing {
 
 /**
- * @class Process test.h xorg/gtest/process.h
+ * @class Process xorg-gtest_process.h xorg/gtest/xorg-gtest_process.h
  *
  * Class that abstracts child process creation and termination.
  *

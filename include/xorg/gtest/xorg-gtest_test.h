@@ -37,7 +37,7 @@ namespace xorg {
 namespace testing {
 
 /**
- * @class Test test.h xorg/gtest/test.h
+ * @class Test xorg-gtest_test.h xorg/gtest/xorg-gtest_test.h
  *
  * Google %Test fixture providing an Xlib connection to an X11 server.
  *

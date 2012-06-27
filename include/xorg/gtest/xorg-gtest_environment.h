@@ -46,7 +46,7 @@ namespace testing {
  */
 
 /**
- * @class Environment environment.h xorg/gtest/environment.h
+ * @class Environment xorg-gtest_environment.h environment.h xorg/gtest/xorg-gtest_environment.h
  *
  * Global Google %Test environment providing a dummy X server.
  *

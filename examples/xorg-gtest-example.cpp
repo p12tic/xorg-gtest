@@ -3,7 +3,7 @@
 using namespace xorg::testing;
 
 /**
- * @example xorg-gtest.cpp
+ * @example xorg-gtest-example.cpp
  *
  * This is an example for using the fixture
  * xorg::testing::Test for your own tests. Please

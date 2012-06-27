@@ -42,7 +42,7 @@ namespace testing {
 namespace evemu {
 
 /**
- * @class Device device.h xorg/gtest/evemu/device.h
+ * @class Device xorg-gtest_device.h xorg/gtest/evemu/xorg-gtest_device.h
  *
  * uTouch-Evemu input device for replaying events through the Linux uinput
  * evdev subsystem.
