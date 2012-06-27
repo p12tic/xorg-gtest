@@ -47,6 +47,11 @@ class XServer : public xorg::testing::Process {
     XServer();
 
     /**
+     * Waits until this server is ready to take connections.
+     */
+    void WaitForConnections(void);
+
+    /**
      * Set the display number for this server. This number must be set
      * before the server is started to have any effect.
      * If unset, the default display number is used.

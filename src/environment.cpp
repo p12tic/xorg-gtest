@@ -150,40 +150,9 @@ void xorg::testing::Environment::SetUp() {
                     "-logfile", d_->path_to_log_file.c_str(),
                     "-config", d_->path_to_conf.c_str(),
                     NULL);
+  d_->server.WaitForConnections();
 
   Process::SetEnv("DISPLAY", display_string, true);
-
-  for (int i = 0; i < 10; ++i) {
-    test_display = XOpenDisplay(NULL);
-
-    if (test_display) {
-      XCloseDisplay(test_display);
-      return;
-    }
-
-    int status;
-    int pid = waitpid(d_->server.Pid(), &status, WNOHANG);
-    if (pid == d_->server.Pid()) {
-      std::string message;
-      message += "X server failed to start on display ";
-      message += display_string;
-      message += ". Ensure that the \"dummy\" video driver is installed.\n"
-                 "If the X.org server is older than 1.12, "
-                 "tests will need to be run as root.\nCheck ";
-      message += d_->path_to_log_file;
-      message += " for any errors";
-      throw std::runtime_error(message);
-    } else if (pid == 0) {
-      sleep(1); /* Give the dummy X server some time to start */
-    } else if (pid == -1) {
-      throw std::runtime_error("Could not get status of dummy X server "
-                               "process");
-    } else {
-      throw std::runtime_error("Invalid child PID returned by Process::Wait()");
-    }
-  }
-
-  throw std::runtime_error("Unable to open connection to dummy X server");
 }
 
 void xorg::testing::Environment::TearDown() {
