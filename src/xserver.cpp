@@ -42,6 +42,7 @@
 #include <stdexcept>
 #include <vector>
 #include <map>
+#include <fstream>
 
 #include <X11/Xlib.h>
 #include <X11/extensions/XInput2.h>
@@ -247,7 +248,47 @@ void xorg::testing::XServer::WaitForConnections(void) {
   throw std::runtime_error("Unable to open connection to dummy X server");
 }
 
+void xorg::testing::XServer::TestStartup(void) {
+  Display* test_display = XOpenDisplay(GetDisplayString().c_str());
+  if (test_display) {
+    XCloseDisplay(test_display);
+    std::string message;
+    message += "A server is already running on ";
+    message += GetDisplayString();
+    message += ".";
+    throw std::runtime_error(message);
+  }
+
+  /* The Xorg server won't start unless the log file and the old log file are
+   * writable. */
+  std::ofstream log_test;
+  log_test.open(d_->options["-logfile"].c_str(), std::ofstream::out);
+  log_test.close();
+  if (log_test.fail()) {
+    std::string message;
+    message += "X.org server log file ";
+    message += d_->options["-config"];
+    message += " is not writable.";
+    throw std::runtime_error(message);
+  }
+
+  std::string old_log_file = d_->options["-config"];
+  old_log_file += ".old";
+  log_test.open(old_log_file.c_str(), std::ofstream::out);
+  log_test.close();
+  if (log_test.fail()) {
+    std::string message;
+    message += "X.org old server log file ";
+    message += old_log_file;
+    message += " is not writable.";
+    throw std::runtime_error(message);
+  }
+
+}
+
 void xorg::testing::XServer::Start(const std::string &program) {
+  TestStartup();
+
   std::vector<std::string> args;
   std::map<std::string, std::string>::iterator it;
 

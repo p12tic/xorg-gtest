@@ -151,6 +151,8 @@ class XServer : public xorg::testing::Process {
     XServer(const XServer&);
     XServer& operator=(const XServer&);
 
+    void TestStartup(void);
+
 };
 } // namespace testing
 } // namespace xorg
