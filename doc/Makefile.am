@@ -26,6 +26,9 @@
 EXTRA_DIST = \
 	Doxyfile 
 
+if HAVE_DOXYGEN
+all-local: doc
+
 doc:
 	doxygen
 
@@ -38,6 +41,7 @@ install-data-local:
 		$(INSTALL) -d $(DESTDIR)$(mandir)/man3; \
 		$(INSTALL) api/man/man3/* $(DESTDIR)$(mandir)/man3; \
 	fi
+endif
 
 clean-local:
 	-rm -rf *.pdf *.html api
