@@ -93,6 +93,22 @@ class Process {
   /**
    * Starts a program as a child process.
    *
+   * See 'man execvp' for further information on the elements in
+   * the vector.
+   *
+   * @param program The program to start.
+   * @param args Vector of arguments passed to the program.
+   *
+   * @throws std::runtime_error on failure.
+   *
+   * @post If successful: Child process forked and program started.
+   * @post If successful: Subsequent calls to Pid() return child process pid.
+   */
+  void Start(const std::string& program, const std::vector<std::string> &args);
+
+  /**
+   * Starts a program as a child process.
+   *
    * See 'man execvp' for further information on the variadic argument list.
    *
    * @param program The program to start.

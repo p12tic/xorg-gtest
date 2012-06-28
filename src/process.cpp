@@ -48,7 +48,7 @@ xorg::testing::Process::Process() : d_(new Private) {
   d_->pid = -1;
 }
 
-void xorg::testing::Process::Start(const std::string& program, va_list args) {
+void xorg::testing::Process::Start(const std::string &program, const std::vector<std::string> &argv) {
   if (d_->pid != -1)
     throw std::runtime_error("Attempting to start an already started process");
 
@@ -61,16 +61,29 @@ void xorg::testing::Process::Start(const std::string& program, va_list args) {
     close(1);
     close(2);
 
-    std::vector<char*> argv;
+    std::vector<char*> args;
+    std::vector<std::string>::const_iterator it;
 
-    do
-      argv.push_back(va_arg(args, char*));
-    while (argv.back());
+    for (it = argv.begin(); it != argv.end(); it++)
+      if (!it->empty())
+        args.push_back(strdup(it->c_str()));
+    args.push_back(NULL);
 
-    execvp(program.c_str(), &argv[0]);
+    execvp(program.c_str(), &args[0]);
 
     throw std::runtime_error("Failed to start process");
   }
+}
+
+void xorg::testing::Process::Start(const std::string& program, va_list args) {
+  std::vector<std::string> argv;
+
+  do {
+    std::string arg(va_arg(args, char*));
+    argv.push_back(arg);
+  } while (!argv.back().empty());
+
+  Start(program, argv);
 }
 
 void xorg::testing::Process::Start(const std::string& program, ...) {
