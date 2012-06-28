@@ -152,7 +152,7 @@ class Process {
    * @post If successful: Child process terminated.
    * @post If successful: Subsequent calls to Pid() return -1.
    */
-  bool Terminate(unsigned int timeout = 0);
+  virtual bool Terminate(unsigned int timeout = 0);
 
   /**
    * Kills (SIGKILL) this child process and waits a given timeout for the
@@ -170,7 +170,7 @@ class Process {
    * @post If successful: Child process killed.
    * @post If successful: Subsequent calls to Pid() return -1.
    */
-  bool Kill(unsigned int timeout = 0);
+  virtual bool Kill(unsigned int timeout = 0);
 
   /**
    * Accesses the pid of the child process.

@@ -304,6 +304,24 @@ void xorg::testing::XServer::Start(const std::string &program) {
   Process::Start(program.empty() ? d_->path_to_server : program, args);
 }
 
+bool xorg::testing::XServer::Terminate(unsigned int timeout) {
+  if (!Process::Terminate(timeout)) {
+    std::cerr << "Warning: Failed to terminate dummy Xorg server: "
+              << std::strerror(errno) << "\n";
+    return false;
+  } else
+    return true;
+}
+
+bool xorg::testing::XServer::Kill(unsigned int timeout) {
+  if (!Process::Kill(timeout)) {
+    std::cerr << "Warning: Failed to kill dummy Xorg server: "
+              << std::strerror(errno) << "\n";
+    return false;
+  } else
+    return true;
+}
+
 void xorg::testing::XServer::SetOption(const std::string &key, const std::string &value) {
   d_->options[key] = value;
 }

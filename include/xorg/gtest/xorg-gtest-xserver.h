@@ -55,6 +55,31 @@ class XServer : public xorg::testing::Process {
     void Start(const std::string &program = "");
 
     /**
+     * Terminates this server process. Will signal the server to terminate
+     * multiple times before giving up.
+     *
+     * @param [in] timeout The timeout in millis to wait for the process to
+     *                     terminate. A timeout of 0 implies not to wait but
+     *                     return immediately.
+     *
+     * @returns true if termination succeeded and, if a timout is given, the
+     *          process shut down within that timeout. false otherwise.
+     */
+    virtual bool Terminate(unsigned int timeout = 0);
+
+    /**
+     * Kills the server. With a vengeance.
+     *
+     * @param [in] timeout The timeout in millis to wait for the process to
+     *                     terminate. A timeout of 0 implies not to wait but
+     *                     return immediately.
+     *
+     * @returns true if kill succeeded and, if a timout is given, the
+     *          process shut down within that timeout. false otherwise.
+     */
+    virtual bool Kill(unsigned int timeout = 0);
+
+    /**
      * Waits until this server is ready to take connections.
      */
     void WaitForConnections(void);
