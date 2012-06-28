@@ -33,6 +33,7 @@
 
 struct xorg::testing::Test::Private {
   ::Display* display;
+  std::string display_string;
 };
 
 xorg::testing::Test::Test() : d_(new Private) {
@@ -42,7 +43,12 @@ xorg::testing::Test::Test() : d_(new Private) {
 xorg::testing::Test::~Test() {}
 
 void xorg::testing::Test::SetUp() {
-  d_->display = XOpenDisplay(NULL);
+  const char *dpy = NULL;
+
+  if (!d_->display_string.empty())
+    dpy = d_->display_string.c_str();
+
+  d_->display = XOpenDisplay(dpy);
   if (!d_->display)
     throw std::runtime_error("Failed to open connection to display");
 }
@@ -55,4 +61,8 @@ void xorg::testing::Test::TearDown() {
 
 ::Display* xorg::testing::Test::Display() const {
   return d_->display;
+}
+
+void xorg::testing::Test::SetDisplayString(const std::string &display) {
+  d_->display_string = display;
 }

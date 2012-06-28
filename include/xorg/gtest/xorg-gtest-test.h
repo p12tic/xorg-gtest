@@ -88,6 +88,16 @@ class Test : public ::testing::Test {
    */
   ::Display* Display() const;
 
+  /**
+   * Set the display string used for XOpenDisplay() and thus affects
+   * Test::Display(). This function must be called before
+   * xorg::testing::Test::SetUp() to have any effect.
+   *
+   * @param display The string representing the display connection, or an
+   * empty string for NULL
+   */
+  void SetDisplayString(const std::string &display);
+
   /** @cond Implementation */
   struct Private;
   std::auto_ptr<Private> d_;
