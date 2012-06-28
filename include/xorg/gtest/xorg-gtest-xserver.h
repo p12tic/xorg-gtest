@@ -40,7 +40,21 @@ namespace testing {
 /**
  * @class XServer xorg-gtest-xserver.h xorg/gtest/xorg-gtest-xserver.h
  *
- * Miscellaneous interfaces to communicate with the X server.
+ * Class representing the X server process.
+ *
+ * @code
+ * XServer server;
+ * server.SetOption("-logfile", "/tmp/Xserver.log");
+ * server.Start();
+ *
+ * ...
+ *
+ * if (!server.Terminate()) {
+ *   std::cerr << "Problem terminating server ... killing now ..." << std::endl;
+ *   if (!server.Kill())
+ *     std::cerr << "Problem killing server" << std::endl;
+ * }
+ * @endcode
  */
 class XServer : public xorg::testing::Process {
   public:
