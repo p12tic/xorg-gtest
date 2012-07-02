@@ -75,6 +75,18 @@ class Device {
    */
   void Play(const std::string& path) const;
 
+  /**
+   * Return the /dev/input/eventX device node for this device.
+   *
+   * Note that evemu doesn't know the device node, so we traverse the file
+   * system looking for it. There is a tiny chance of the device node being
+   * wrong, or the device disappearing before we find it. If the device
+   * node cannot be found, an empty string is returned.
+   *
+   * @return The string representing the device node
+   */
+  const std::string& GetDeviceNode(void);
+
  private:
   struct Private;
   std::auto_ptr<Private> d_;
@@ -82,6 +94,8 @@ class Device {
   /* Disable copy constructor & assignment operator */
   Device(const Device&);
   Device& operator=(const Device&);
+
+  void GuessDeviceNode(time_t ctime);
 };
 
 } // namespace evemu
