@@ -25,7 +25,7 @@
  *
  ******************************************************************************/
 
-#include "xorg/gtest/xorg-gtest_process.h"
+#include "xorg/gtest/xorg-gtest-process.h"
 
 #include <sys/types.h>
 #include <sys/wait.h>

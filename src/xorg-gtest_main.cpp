@@ -31,7 +31,7 @@
 
 #include <gtest/gtest.h>
 
-#include "xorg/gtest/xorg-gtest_environment.h"
+#include "xorg/gtest/xorg-gtest-environment.h"
 #include "defines.h"
 
 namespace {

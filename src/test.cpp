@@ -25,7 +25,7 @@
  *
  ******************************************************************************/
 
-#include "xorg/gtest/xorg-gtest_test.h"
+#include "xorg/gtest/xorg-gtest-test.h"
 
 #include <stdexcept>
 
