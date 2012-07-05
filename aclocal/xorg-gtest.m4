@@ -74,7 +74,7 @@ AC_DEFUN([CHECK_XORG_GTEST],
 
   PKG_CHECK_MODULES(X11, [x11], [have_x11=yes], [have_x11=no])
 
-  # Check if we should include support for utouch-evemu
+  # Check if we should include support for evemu
   AC_ARG_WITH([evemu],
               [AS_HELP_STRING([--with-evemu],
                               [support Linux input device recording playback
@@ -83,10 +83,10 @@ AC_DEFUN([CHECK_XORG_GTEST],
               [with_evemu=check])
 
   AS_IF([test "x$with_evemu" = xyes],
-        [PKG_CHECK_MODULES(EVEMU, [utouch-evemu], [have_xorg_gtest_evemu=yes])],
+        [PKG_CHECK_MODULES(EVEMU, [evemu], [have_xorg_gtest_evemu=yes])],
         [test "x$with_evemu" = xcheck],
         [PKG_CHECK_MODULES(EVEMU,
-                           [utouch-evemu],
+                           [evemu],
                            [have_xorg_gtest_evemu=yes],
                            [have_xorg_gtest_evemu=no])])
   AS_IF([test "x$have_xorg_gtest_evemu" = xyes],

@@ -35,17 +35,20 @@ AS_IF([test "x$have_gtest" != xyes],
 
 AC_SUBST([GTEST_CPPFLAGS])
 
-# Check if we should include support for utouch-evemu
+# Check if we should include support for evemu
 AC_ARG_WITH([evemu],
             [AS_HELP_STRING([--with-evemu],
                             [support Linux input device recording playback (default: enabled if available)])],
             [],
             [with_evemu=check])
 
-AS_IF([test "x$with_evemu" == xyes],
-      [PKG_CHECK_MODULES(EVEMU, utouch-evemu, [have_evemu=yes])],
-      [test "x$with_evemu" == xcheck],
-      [PKG_CHECK_MODULES(EVEMU, utouch-evemu, [have_evemu=yes], [:])])
+# utouch-evemu was renamed to evemu, check for both
+PKG_CHECK_MODULES(EVEMU, evemu, [have_evemu=yes],
+                  [PKG_CHECK_MODULES(EVEMU, utouch-evemu, [have_evemu=yes], [have_evemu=no])])
+
+AS_IF([test "x$with_evemu" == xyes && test "x$have_evemu" != xyes],
+      AC_MSG_ERROR([package 'evemu' not found]))
+
 AM_CONDITIONAL([HAVE_EVEMU], [test "x$have_evemu" = "xyes"])
 AS_IF([test "x$have_evemu" = xyes], [AC_DEFINE([HAVE_EVEMU])])
 
