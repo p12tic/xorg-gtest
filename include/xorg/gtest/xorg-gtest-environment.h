@@ -80,14 +80,14 @@ class Environment : public ::testing::Environment {
    *
    * @param path_to_log_file Path to server logfile.
    */
-  void set_log_file(const std::string& path_to_log_file);
+  void SetLogFile(const std::string& path_to_log_file);
 
   /**
    * Returns the path where the server log file will be created.
    *
    * @return Path to server logfile.
    */
-  const std::string& log_file() const;
+  const std::string& GetLogFile() const;
 
   /**
    * Sets the path to the desired server configuration file.
@@ -95,16 +95,16 @@ class Environment : public ::testing::Environment {
    * The path will be passed on to the server via the command line argument
    * "-config". The default value is "[datadir]/xorg/gtest/dummy.conf".
    *
-   * @param path_conf_file Path to a Xorg X server .conf file.
+   * @param path_to_conf_file Path to a Xorg X server .conf file.
    */
-  void set_conf_file(const std::string& path_conf_file);
+  void SetConfigFile(const std::string& path_to_conf_file);
 
   /**
    * Returns the path of the server configuration file to be used.
    *
    * @return File path of the server configuration currently set
    */
-  const std::string& conf_file() const;
+  const std::string& GetConfigFile() const;
 
   /**
    * Sets the path to the server executable
@@ -113,14 +113,14 @@ class Environment : public ::testing::Environment {
    *
    * @param path_to_server Path to an X.org server executable
    */
-  void set_server(const std::string& path_to_server);
+  void SetServerPath(const std::string& path_to_server);
 
   /**
    * Returns the path of the server executable to be used.
    *
    * @return Path to server executable.
    */
-  const std::string& server() const;
+  const std::string& GetServerPath() const;
 
   /**
    * Sets the display number that the server will use.
@@ -130,19 +130,68 @@ class Environment : public ::testing::Environment {
    *
    * @param display_num A display number.
    */
-  void set_display(int display_num);
+  void SetDisplayNumber(int display_num);
 
   /**
    * Returns the display number of the server instance.
    *
    * @return Display number of the server.
    */
-  int display() const;
+  int GetDisplayNumber() const;
 
   /**
    * Kill the dummy Xorg server with SIGKILL.
    */
   void Kill();
+
+  /* DEPRECATED */
+  /**
+   * @deprecated
+   * @see SetLogFile
+   */
+  void set_log_file(const std::string& path_to_log_file);
+
+  /**
+   * @deprecated
+   * @see SetLogFile
+   */
+  const std::string& log_file() const;
+
+  /**
+   * @deprecated
+   * @see SetConfigFile
+   */
+  void set_conf_file(const std::string& path_conf_file);
+
+  /**
+   * @deprecated
+   * @see GetConfigFile
+   */
+  const std::string& conf_file() const;
+
+  /**
+   * @deprecated
+   * @see SetServerPath
+   */
+  void set_server(const std::string& path_to_server);
+
+  /**
+   * @deprecated
+   * @see GetServerPath
+   */
+  const std::string& server() const;
+
+  /**
+   * @deprecated
+   * @see SetDisplay
+   */
+  void set_display(int display_num);
+
+  /**
+   * @deprecated
+   * @see GetDisplayNumber()
+   */
+  int display() const;
 
  protected:
   /**

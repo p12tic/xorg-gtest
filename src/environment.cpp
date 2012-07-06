@@ -63,42 +63,42 @@ xorg::testing::Environment::~Environment() {}
 
 void xorg::testing::Environment::set_log_file(const std::string& path_to_log_file)
 {
+  SetLogFile(path_to_log_file);
+}
+
+void xorg::testing::Environment::SetLogFile(const std::string& path_to_log_file)
+{
   d_->path_to_log_file = path_to_log_file;
 }
 
-const std::string& xorg::testing::Environment::log_file() const
+const std::string& xorg::testing::Environment::GetLogFile() const
 {
   return d_->path_to_log_file;
 }
 
-void xorg::testing::Environment::set_conf_file(const std::string& path_conf_file)
+void xorg::testing::Environment::SetConfigFile(const std::string& path_to_conf_file)
 {
-  d_->path_to_conf = path_conf_file;
+  d_->path_to_conf = path_to_conf_file;
 }
 
-const std::string& xorg::testing::Environment::conf_file() const
+const std::string& xorg::testing::Environment::GetConfigFile() const
 {
   return d_->path_to_conf;
 }
 
-void xorg::testing::Environment::set_server(const std::string& path_to_server)
+void xorg::testing::Environment::SetServerPath(const std::string& path_to_server)
 {
   d_->path_to_server = path_to_server;
 }
 
-const std::string& xorg::testing::Environment::server() const
+const std::string& xorg::testing::Environment::GetServerPath() const
 {
   return d_->path_to_server;
 }
 
-void xorg::testing::Environment::set_display(int display_num)
+void xorg::testing::Environment::SetDisplayNumber(int display_num)
 {
   d_->display = display_num;
-}
-
-int xorg::testing::Environment::display() const
-{
-  return d_->display;
 }
 
 void xorg::testing::Environment::SetUp() {
@@ -214,4 +214,41 @@ void xorg::testing::Environment::Kill() {
   }
 
   std::cerr << "Warning: Dummy X server did not shut down\n";
+}
+
+
+/* DEPRECATED */
+const std::string& xorg::testing::Environment::log_file() const
+{
+  return GetLogFile();
+}
+
+void xorg::testing::Environment::set_conf_file(const std::string& path_conf_file)
+{
+  return SetConfigFile(path_conf_file);
+}
+
+const std::string& xorg::testing::Environment::conf_file() const
+{
+  return GetConfigFile();
+}
+
+void xorg::testing::Environment::set_server(const std::string& path_to_server)
+{
+  SetServerPath(path_to_server);
+}
+
+const std::string& xorg::testing::Environment::server() const
+{
+  return GetServerPath();
+}
+
+void xorg::testing::Environment::set_display(int display_num)
+{
+  SetDisplayNumber(display_num);
+}
+
+int xorg::testing::Environment::display() const
+{
+  return d_->display;
 }

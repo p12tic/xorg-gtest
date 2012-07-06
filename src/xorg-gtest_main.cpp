@@ -170,16 +170,16 @@ int main(int argc, char *argv[]) {
     environment = new xorg::testing::Environment;
 
     if (xorg_conf_specified)
-      environment->set_conf_file(xorg_conf_path);
+      environment->SetConfigFile(xorg_conf_path);
 
     if (server_specified)
-      environment->set_server(server);
+      environment->SetServerPath(server);
 
     if (xorg_display_specified)
-      environment->set_display(xorg_display);
+      environment->SetDisplayNumber(xorg_display);
 
     if (xorg_logfile_specified)
-        environment->set_log_file(xorg_log_file_path);
+      environment->SetLogFile(xorg_log_file_path);
 
     testing::AddGlobalTestEnvironment(environment);
   }
