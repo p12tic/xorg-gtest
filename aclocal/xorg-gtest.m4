@@ -1,4 +1,4 @@
-# serial 2
+# serial 3
 
 # Copyright (C) 2012 Canonical, Ltd.
 #
