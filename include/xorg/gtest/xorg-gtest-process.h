@@ -174,6 +174,7 @@ class Process {
   /* Disable copy constructor, assignment operator */
   Process(const Process&);
   Process& operator=(const Process&);
+  bool KillSelf(int signal);
 };
 
 } // testing

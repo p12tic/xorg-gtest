@@ -95,14 +95,15 @@ void xorg::testing::Process::Start(const std::string& program, ...) {
   va_end(list); /* Shouldn't get here */
 }
 
-bool xorg::testing::Process::Terminate() {
+
+bool xorg::testing::Process::KillSelf(int signal) {
   if (d_->pid == -1) {
     return false;
   } else if (d_->pid == 0) {
     /* Child */
-    throw std::runtime_error("Child process tried to terminate itself");
+    throw std::runtime_error("Child process tried to kill itself");
   } else { /* Parent */
-    if (kill(d_->pid, SIGTERM) < 0) {
+    if (kill(d_->pid, signal) < 0) {
       d_->pid = -1;
       return false;
     }
@@ -111,20 +112,12 @@ bool xorg::testing::Process::Terminate() {
   return true;
 }
 
-bool xorg::testing::Process::Kill() {
-  if (d_->pid == -1) {
-    return false;
-  } else if (d_->pid == 0) {
-    /* Child */
-    throw std::runtime_error("Child process tried to kill itself");
-  } else { /* Parent */
-    if (kill(d_->pid, SIGKILL) < 0) {
-      d_->pid = -1;
-      return false;
-    }
-    d_->pid = -1;
-  }
-  return true;
+bool xorg::testing::Process::Terminate(void) {
+  return KillSelf(SIGTERM);
+}
+
+bool xorg::testing::Process::Kill(void) {
+  return KillSelf(SIGKILL);
 }
 
 void xorg::testing::Process::SetEnv(const std::string& name,
