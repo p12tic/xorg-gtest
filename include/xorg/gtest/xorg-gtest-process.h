@@ -137,28 +137,40 @@ class Process {
   void Start(const std::string& program, ...);
 
   /**
-   * Terminates (SIGTERM) this child process.
+   * Terminates (SIGTERM) this child process and waits a given timeout for
+   * the process to terminate.
+   *
+   * @param [in] timeout The timeout in millis to wait for the process to
+   *                     terminate. A timeout of 0 implies not to wait but
+   *                     return immediately.
    *
    * @throws std::runtime_error if child tries to terminate itself.
    *
-   * @returns true if termination succeeded, false otherwise.
+   * @returns true if termination succeeded and, if a timout is given, the
+   *          process shut down within that timeout. false otherwise.
    *
    * @post If successful: Child process terminated.
    * @post If successful: Subsequent calls to Pid() return -1.
    */
-  bool Terminate();
+  bool Terminate(unsigned int timeout = 0);
 
   /**
-   * Kills (SIGKILL) this child process.
+   * Kills (SIGKILL) this child process and waits a given timeout for the
+   * process to terminate.
+   *
+   * @param [in] timeout The timeout in millis to wait for the process to
+   *                     terminate. A timeout of 0 implies not to wait but
+   *                     return immediately.
    *
    * @throws std::runtime_error if child tries to kill itself.
    *
-   * @returns true if kill succeeded, false otherwise.
+   * @returns true if kill succeeded and, if a timout is given, the
+   *          process shut down within that timeout. false otherwise.
    *
    * @post If successful: Child process killed.
    * @post If successful: Subsequent calls to Pid() return -1.
    */
-  bool Kill();
+  bool Kill(unsigned int timeout = 0);
 
   /**
    * Accesses the pid of the child process.
@@ -174,7 +186,8 @@ class Process {
   /* Disable copy constructor, assignment operator */
   Process(const Process&);
   Process& operator=(const Process&);
-  bool KillSelf(int signal);
+  bool WaitForExit(unsigned int timeout);
+  bool KillSelf(int signal, unsigned int timout);
 };
 
 } // testing

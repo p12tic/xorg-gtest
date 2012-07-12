@@ -95,8 +95,23 @@ void xorg::testing::Process::Start(const std::string& program, ...) {
   va_end(list); /* Shouldn't get here */
 }
 
+bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
+  for (int i = 0; i < 10; i++) {
+    int status;
+    int pid = waitpid(Pid(), &status, WNOHANG);
 
-bool xorg::testing::Process::KillSelf(int signal) {
+    if (pid == Pid())
+      return true;
+
+      usleep(timeout * 100);
+  }
+
+  return false;
+}
+
+bool xorg::testing::Process::KillSelf(int signal, unsigned int timeout) {
+  bool wait_success = true;
+
   if (d_->pid == -1) {
     return false;
   } else if (d_->pid == 0) {
@@ -107,17 +122,19 @@ bool xorg::testing::Process::KillSelf(int signal) {
       d_->pid = -1;
       return false;
     }
+    if (timeout > 0)
+      wait_success = WaitForExit(timeout);
     d_->pid = -1;
   }
-  return true;
+  return wait_success;
 }
 
-bool xorg::testing::Process::Terminate(void) {
-  return KillSelf(SIGTERM);
+bool xorg::testing::Process::Terminate(unsigned int timeout) {
+  return KillSelf(SIGTERM, timeout);
 }
 
-bool xorg::testing::Process::Kill(void) {
-  return KillSelf(SIGKILL);
+bool xorg::testing::Process::Kill(unsigned int timeout) {
+  return KillSelf(SIGKILL, timeout);
 }
 
 void xorg::testing::Process::SetEnv(const std::string& name,
