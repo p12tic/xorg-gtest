@@ -42,9 +42,7 @@ AC_ARG_WITH([evemu],
             [],
             [with_evemu=check])
 
-# utouch-evemu was renamed to evemu, check for both
-PKG_CHECK_MODULES(EVEMU, evemu, [have_evemu=yes],
-                  [PKG_CHECK_MODULES(EVEMU, utouch-evemu, [have_evemu=yes], [have_evemu=no])])
+PKG_CHECK_MODULES(EVEMU, [evemu >= 1.0.10] , [have_evemu=yes], [have_evemu=no])
 
 AS_IF([test "x$with_evemu" == xyes && test "x$have_evemu" != xyes],
       AC_MSG_ERROR([package 'evemu' not found]))
