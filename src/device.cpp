@@ -27,6 +27,7 @@
 
 #include "xorg/gtest/evemu/xorg-gtest-device.h"
 
+#include <linux/input.h>
 #include <fcntl.h>
 #include <dirent.h>
 
@@ -147,6 +148,24 @@ void xorg::testing::evemu::Device::Play(const std::string& path) const {
   }
 
   fclose(file);
+}
+
+void xorg::testing::evemu::Device::PlayOne(int type, int code, int value, bool sync)
+{
+  struct input_event ev;
+  if (evemu_create_event(&ev, type, code, value))
+    throw std::runtime_error("Failed to create event");
+
+  if (evemu_play_one(d_->fd, &ev))
+    throw std::runtime_error("Failed to play event");
+
+  if (sync) {
+    if (evemu_create_event(&ev, EV_SYN, SYN_REPORT, 0))
+      throw std::runtime_error("Failed to create EV_SYN event");
+
+    if (evemu_play_one(d_->fd, &ev))
+      throw std::runtime_error("Failed to play EV_SYN event");
+  }
 }
 
 const std::string& xorg::testing::evemu::Device::GetDeviceNode(void) {

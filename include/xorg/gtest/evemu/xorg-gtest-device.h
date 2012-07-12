@@ -76,6 +76,20 @@ class Device {
   void Play(const std::string& path) const;
 
   /**
+   * Play a single event through the device.
+   *
+   * Plays an event with the given type, code and value through the device.
+   *
+   * @param [in] type Evdev interface event type, e.g. EV_ABS, EV_REL, EV_KEY.
+   * @param [in] code Evdev interface event code, e.g. ABS_X, REL_Y, BTN_LEFT
+   * @param [in] value Event value
+   * @param [in] sync If true, submit an EV_SYN event after this event
+   *
+   * @throws std::runtime_error if playback failed for any reason.
+   */
+  void PlayOne(int type, int code, int value, bool sync = false);
+
+  /**
    * Return the /dev/input/eventX device node for this device.
    *
    * Note that evemu doesn't know the device node, so we traverse the file
