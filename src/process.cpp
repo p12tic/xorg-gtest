@@ -64,6 +64,8 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
     std::vector<char*> args;
     std::vector<std::string>::const_iterator it;
 
+    args.push_back(strdup(program.c_str()));
+
     for (it = argv.begin(); it != argv.end(); it++)
       if (!it->empty())
         args.push_back(strdup(it->c_str()));
