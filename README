@@ -74,3 +74,8 @@ xorg-gtest main() library targets if you will not use them. Copy the gtest and
 xorg-gtest library targets if multiple builds with different compilation flags
 are needed. Finally, link the tests with the appropriate gtest and xorg-gtest
 libraries and their dependencies: libpthread and libX11.
+
+Environment variables
+---------------------
+XORG_GTEST_XSERVER_SIGSTOP
+  If set, an XServer object will raise a SIGSTOP signal after startup.

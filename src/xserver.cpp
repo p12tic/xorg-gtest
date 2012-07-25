@@ -302,6 +302,12 @@ void xorg::testing::XServer::Start(const std::string &program) {
   }
 
   Process::Start(program.empty() ? d_->path_to_server : program, args);
+
+  if (Pid() > 0) {
+    char *sleepwait = getenv("XORG_GTEST_XSERVER_SIGSTOP");
+    if (sleepwait)
+      raise(SIGSTOP);
+  }
 }
 
 bool xorg::testing::XServer::Terminate(unsigned int timeout) {
