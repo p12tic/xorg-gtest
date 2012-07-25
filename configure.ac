@@ -78,6 +78,7 @@ AM_CONDITIONAL(ENABLE_XORG_GTEST_TESTS, [test "x$have_dummy_module" = xyes ])
 AC_CONFIG_FILES([Makefile
                  aclocal/Makefile
                  data/Makefile
+                 doc/Doxyfile
                  doc/Makefile
                  examples/Makefile
                  include/Makefile

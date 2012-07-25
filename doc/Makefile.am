@@ -23,9 +23,6 @@
 # SOFTWARE.
 #
 
-EXTRA_DIST = \
-	Doxyfile 
-
 if HAVE_DOXYGEN
 all-local: doc
 
