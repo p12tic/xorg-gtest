@@ -34,6 +34,9 @@ install-data-local:
 		$(INSTALL) -d $(DESTDIR)$(docdir); \
 		cp -a api/html $(DESTDIR)$(docdir); \
 	fi
+
+uninstall-local:
+	-rm -rf $(DESTDIR)$(docdir)
 endif
 
 clean-local:
