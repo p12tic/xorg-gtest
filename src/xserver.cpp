@@ -272,7 +272,7 @@ void xorg::testing::XServer::TestStartup(void) {
     throw std::runtime_error(message);
   }
 
-  std::string old_log_file = d_->options["-config"];
+  std::string old_log_file = d_->options["-logfile"];
   old_log_file += ".old";
   log_test.open(old_log_file.c_str(), std::ofstream::out);
   log_test.close();
