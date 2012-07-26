@@ -267,7 +267,7 @@ void xorg::testing::XServer::TestStartup(void) {
   if (log_test.fail()) {
     std::string message;
     message += "X.org server log file ";
-    message += d_->options["-config"];
+    message += d_->options["-logfile"];
     message += " is not writable.";
     throw std::runtime_error(message);
   }
