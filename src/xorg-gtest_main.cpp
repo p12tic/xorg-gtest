@@ -113,7 +113,7 @@ static int usage(int exitcode) {
   std::cout << "    --server: Path to X server executable\n";
   std::cout << "    --xorg-display: xorg dummy display port\n";
   std::cout << "    --xorg-logfile: xorg logfile filename. See -logfile in \"man Xorg\".\n"
-               "                    Its default value is "DEFAULT_XORG_LOGFILE".\n";
+               "                    Its default value is " DEFAULT_XORG_LOGFILE ".\n";
   return exitcode;
 }
 
