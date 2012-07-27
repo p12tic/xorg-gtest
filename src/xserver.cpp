@@ -125,7 +125,7 @@ bool xorg::testing::XServer::WaitForEvent(::Display *display, time_t timeout)
 bool xorg::testing::XServer::WaitForEventOfType(::Display *display, int type, int extension,
                                                 int evtype, time_t timeout)
 {
-    while (WaitForEvent(display)) {
+    while (WaitForEvent(display, timeout)) {
         XEvent event;
         if (!XPeekEvent(display, &event))
             throw std::runtime_error("Failed to peek X event");
@@ -169,7 +169,7 @@ bool xorg::testing::XServer::WaitForDevice(::Display *display, const std::string
         throw std::runtime_error("Failed to query XInput extension");
 
     while (WaitForEventOfType(display, GenericEvent, opcode,
-                              XI_HierarchyChanged)) {
+                              XI_HierarchyChanged, timeout)) {
         XEvent event;
         if (XNextEvent(display, &event) != Success)
             throw std::runtime_error("Failed to get X event");
