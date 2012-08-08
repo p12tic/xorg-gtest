@@ -60,6 +60,7 @@ struct xorg::testing::XServer::Private {
   std::string display_string;
   std::string path_to_server;
   std::map<std::string, std::string> options;
+  std::string version;
 };
 
 xorg::testing::XServer::XServer() : d_(new Private) {
@@ -284,6 +285,36 @@ void xorg::testing::XServer::TestStartup(void) {
     throw std::runtime_error(message);
   }
 
+}
+
+const std::string& xorg::testing::XServer::GetVersion(void) {
+  if (Pid() == -1 || !d_->version.empty())
+    return d_->version;
+
+  std::ifstream logfile;
+  logfile.open(d_->options["-logfile"].c_str());
+
+  std::string prefix = "X.Org X Server ";
+
+  if (logfile.is_open()) {
+    std::string line;
+    while (getline(logfile, line)) {
+      size_t start = line.find(prefix);
+      if (start == line.npos)
+        continue;
+
+      line = line.substr(prefix.size());
+      /* RCs have the human-readable version after the version */
+      size_t end = line.find(" ");
+      if (end == line.npos)
+        end = line.size();
+
+      d_->version = line.substr(0, end);
+      break;
+    }
+  }
+
+  return d_->version;
 }
 
 void xorg::testing::XServer::Start(const std::string &program) {

@@ -133,6 +133,16 @@ class XServer : public xorg::testing::Process {
     const std::string& GetDisplayString(void);
 
     /**
+     * Get the X server version as printed into the log file, usually in the
+     * form a.b.c[.d], with d being the optional part for release
+     * candidates.
+     *
+     * @return A string representing this server's version. If the server
+     *         hasn't been started yet, GetVersion() returns an empty string.
+     */
+    const std::string& GetVersion();
+
+    /**
      * Set startup options for the server.
      *
      * For arguments that do not take/need a value, use the empty string as
