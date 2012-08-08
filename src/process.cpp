@@ -52,7 +52,7 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
   if (d_->pid != -1)
     throw std::runtime_error("Attempting to start an already started process");
 
-  d_->pid = vfork();
+  d_->pid = fork();
 
   if (d_->pid == -1) {
     throw std::runtime_error("Failed to fork child process");
