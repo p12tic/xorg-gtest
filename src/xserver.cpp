@@ -367,6 +367,12 @@ bool xorg::testing::XServer::Kill(unsigned int timeout) {
     return true;
 }
 
+void xorg::testing::XServer::RemoveLogFile(bool force) {
+  enum Process::State state = GetState();
+  if (force || state == Process::TERMINATED || state == Process::FINISHED_SUCCESS)
+    unlink(d_->options["-logfile"].c_str());
+}
+
 void xorg::testing::XServer::SetOption(const std::string &key, const std::string &value) {
   d_->options[key] = value;
 }

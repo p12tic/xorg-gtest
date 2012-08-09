@@ -95,6 +95,18 @@ class XServer : public xorg::testing::Process {
     virtual bool Kill(unsigned int timeout = 0);
 
     /**
+     * Remove the log file used by this server. By default, this function
+     * only removes the log file if the server was terminated or finished
+     * with an exit code of 0.
+     *
+     * If force is true, the log file is removed regardless of the state of
+     * the server.
+     *
+     * @param force Force removal of the log file
+     */
+    void RemoveLogFile(bool force = false);
+
+    /**
      * Waits until this server is ready to take connections.
      */
     void WaitForConnections(void);
