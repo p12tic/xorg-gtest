@@ -64,6 +64,22 @@ namespace testing {
  */
 class Process {
  public:
+   /**
+    * Describes the state of a process as seen by this library. This state
+    * changes some behaviors inside the library, most notably:
+    * * A process in state ERROR or NONE will fail to Kill() or Terminate()
+    * * A process in state FINISHED_SUCCESS or FINISHED_FAILURE will always
+    * succeed to Kill() or Terminate()
+    */
+   enum State {
+     ERROR,             /**< An error has occured, state is now unknown */
+     NONE,              /**< The process has not been started yet */
+     RUNNING,           /**< The process has been started */
+     FINISHED_SUCCESS,  /**< The process finished with an exit code of 0 */
+     FINISHED_FAILURE,  /**< The process finished with a non-zero exit code */
+     TERMINATED,        /**< The process was successfully terminated by this library */
+   };
+
   /**
    * Helper function to adjust the environment of the current process.
    *
@@ -182,6 +198,13 @@ class Process {
    * @returns The pid of the child process or -1.
    */
   pid_t Pid() const;
+
+  /**
+   * Return the state of the process.
+   *
+   * @return The current state of the process
+   */
+  enum Process::State GetState();
 
  private:
   struct Private;

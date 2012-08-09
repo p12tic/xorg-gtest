@@ -42,10 +42,27 @@
 
 struct xorg::testing::Process::Private {
   pid_t pid;
+  enum State state;
 };
 
 xorg::testing::Process::Process() : d_(new Private) {
   d_->pid = -1;
+  d_->state = NONE;
+}
+
+enum xorg::testing::Process::State xorg::testing::Process::GetState() {
+  if (d_->state == RUNNING) {
+    int status;
+    int pid = waitpid(Pid(), &status, WNOHANG);
+    if (pid == Pid()) {
+      if (WIFEXITED(status)) {
+        d_->pid = -1;
+        d_->state = WEXITSTATUS(status) ? FINISHED_FAILURE : FINISHED_SUCCESS;
+      }
+    }
+  }
+
+  return d_->state;
 }
 
 void xorg::testing::Process::Start(const std::string &program, const std::vector<std::string> &argv) {
@@ -55,6 +72,7 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
   d_->pid = fork();
 
   if (d_->pid == -1) {
+    d_->state = ERROR;
     throw std::runtime_error("Failed to fork child process");
   } else if (d_->pid == 0) { /* Child */
     close(0);
@@ -74,8 +92,11 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
 
     execvp(program.c_str(), &args[0]);
 
+    d_->state = ERROR;
     throw std::runtime_error("Failed to start process");
   }
+
+  d_->state = RUNNING;
 }
 
 void xorg::testing::Process::Start(const std::string& program, va_list args) {
@@ -117,6 +138,19 @@ bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
 bool xorg::testing::Process::KillSelf(int signal, unsigned int timeout) {
   bool wait_success = true;
 
+  enum State state = GetState();
+  switch (state) {
+    case FINISHED_SUCCESS:
+    case FINISHED_FAILURE:
+    case TERMINATED:
+      return true;
+    case ERROR:
+    case NONE:
+      return false;
+    default:
+      break;
+  }
+
   if (d_->pid == -1) {
     return false;
   } else if (d_->pid == 0) {
@@ -125,12 +159,14 @@ bool xorg::testing::Process::KillSelf(int signal, unsigned int timeout) {
   } else { /* Parent */
     if (kill(d_->pid, signal) < 0) {
       d_->pid = -1;
+      d_->state = ERROR;
       return false;
     }
     if (timeout > 0)
       wait_success = WaitForExit(timeout);
     d_->pid = -1;
   }
+  d_->state = TERMINATED;
   return wait_success;
 }
 
