@@ -143,6 +143,22 @@ class XServer : public xorg::testing::Process {
     const std::string& GetVersion();
 
     /**
+     * Get the server's log file path. If this path is empty, the server
+     * will use it's built-in log file path.
+     *
+     * @return The log file path this server will use, is using or has used.
+     */
+    const std::string& GetLogFilePath();
+
+    /**
+     * Get the server's config file path. If this path is empty, the server
+     * will use it's built-in config file path.
+     *
+     * @return The config file path this server will use, is using or has used.
+     */
+    const std::string& GetConfigPath();
+
+    /**
      * Set startup options for the server.
      *
      * For arguments that do not take/need a value, use the empty string as

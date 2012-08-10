@@ -362,3 +362,11 @@ bool xorg::testing::XServer::Kill(unsigned int timeout) {
 void xorg::testing::XServer::SetOption(const std::string &key, const std::string &value) {
   d_->options[key] = value;
 }
+
+const std::string& xorg::testing::XServer::GetLogFilePath() {
+  return d_->options["-logfile"];
+}
+
+const std::string& xorg::testing::XServer::GetConfigPath() {
+  return d_->options["-config"];
+}
