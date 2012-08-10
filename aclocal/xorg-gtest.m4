@@ -1,4 +1,4 @@
-# serial 5
+# serial 6
 
 # Copyright (C) 2012 Canonical, Ltd.
 #
@@ -30,13 +30,23 @@ AC_DEFUN([_CHECK_GTEST],
   AC_ARG_WITH([gtest-source-path],
               [AS_HELP_STRING([--with-gtest-source-path],
                               [location of the Google test sources, defaults to /usr/src/gtest])],
-              [GTEST_SOURCE="$withval"; GTEST_CPPFLAGS="-I$withval/include"],
+              [GTEST_SOURCE="$withval"; GTEST_CPPFLAGS="-I$withval/include";
+               case "$withval" in
+                  /*) ;;
+                  *) AC_MSG_ERROR([gtest-source-path must be an absolute path ('$withval')]) ;;
+               esac
+              ],
               [GTEST_SOURCE="/usr/src/gtest"])
 
   AC_ARG_WITH([gtest-include-path],
               [AS_HELP_STRING([--with-gtest-include-path],
                               [location of the Google test headers])],
-              [GTEST_CPPFLAGS="-I$withval"])
+              [GTEST_CPPFLAGS="-I$withval";
+               case "$withval" in
+                  /*) ;;
+                  *) AC_MSG_ERROR([gtest-include-path must be an absolute path ('$withval')]) ;;
+               esac
+               ])
 
   GTEST_CPPFLAGS="$GTEST_CPPFLAGS -I$GTEST_SOURCE"
 
