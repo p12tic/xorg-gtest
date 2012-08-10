@@ -59,6 +59,7 @@ namespace testing {
 class XServer : public xorg::testing::Process {
   public:
     XServer();
+    ~XServer();
 
     /**
      * Start a new server. If no binary is given, the server started is the

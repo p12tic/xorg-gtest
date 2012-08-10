@@ -68,6 +68,12 @@ xorg::testing::XServer::XServer() : d_(new Private) {
   SetDisplayNumber(d_->display_number);
 }
 
+xorg::testing::XServer::~XServer() {
+  if (Pid() > 0)
+    if (!Terminate(3000))
+      Kill(300);
+}
+
 void xorg::testing::XServer::SetDisplayNumber(unsigned int display_number) {
     d_->display_number = display_number;
 
