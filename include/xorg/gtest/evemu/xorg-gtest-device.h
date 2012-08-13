@@ -44,7 +44,7 @@ namespace evemu {
 /**
  * @class Device xorg-gtest_device.h xorg/gtest/evemu/xorg-gtest_device.h
  *
- * uTouch-Evemu input device for replaying events through the Linux uinput
+ * evemu input device for replaying events through the Linux uinput
  * evdev subsystem.
  *
  * Use the Recording class to play back a specific recording.
@@ -55,7 +55,7 @@ class Device {
   /**
    * Create a new device context.
    *
-   * @param [in] path Path to uTouch-Evemu device property file.
+   * @param [in] path Path to evemu device property file.
    *
    * @throws std::runtime_error if the device property file could not be found
    *         or the device could not be created.
@@ -64,12 +64,12 @@ class Device {
   ~Device();
 
   /**
-   * Play a uTouch-Evemu recording through the device.
+   * Play a evemu recording through the device.
    *
    * Plays the recording from the beginning through the end. This call will
    * block until the recording has finished.
    *
-   * @param [in] path Path to uTouch-Evemu recording file.
+   * @param [in] path Path to evemu recording file.
    *
    * @throws std::runtime_error if playback failed for any reason.
    */
