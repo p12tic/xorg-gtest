@@ -1,7 +1,9 @@
 #
-# Makefile for the doc subdirectory of xorg-gtest
+# @file examples/Makefile.am
+# @brief automake recipe for the xorg-gtest self-tests
 #
 # Copyright (C) 2011, 2012 Canonical, Ltd.
+# Copyright © 2012 Red Hat, Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,26 +25,38 @@
 # SOFTWARE.
 #
 
-SUBDIRS = aclocal data doc include src examples test
+noinst_PROGRAMS = process-test
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = xorg-gtest.pc
+AM_CPPFLAGS = $(GTEST_CPPFLAGS)
+AM_CXXFLAGS = $(BASE_CXXFLAGS)
 
-ACLOCAL_AMFLAGS = -I m4
+tests_libraries = \
+	libgtest.a \
+	libxorg-gtest.a \
+	-lpthread \
+	$(X11_LIBS) \
+	$(EVEMU_LIBS)
 
-MAINTAINERCLEANFILES = ChangeLog INSTALL
+process_test_SOURCES = process-test.cpp
+process_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
+process_test_LDADD =  $(tests_libraries)
 
-.PHONY: ChangeLog INSTALL
-ChangeLog:
-	$(CHANGELOG_CMD)
+check_LIBRARIES = libgtest.a libxorg-gtest.a
 
-INSTALL:
-	$(INSTALL_CMD)
+# build googletest as static lib
+nodist_libgtest_a_SOURCES = $(GTEST_SOURCE)/src/gtest-all.cc
+libgtest_a_CPPFLAGS = $(AM_CPPFLAGS) -w
+libgtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 
-.PHONY: doc
-doc:
-	$(MAKE) -C doc $@
+# build xorg-gtest as static lib
+libxorg_gtest_a_SOURCES = $(top_srcdir)/src/xorg-gtest-all.cpp
+libxorg_gtest_a_CPPFLAGS = \
+	$(AM_CPPFLAGS) \
+	-I$(top_srcdir)/include \
+	-I$(top_srcdir) \
+	-DDUMMY_CONF_PATH="\"$(top_srcdir)/data/xorg/gtest/dummy.conf\""
+libxorg_gtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 
-dist-hook: ChangeLog INSTALL
-
-EXTRA_DIST = data
+if ENABLE_XORG_GTEST_TESTS
+TESTS = $(noinst_PROGRAMS)
+endif

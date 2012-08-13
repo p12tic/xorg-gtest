@@ -83,6 +83,7 @@ AC_CONFIG_FILES([Makefile
                  examples/Makefile
                  include/Makefile
                  src/Makefile
+                 test/Makefile
                  xorg-gtest.pc])
 
 AC_OUTPUT
