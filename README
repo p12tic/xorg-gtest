@@ -79,3 +79,6 @@ Environment variables
 ---------------------
 XORG_GTEST_XSERVER_SIGSTOP
   If set, an XServer object will raise a SIGSTOP signal after startup.
+XORG_GTEST_CHILD_STDOUT
+  If set to any value, Process::Start() will _not_ close stdout/stdin/stderr
+  for the forked child.

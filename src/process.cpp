@@ -58,8 +58,10 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
     throw std::runtime_error("Failed to fork child process");
   } else if (d_->pid == 0) { /* Child */
     close(0);
-    close(1);
-    close(2);
+    if (getenv("XORG_GTEST_CHILD_STDOUT") == NULL) {
+      close(1);
+      close(2);
+    }
 
     std::vector<char*> args;
     std::vector<std::string>::const_iterator it;
