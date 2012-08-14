@@ -112,7 +112,8 @@ class Process {
    * See 'man execvp' for further information on the variadic argument list.
    *
    * @param program The program to start.
-   * @param args Variadic list of arguments passed to the program.
+   * @param args Variadic list of arguments passed to the program. This list
+   * must end in a zero-length string ("", not NULL).
    *
    * @throws std::runtime_error on failure.
    *
@@ -124,7 +125,8 @@ class Process {
   /**
    * Starts a program as a child process.
    *
-   * Takes a variadic list of arguments passed to the program.
+   * Takes a variadic list of arguments passed to the program. This list
+   * must end in a zero-length string ("", not NULL).
    * See 'man execvp' for further information on the variadic argument list.
    *
    * @param program The program to start.
