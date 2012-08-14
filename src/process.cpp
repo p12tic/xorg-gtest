@@ -69,8 +69,7 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
     args.push_back(strdup(program.c_str()));
 
     for (it = argv.begin(); it != argv.end(); it++)
-      if (!it->empty())
-        args.push_back(strdup(it->c_str()));
+      args.push_back(strdup(it->c_str()));
     args.push_back(NULL);
 
     execvp(program.c_str(), &args[0]);
@@ -82,10 +81,14 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
 void xorg::testing::Process::Start(const std::string& program, va_list args) {
   std::vector<std::string> argv;
 
-  do {
-    std::string arg(va_arg(args, char*));
-    argv.push_back(arg);
-  } while (!argv.back().empty());
+  if (args) {
+    char *arg;
+    do {
+      arg = va_arg(args, char*);
+      if (arg)
+        argv.push_back(std::string(arg));
+    } while (arg);
+  }
 
   Start(program, argv);
 }

@@ -30,6 +30,7 @@
 #define XORG_GTEST_PROCESS_H
 
 #include <stdarg.h>
+#include <X11/Xfuncproto.h> /* for _X_SENTINEL */
 
 #include <memory>
 #include <string>
@@ -114,7 +115,7 @@ class Process {
    *
    * @param program The program to start.
    * @param args Variadic list of arguments passed to the program. This list
-   * must end in a zero-length string ("", not NULL).
+   * must end with NULL.
    *
    * @throws std::runtime_error on failure.
    *
@@ -127,7 +128,7 @@ class Process {
    * Starts a program as a child process.
    *
    * Takes a variadic list of arguments passed to the program. This list
-   * must end in a zero-length string ("", not NULL).
+   * must end with NULL.
    * See 'man execvp' for further information on the variadic argument list.
    *
    * @param program The program to start.
@@ -137,7 +138,7 @@ class Process {
    * @post If successful: Child process forked and program started.
    * @post If successful: Subsequent calls to Pid() return child process pid.
    */
-  void Start(const std::string& program, ...);
+  void Start(const std::string& program, ...) _X_SENTINEL(0);
 
   /**
    * Terminates (SIGTERM) this child process and waits a given timeout for
