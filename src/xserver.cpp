@@ -332,7 +332,6 @@ void xorg::testing::XServer::Start(const std::string &program) {
   std::vector<std::string> args;
   std::map<std::string, std::string>::iterator it;
 
-  args.push_back(program);
   args.push_back(std::string(GetDisplayString()));
 
   for (it = d_->options.begin(); it != d_->options.end(); it++) {
