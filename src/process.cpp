@@ -27,6 +27,7 @@
 
 #include "xorg/gtest/xorg-gtest-process.h"
 
+#include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -80,6 +81,10 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
       close(1);
       close(2);
     }
+
+#ifdef __linux
+    prctl(PR_SET_PDEATHSIG, SIGTERM);
+#endif
 
     std::vector<char*> args;
     std::vector<std::string>::const_iterator it;
