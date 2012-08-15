@@ -3,6 +3,7 @@
  * X testing environment - Google Test environment feat. dummy x server
  *
  * Copyright (C) 2011, 2012 Canonical Ltd.
+ * Copyright © 2012 Red Hat, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
