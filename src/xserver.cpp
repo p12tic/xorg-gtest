@@ -270,20 +270,30 @@ void xorg::testing::XServer::TestStartup(void) {
 
   /* The Xorg server won't start unless the log file and the old log file are
    * writable. */
+  bool logfile_was_present;
+  std::ifstream file_test;
+  file_test.open(log.c_str());
+  logfile_was_present = file_test.good();
+
   std::ofstream log_test;
   log_test.open(log.c_str(), std::ofstream::out);
   log_test.close();
   if (log_test.fail()) {
     throw std::runtime_error("X.org server log file " + log + " is not writable.");
-  }
+  } else if (!logfile_was_present)
+    unlink(log.c_str());
 
   std::string old_log_file = log + ".old";
+
+  file_test.open(old_log_file.c_str());
+  logfile_was_present = file_test.good();
 
   log_test.open(old_log_file.c_str(), std::ofstream::out);
   log_test.close();
   if (log_test.fail()) {
     throw std::runtime_error("X.org old server log file " + old_log_file + " is not writable.");
-  }
+  } else if (!logfile_was_present)
+    unlink(old_log_file.c_str());
 }
 
 const std::string& xorg::testing::XServer::GetVersion(void) {
