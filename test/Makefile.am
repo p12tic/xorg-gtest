@@ -25,7 +25,7 @@
 # SOFTWARE.
 #
 
-noinst_PROGRAMS = process-test
+noinst_PROGRAMS = process-test xserver-test
 
 AM_CPPFLAGS = $(GTEST_CPPFLAGS)
 AM_CXXFLAGS = $(BASE_CXXFLAGS)
@@ -40,6 +40,10 @@ tests_libraries = \
 process_test_SOURCES = process-test.cpp
 process_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
 process_test_LDADD =  $(tests_libraries)
+
+xserver_test_SOURCES = xserver-test.cpp
+xserver_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
+xserver_test_LDADD =  $(tests_libraries)
 
 check_LIBRARIES = libgtest.a libxorg-gtest.a
 
