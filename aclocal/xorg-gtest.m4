@@ -1,4 +1,4 @@
-# serial 6
+# serial 7
 
 # Copyright (C) 2012 Canonical, Ltd.
 #
@@ -36,7 +36,7 @@ AC_DEFUN([_CHECK_GTEST],
                   *) AC_MSG_ERROR([gtest-source-path must be an absolute path ('$withval')]) ;;
                esac
               ],
-              [GTEST_SOURCE="/usr/src/gtest"])
+              [GTEST_SOURCE="/usr/src/gtest"; GTEST_CPPFLAGS="-I$GTEST_SOURCE/include"])
 
   AC_ARG_WITH([gtest-include-path],
               [AS_HELP_STRING([--with-gtest-include-path],
