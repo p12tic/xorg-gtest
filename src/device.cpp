@@ -31,6 +31,8 @@
 #include <linux/input.h>
 #include <fcntl.h>
 #include <dirent.h>
+#include <sys/inotify.h>
+#include <poll.h>
 
 #include <stdexcept>
 
@@ -110,6 +112,48 @@ void xorg::testing::evemu::Device::GuessDeviceNode(time_t ctime) {
   free(event_devices);
 }
 
+static std::string wait_for_inotify(int fd)
+{
+  std::string devnode;
+  bool found = false;
+  struct pollfd pfd;
+
+  pfd.fd = fd;
+  pfd.events = POLLIN;
+
+  char buf[1024];
+  size_t bufidx = 0;
+
+  while (!found && poll(&pfd, 1, 2000) > 0) {
+    ssize_t r;
+
+    r = read(fd, buf + bufidx, sizeof(buf) - bufidx);
+    if (r == -1 && errno != EAGAIN) {
+      std::cerr << "inotify read failed with: " << std::string(strerror(errno)) << std::endl;
+      break;
+    }
+
+    bufidx += r;
+
+    struct inotify_event *e = reinterpret_cast<struct inotify_event*>(buf);
+
+    while (bufidx > sizeof(*e) && bufidx >= sizeof(*e) + e->len) {
+      if (strncmp(e->name, "event", 5) == 0) {
+        devnode = DEV_INPUT_DIR + std::string(e->name);
+        found = true;
+        break;
+      }
+
+      /* this packet didn't contain what we're looking for */
+      int len = sizeof(*e) + e->len;
+      memmove(buf, buf + len, bufidx - len);
+      bufidx -= len;
+    }
+  }
+
+  return devnode;
+}
+
 xorg::testing::evemu::Device::Device(const std::string& path)
     : d_(new Private) {
   static const char UINPUT_NODE[] = "/dev/uinput";
@@ -132,6 +176,14 @@ xorg::testing::evemu::Device::Device(const std::string& path)
 
   fclose(fp);
 
+  int ifd = inotify_init1(IN_NONBLOCK);
+  if (ifd == -1 || inotify_add_watch(ifd, DEV_INPUT_DIR, IN_CREATE) == -1) {
+    std::cerr << "Failed to create inotify watch" << std::endl;
+    if (ifd != -1)
+      close(ifd);
+    ifd = -1;
+  }
+
   d_->fd = open(UINPUT_NODE, O_WRONLY);
   if (d_->fd < 0) {
     evemu_delete(d_->device);
@@ -145,7 +197,12 @@ xorg::testing::evemu::Device::Device(const std::string& path)
     throw std::runtime_error("Failed to create evemu device");
   }
 
-  GuessDeviceNode(d_->ctime);
+  if (ifd != -1) {
+    std::string devnode = wait_for_inotify(ifd);
+    if (event_is_device(devnode, evemu_get_name(d_->device), d_->ctime))
+        d_->device_node = devnode;
+    close(ifd);
+  } /* else guess node when we'll need it */
 }
 
 void xorg::testing::evemu::Device::Play(const std::string& path) const {

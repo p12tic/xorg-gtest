@@ -25,10 +25,12 @@
 # SOFTWARE.
 #
 
-noinst_PROGRAMS = process-test xserver-test
+noinst_PROGRAMS = process-test xserver-test device-test
+noinst_DATA = PIXART-USB-OPTICAL-MOUSE.desc
 
 AM_CPPFLAGS = $(GTEST_CPPFLAGS)
-AM_CXXFLAGS = $(BASE_CXXFLAGS)
+AM_CXXFLAGS = $(BASE_CXXFLAGS) \
+	      -DTEST_ROOT_DIR=\"$(abs_top_srcdir)/test/\"
 
 tests_libraries = \
 	libgtest.a \
@@ -44,6 +46,10 @@ process_test_LDADD =  $(tests_libraries)
 xserver_test_SOURCES = xserver-test.cpp
 xserver_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
 xserver_test_LDADD =  $(tests_libraries)
+
+device_test_SOURCES = device-test.cpp
+device_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
+device_test_LDADD =  $(tests_libraries)
 
 check_LIBRARIES = libgtest.a libxorg-gtest.a
 
