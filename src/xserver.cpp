@@ -236,23 +236,22 @@ void xorg::testing::XServer::WaitForConnections(void) {
       std::string message;
       message += "X server failed to start on display ";
       message +=  GetDisplayString();
-      message += ". Ensure that the \"dummy\" video driver is installed.\n"
+      message += ". Ensure that the correct video driver is installed.\n"
                  "If the X.org server is older than 1.12, "
                  "tests will need to be run as root.\nCheck ";
       message += d_->options["-logfile"];
       message += " for any errors";
       throw std::runtime_error(message);
     } else if (pid == 0) {
-      sleep(1); /* Give the dummy X server some time to start */
+      sleep(1); /* Give the X server some time to start */
     } else if (pid == -1) {
-      throw std::runtime_error("Could not get status of dummy X server "
-                               "process");
+      throw std::runtime_error("Could not get status of X server process");
     } else {
       throw std::runtime_error("Invalid child PID returned by Process::Wait()");
     }
   }
 
-  throw std::runtime_error("Unable to open connection to dummy X server");
+  throw std::runtime_error("Unable to open connection to X server");
 }
 
 void xorg::testing::XServer::TestStartup(void) {
@@ -351,7 +350,7 @@ void xorg::testing::XServer::Start(const std::string &program) {
 
 bool xorg::testing::XServer::Terminate(unsigned int timeout) {
   if (!Process::Terminate(timeout)) {
-    std::cerr << "Warning: Failed to terminate dummy Xorg server: "
+    std::cerr << "Warning: Failed to terminate Xorg server: "
               << std::strerror(errno) << "\n";
     return false;
   } else
@@ -360,7 +359,7 @@ bool xorg::testing::XServer::Terminate(unsigned int timeout) {
 
 bool xorg::testing::XServer::Kill(unsigned int timeout) {
   if (!Process::Kill(timeout)) {
-    std::cerr << "Warning: Failed to kill dummy Xorg server: "
+    std::cerr << "Warning: Failed to kill Xorg server: "
               << std::strerror(errno) << "\n";
     return false;
   } else

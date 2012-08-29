@@ -1,6 +1,6 @@
 # Initialize Autoconf
 AC_PREREQ([2.60])
-AC_INIT([Dummy X.org Testing Environment for Google Test],
+AC_INIT([X.org Testing Environment for Google Test],
         [0.4.0],
         [],
         [xorg-gtest])
