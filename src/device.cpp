@@ -45,6 +45,7 @@ struct xorg::testing::evemu::Device::Private {
   int fd;
   struct evemu_device* device;
   std::string device_node;
+  time_t ctime;
 };
 
 static int _event_device_compare(const struct dirent **a,
@@ -137,14 +138,14 @@ xorg::testing::evemu::Device::Device(const std::string& path)
     throw std::runtime_error("Failed to open uinput node");
   }
 
-  time_t ctime = time(NULL);
+  d_->ctime = time(NULL);
   if (evemu_create(d_->device, d_->fd) < 0) {
     close(d_->fd);
     evemu_delete(d_->device);
     throw std::runtime_error("Failed to create evemu device");
   }
 
-  GuessDeviceNode(ctime);
+  GuessDeviceNode(d_->ctime);
 }
 
 void xorg::testing::evemu::Device::Play(const std::string& path) const {
@@ -179,6 +180,8 @@ void xorg::testing::evemu::Device::PlayOne(int type, int code, int value, bool s
 }
 
 const std::string& xorg::testing::evemu::Device::GetDeviceNode(void) {
+  if (d_->device_node.empty())
+    GuessDeviceNode(d_->ctime);
   return d_->device_node;
 }
 
