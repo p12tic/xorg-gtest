@@ -69,6 +69,9 @@ static bool event_is_device(const std::string &path,
     bool equal = false;
     int fd = open(path.c_str(), O_RDONLY);
 
+    if (fd == -1)
+      return false;
+
     if (ioctl(fd, EVIOCGNAME(sizeof(device_name)), device_name) != -1 &&
         devname.compare(device_name) == 0) {
       struct stat buf;
