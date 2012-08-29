@@ -63,16 +63,11 @@ static int _event_device_filter(const struct dirent *d) {
 }
 
 void xorg::testing::evemu::Device::GuessDeviceNode(time_t ctime) {
-  struct dirent **event_devices;
+  struct dirent **event_devices = NULL;
   int n_event_devices;
 
   n_event_devices = scandir(SYS_INPUT_DIR, &event_devices,
                             _event_device_filter, _event_device_compare);
-
-  if (n_event_devices < 0) {
-    std::cerr << "Failed to guess device node." << std::endl;
-    return;
-  }
 
   bool found = false;
   for (int i = 0; i < n_event_devices && !found; i++) {
@@ -94,6 +89,9 @@ void xorg::testing::evemu::Device::GuessDeviceNode(time_t ctime) {
     }
     close(fd);
   }
+
+  if (!found)
+    std::cerr << "Failed to guess device node." << std::endl;
 
   for (int i = 0; i < n_event_devices; i++)
     free(event_devices[i]);
