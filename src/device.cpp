@@ -77,8 +77,8 @@ void xorg::testing::evemu::Device::GuessDeviceNode(time_t ctime) {
     int fd = open(s.str().c_str(), O_RDONLY);
     char device_name[256];
 
-    ioctl(fd, EVIOCGNAME(sizeof(device_name)), device_name);
-    if (strcmp(device_name, evemu_get_name(d_->device)) == 0) {
+    if (ioctl(fd, EVIOCGNAME(sizeof(device_name)), device_name) != -1 &&
+        strcmp(device_name, evemu_get_name(d_->device)) == 0) {
       struct stat buf;
       if (fstat(fd, &buf) == 0) {
         if (buf.st_ctime >= ctime) {
