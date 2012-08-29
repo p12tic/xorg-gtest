@@ -62,6 +62,26 @@ static int _event_device_filter(const struct dirent *d) {
   return (strncmp("event", d->d_name, sizeof("event") - 1) == 0);
 }
 
+static bool event_is_device(const std::string &path,
+                            const std::string &devname,
+                            time_t ctime) {
+    char device_name[256];
+    bool equal = false;
+    int fd = open(path.c_str(), O_RDONLY);
+
+    if (ioctl(fd, EVIOCGNAME(sizeof(device_name)), device_name) != -1 &&
+        devname.compare(device_name) == 0) {
+      struct stat buf;
+
+      if (fstat(fd, &buf) == 0)
+        if (buf.st_ctime >= ctime)
+          equal = true;
+    }
+    close(fd);
+
+    return equal;
+}
+
 void xorg::testing::evemu::Device::GuessDeviceNode(time_t ctime) {
   struct dirent **event_devices = NULL;
   int n_event_devices;
@@ -73,21 +93,9 @@ void xorg::testing::evemu::Device::GuessDeviceNode(time_t ctime) {
   for (int i = 0; i < n_event_devices && !found; i++) {
     std::stringstream s;
     s << DEV_INPUT_DIR << event_devices[i]->d_name;
-
-    int fd = open(s.str().c_str(), O_RDONLY);
-    char device_name[256];
-
-    if (ioctl(fd, EVIOCGNAME(sizeof(device_name)), device_name) != -1 &&
-        strcmp(device_name, evemu_get_name(d_->device)) == 0) {
-      struct stat buf;
-      if (fstat(fd, &buf) == 0) {
-        if (buf.st_ctime >= ctime) {
-          d_->device_node = s.str();
-          found = true;
-        }
-      }
-    }
-    close(fd);
+    found = event_is_device(s.str(), evemu_get_name(d_->device), ctime);
+    if (found)
+      d_->device_node = s.str();
   }
 
   if (!found)
