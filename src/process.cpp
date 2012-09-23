@@ -133,6 +133,8 @@ bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
 
     if (pid == Pid())
       return true;
+    else if (pid == -1)
+      return errno == ECHILD;
 
       usleep(10);
   }
