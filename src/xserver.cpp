@@ -222,7 +222,7 @@ bool xorg::testing::XServer::WaitForDevice(::Display *display, const std::string
 }
 
 void xorg::testing::XServer::WaitForConnections(void) {
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < 100; ++i) {
     Display *test_display = XOpenDisplay(GetDisplayString().c_str());
 
     if (test_display) {
@@ -243,7 +243,7 @@ void xorg::testing::XServer::WaitForConnections(void) {
       message += " for any errors";
       throw std::runtime_error(message);
     } else if (pid == 0) {
-      sleep(1); /* Give the X server some time to start */
+      usleep(100);
     } else if (pid == -1) {
       throw std::runtime_error("Could not get status of X server process");
     } else {
