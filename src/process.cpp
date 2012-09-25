@@ -127,7 +127,7 @@ void xorg::testing::Process::Start(const std::string& program, ...) {
 }
 
 bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
-  for (int i = 0; i < timeout * 100; i++) {
+  for (unsigned int i = 0; i < timeout * 100; i++) {
     int status;
     int pid = waitpid(Pid(), &status, WNOHANG);
 
