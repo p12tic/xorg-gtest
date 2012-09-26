@@ -143,8 +143,6 @@ bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
 }
 
 bool xorg::testing::Process::KillSelf(int signal, unsigned int timeout) {
-  bool wait_success = true;
-
   enum State state = GetState();
   switch (state) {
     case FINISHED_SUCCESS:
@@ -169,12 +167,17 @@ bool xorg::testing::Process::KillSelf(int signal, unsigned int timeout) {
       d_->state = ERROR;
       return false;
     }
-    if (timeout > 0)
+    if (timeout > 0) {
+      bool wait_success = true;
+
       wait_success = WaitForExit(timeout);
+      if (!wait_success)
+        return false;
+    }
     d_->pid = -1;
   }
   d_->state = TERMINATED;
-  return wait_success;
+  return true;
 }
 
 bool xorg::testing::Process::Terminate(unsigned int timeout) {
