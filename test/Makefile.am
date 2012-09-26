@@ -25,7 +25,12 @@
 # SOFTWARE.
 #
 
-noinst_PROGRAMS = process-test xserver-test device-test
+test_programs = process-test \
+		xserver-test \
+		device-test
+
+noinst_PROGRAMS = $(test_programs) \
+		  process-test-helper
 noinst_DATA = PIXART-USB-OPTICAL-MOUSE.desc
 
 GTEST_CPPFLAGS=-I$(top_srcdir)/gtest/include -I$(top_srcdir)/gtest
@@ -44,6 +49,9 @@ tests_libraries = \
 process_test_SOURCES = process-test.cpp
 process_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
 process_test_LDADD =  $(tests_libraries)
+
+process_test_helper_SOURCES = process-test-helper.cpp
+process_test_helper_CPPFLAGS = $(AM_CPPFLAGS)
 
 xserver_test_SOURCES = xserver-test.cpp
 xserver_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
@@ -70,5 +78,5 @@ libxorg_gtest_a_CPPFLAGS = \
 libxorg_gtest_a_CXXFLAGS = $(AM_CXXFLAGS)
 
 if ENABLE_XORG_GTEST_TESTS
-TESTS = $(noinst_PROGRAMS)
+TESTS = $(test_programs)
 endif

@@ -108,6 +108,30 @@ TEST(Process, ChildTearDown)
   }
 }
 
+TEST(Process, TerminationFailure)
+{
+  SCOPED_TRACE("TESTCASE: if Process::Terminate() fails to terminate the \n"
+               "child process, kill must terminate it it instead");
+
+  sigset_t sig_mask;
+  struct timespec sig_timeout = {0, 5000000L};
+
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGUSR1);
+
+  Process p;
+  p.Start(TEST_ROOT_DIR "process-test-helper", NULL);
+  /* don't check error here, the helper may have sent the signal before we
+     get here */
+  sigtimedwait(&sig_mask, NULL, &sig_timeout);
+
+  ASSERT_GT(p.Pid(), 0);
+  kill(p.Pid(), SIGSTOP);
+
+  ASSERT_FALSE(p.Terminate(100));
+  ASSERT_EQ(p.GetState(), Process::RUNNING);
+  ASSERT_TRUE(p.Kill(100));
+}
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
