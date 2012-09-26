@@ -25,7 +25,7 @@ TEST(Process, StartWithNULLTerminatedArg)
   ASSERT_GT(p.Pid(), 0);
 }
 
-TEST(Process, TerminationSuccess)
+TEST(Process, ExitCodeSuccess)
 {
   SCOPED_TRACE("TESTCASE: invocation of 'echo -n', check for success exit status");
 
@@ -45,7 +45,7 @@ TEST(Process, TerminationSuccess)
   ASSERT_EQ(p.GetState(), Process::FINISHED_SUCCESS);
 }
 
-TEST(Process, TerminationFailure)
+TEST(Process, ExitCodeFailure)
 {
   SCOPED_TRACE("TESTCASE: an invalid invocation of 'ls', check for error exit status");
   Process p;
