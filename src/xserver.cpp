@@ -330,6 +330,26 @@ void xorg::testing::XServer::Start(const std::string &program) {
 
   std::vector<std::string> args;
   std::map<std::string, std::string>::iterator it;
+  std::string err_msg;
+
+  sigset_t sig_mask;
+  struct timespec sig_timeout = {1, 0}; /* 1 sec + 0 nsec */
+
+  /* add SIGUSR1 to the signal mask */
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGUSR1);
+  if (sigprocmask(SIG_BLOCK, &sig_mask, NULL)) {
+    err_msg.append("Failed to set signal mask: ");
+    err_msg.append(std::strerror(errno));
+    throw std::runtime_error(err_msg);
+  }
+  /* set SIGUSR1 handler to SIG_IGN, XServer tests for this and will
+   * send SIGUSR1 when ready */
+  if (SIG_ERR == signal(SIGUSR1, SIG_IGN)) {
+    err_msg.append("Failed to set signal handler: ");
+    err_msg.append(std::strerror(errno));
+    throw std::runtime_error(err_msg);
+  }
 
   args.push_back(std::string(GetDisplayString()));
 
@@ -345,6 +365,17 @@ void xorg::testing::XServer::Start(const std::string &program) {
     char *sleepwait = getenv("XORG_GTEST_XSERVER_SIGSTOP");
     if (sleepwait)
       raise(SIGSTOP);
+
+    /* wait for SIGUSR1 from XServer */
+    if (SIGUSR1 != sigtimedwait(&sig_mask, NULL, &sig_timeout)) {
+      if (errno == EAGAIN) {
+        err_msg.append("XServer startup timed out: ");
+      } else {
+        err_msg.append("Error while waiting for XServer startup: ");
+      }
+      err_msg.append(std::strerror(errno));
+      throw std::runtime_error(err_msg);
+    }
   }
 }
 
