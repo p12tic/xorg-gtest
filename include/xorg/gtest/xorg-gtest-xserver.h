@@ -109,7 +109,7 @@ class XServer : public xorg::testing::Process {
     /**
      * Waits until this server is ready to take connections.
      */
-    void WaitForConnections(void);
+    _X_DEPRECATED void WaitForConnections(void);
 
     /**
      * Set the display number for this server. This number must be set

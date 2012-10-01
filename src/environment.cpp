@@ -106,7 +106,6 @@ void xorg::testing::Environment::SetUp() {
   if (d_->path_to_conf.length())
     d_->server.SetOption("-config", d_->path_to_log_file);
   d_->server.Start(d_->path_to_server);
-  d_->server.WaitForConnections();
 
   Process::SetEnv("DISPLAY", d_->server.GetDisplayString(), true);
 }

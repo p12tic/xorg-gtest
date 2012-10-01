@@ -222,36 +222,6 @@ bool xorg::testing::XServer::WaitForDevice(::Display *display, const std::string
 }
 
 void xorg::testing::XServer::WaitForConnections(void) {
-  for (int i = 0; i < 100; ++i) {
-    Display *test_display = XOpenDisplay(GetDisplayString().c_str());
-
-    if (test_display) {
-      XCloseDisplay(test_display);
-      return;
-    }
-
-    int status;
-    int pid = waitpid(Pid(), &status, WNOHANG);
-    if (pid == Pid()) {
-      std::string message;
-      message += "X server failed to start on display ";
-      message +=  GetDisplayString();
-      message += ". Ensure that the correct video driver is installed.\n"
-                 "If the X.org server is older than 1.12, "
-                 "tests will need to be run as root.\nCheck ";
-      message += d_->options["-logfile"];
-      message += " for any errors";
-      throw std::runtime_error(message);
-    } else if (pid == 0) {
-      usleep(100);
-    } else if (pid == -1) {
-      throw std::runtime_error("Could not get status of X server process");
-    } else {
-      throw std::runtime_error("Invalid child PID returned by Process::Wait()");
-    }
-  }
-
-  throw std::runtime_error("Unable to open connection to X server");
 }
 
 void xorg::testing::XServer::TestStartup(void) {
