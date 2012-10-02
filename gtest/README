@@ -1,0 +1,8 @@
+Source and header files in this directory are part of googletest.
+http://code.google.com/p/googletest/
+
+Originally imported from gtest-1.6.0.zip/fused-src
+md5: 4577b49f2973c90bf9ba69aa8166b786  gtest-1.6.0.zip
+
+DO NOT MODIFY any code files. If fixes to googletest are needed, fix it
+upstream, then import upstream.
