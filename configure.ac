@@ -27,14 +27,6 @@ XORG_WITH_DOXYGEN
 
 PKG_CHECK_MODULES(X11, x11 xi)
  
-# Check for Google Test
-CHECK_GTEST
-
-AS_IF([test "x$have_gtest" != xyes],
-      AC_MSG_ERROR([package 'gtest' not found]))
-
-AC_SUBST([GTEST_CPPFLAGS])
-
 # Check if we should include support for evemu
 AC_ARG_WITH([evemu],
             [AS_HELP_STRING([--with-evemu],
@@ -77,6 +69,8 @@ AM_CONDITIONAL(ENABLE_XORG_GTEST_TESTS, [test "x$have_dummy_module" = xyes ])
 
 AC_CONFIG_FILES([Makefile
                  aclocal/Makefile
+                 gtest/Makefile
+                 gtest/include/Makefile
                  data/Makefile
                  doc/Doxyfile
                  doc/Makefile

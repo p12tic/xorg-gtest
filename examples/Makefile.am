@@ -26,11 +26,13 @@
 
 check_LIBRARIES = libgtest.a libxorg-gtest.a libxorg-gtest_main.a
 
+GTEST_CPPFLAGS=-I$(top_srcdir)/gtest/include -I$(top_srcdir)/gtest
+
 AM_CPPFLAGS = $(GTEST_CPPFLAGS)
 AM_CXXFLAGS = $(X11_CFLAGS) $(BASE_CXXFLAGS)
 
 # build googletest as static lib
-nodist_libgtest_a_SOURCES = $(GTEST_SOURCE)/src/gtest-all.cc
+nodist_libgtest_a_SOURCES = $(top_srcdir)/gtest/src/gtest-all.cc
 libgtest_a_CPPFLAGS = $(AM_CPPFLAGS) -w
 libgtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 

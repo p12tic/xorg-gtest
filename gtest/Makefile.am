@@ -1,7 +1,6 @@
+# Makefile for the gtest subdirectory of xorg-gtest
 #
-# Makefile for the doc subdirectory of xorg-gtest
-#
-# Copyright (C) 2011, 2012 Canonical, Ltd.
+# Copyright © 2012 Red Hat, Inc
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -23,26 +22,7 @@
 # SOFTWARE.
 #
 
-SUBDIRS = aclocal data doc include src examples test gtest
+SUBDIRS = include
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = xorg-gtest.pc
-
-ACLOCAL_AMFLAGS = -I m4
-
-MAINTAINERCLEANFILES = ChangeLog INSTALL
-
-.PHONY: ChangeLog INSTALL
-ChangeLog:
-	$(CHANGELOG_CMD)
-
-INSTALL:
-	$(INSTALL_CMD)
-
-.PHONY: doc
-doc:
-	$(MAKE) -C doc $@
-
-dist-hook: ChangeLog INSTALL
-
-EXTRA_DIST = data
+srcinstalldir = $(prefix)/src/xorg-gtest/src/gtest
+dist_srcinstall_DATA = src/gtest-all.cc src/gtest_main.cc

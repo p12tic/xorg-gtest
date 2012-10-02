@@ -28,6 +28,8 @@
 noinst_PROGRAMS = process-test xserver-test device-test
 noinst_DATA = PIXART-USB-OPTICAL-MOUSE.desc
 
+GTEST_CPPFLAGS=-I$(top_srcdir)/gtest/include -I$(top_srcdir)/gtest
+
 AM_CPPFLAGS = $(GTEST_CPPFLAGS)
 AM_CXXFLAGS = $(BASE_CXXFLAGS) \
 	      -DTEST_ROOT_DIR=\"$(abs_top_srcdir)/test/\"
@@ -54,9 +56,9 @@ device_test_LDADD =  $(tests_libraries)
 check_LIBRARIES = libgtest.a libxorg-gtest.a
 
 # build googletest as static lib
-nodist_libgtest_a_SOURCES = $(GTEST_SOURCE)/src/gtest-all.cc
+nodist_libgtest_a_SOURCES = $(top_srcdir)/gtest/src/gtest-all.cc
 libgtest_a_CPPFLAGS = $(AM_CPPFLAGS) -w
-libgtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
+libgtest_a_CXXFLAGS = $(AM_CXXFLAGS)
 
 # build xorg-gtest as static lib
 libxorg_gtest_a_SOURCES = $(top_srcdir)/src/xorg-gtest-all.cpp
@@ -65,7 +67,7 @@ libxorg_gtest_a_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir) \
 	-DDUMMY_CONF_PATH="\"$(top_srcdir)/data/xorg/gtest/dummy.conf\""
-libxorg_gtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
+libxorg_gtest_a_CXXFLAGS = $(AM_CXXFLAGS)
 
 if ENABLE_XORG_GTEST_TESTS
 TESTS = $(noinst_PROGRAMS)
