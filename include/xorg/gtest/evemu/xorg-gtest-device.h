@@ -43,7 +43,7 @@ namespace testing {
 namespace evemu {
 
 /**
- * @class Device xorg-gtest_device.h xorg/gtest/evemu/xorg-gtest_device.h
+ * @class Device xorg-gtest-device.h xorg/gtest/evemu/xorg-gtest-device.h
  *
  * evemu input device for replaying events through the Linux uinput
  * evdev subsystem.
