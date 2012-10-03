@@ -23,18 +23,10 @@
 # SOFTWARE.
 #
 
-# compat headers, to be dropped in the future
-compat_headers =  \
-	xorg/gtest/xorg-gtest_environment.h \
-	xorg/gtest/xorg-gtest_process.h \
-	xorg/gtest/xorg-gtest_test.h \
-	xorg/gtest/evemu/xorg-gtest_device.h
-
 nobase_include_HEADERS = \
 	xorg/gtest/xorg-gtest-environment.h \
 	xorg/gtest/xorg-gtest-process.h \
 	xorg/gtest/xorg-gtest-test.h \
 	xorg/gtest/xorg-gtest-xserver.h \
 	xorg/gtest/evemu/xorg-gtest-device.h \
-	xorg/gtest/xorg-gtest.h \
-	$(compat_headers)
+	xorg/gtest/xorg-gtest.h
