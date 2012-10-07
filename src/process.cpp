@@ -127,25 +127,40 @@ void xorg::testing::Process::Start(const std::string& program, ...) {
 }
 
 bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
-  for (unsigned int i = 0; i < timeout * 100; i++) {
-    int status;
-    int pid = waitpid(Pid(), &status, WNOHANG);
+  sigset_t sig_mask, old_mask;
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGCHLD);
 
-    if (pid == Pid()) {
-      if (WIFEXITED(status)) {
-        d_->state = WEXITSTATUS(status) ? FINISHED_FAILURE : FINISHED_SUCCESS;
-        return true;
-      } else if (WIFSIGNALED(status)) {
-        d_->state = FINISHED_FAILURE;
-        return true;
-      }
-    } else if (pid == -1)
-      return errno == ECHILD;
+  if (sigprocmask(SIG_BLOCK, &sig_mask, &old_mask) == 0) {
+    struct timespec sig_timeout = {timeout / 1000,
+                                   (timeout % 1000) * 1000000L};
 
-      usleep(10);
+    if (sigtimedwait(&sig_mask, NULL, &sig_timeout) != SIGCHLD && errno != EAGAIN) {
+      SCOPED_TRACE("INFO: Failure waiting for SIGCHLD: " +
+                   std::string(strerror(errno)) + ". I slept instead.");
+      usleep(timeout * 1000);
+    }
+
+    if (!sigismember(&sig_mask, SIGCHLD)) {
+      if (sigprocmask(SIG_UNBLOCK, &sig_mask, NULL) == -1)
+        SCOPED_TRACE("WARNING: Failed to unblock SIGCHLD. Tests may behave funny.\n");
+    }
+  } else { /* oops, can't wait for SIGCHLD, sleep instead */
+    SCOPED_TRACE("INFO: Failed to set SIGCHLD mask, sleeping instead.\n");
+    usleep(timeout * 1000);
   }
 
-  return false;
+  int status;
+  int pid = waitpid(Pid(), &status, WNOHANG);
+  if (pid == Pid()) {
+    if (WIFEXITED(status)) {
+      d_->state = WEXITSTATUS(status) ? FINISHED_FAILURE : FINISHED_SUCCESS;
+    } else if (WIFSIGNALED(status)) {
+      d_->state = FINISHED_FAILURE;
+    }
+    return true;
+  } else
+    return (pid == -1 && errno == ECHILD);
 }
 
 bool xorg::testing::Process::KillSelf(int signal, unsigned int timeout) {
