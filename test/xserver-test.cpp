@@ -55,6 +55,22 @@ TEST(XServer, LogRemoval)
   file.close();
 }
 
+TEST(XServer, WaitForSIGUSR1)
+{
+  SCOPED_TRACE("TESTCASE: XOpenDisplay() following server.Start() must\n"
+               "succeed as we wait for the SIGUSR1 signal\n");
+  for (int i = 0; i < 20; i++) {
+    XServer server;
+    server.SetOption("-logfile", "/tmp/xorg-testing-xserver-sigusr1.log");
+    server.SetOption("-noreset", "");
+    server.Start();
+    ASSERT_EQ(server.GetState(), Process::RUNNING);
+    Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
+    ASSERT_TRUE(dpy != NULL);
+    XCloseDisplay(dpy);
+    server.Terminate(500);
+  }
+}
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
