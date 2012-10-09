@@ -133,6 +133,16 @@ TEST(Process, TerminationFailure)
   ASSERT_TRUE(p.Kill(100));
 }
 
+TEST(Process, KillExitStatus)
+{
+  SCOPED_TRACE("TESTCASE: a child process killed must have a state of\n"
+               "FINISHED_FAILURE");
+  Process p;
+  p.Start(TEST_ROOT_DIR "process-test-helper", NULL);
+  p.Kill(1000);
+  ASSERT_EQ(p.GetState(), Process::FINISHED_FAILURE);
+}
+
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
