@@ -70,6 +70,8 @@ class Process {
     * * A process in state ERROR or NONE will fail to Kill() or Terminate()
     * * A process in state FINISHED_SUCCESS or FINISHED_FAILURE will always
     * succeed to Kill() or Terminate()
+    * * A process in state TERMINATED may change state to FINISHED_SUCCESS
+    * or FINISHED_FAILURE when queried again.
     */
    enum State {
      ERROR,             /**< An error has occured, state is now unknown */
@@ -77,7 +79,8 @@ class Process {
      RUNNING,           /**< The process has been started */
      FINISHED_SUCCESS,  /**< The process finished with an exit code of 0 */
      FINISHED_FAILURE,  /**< The process finished with a non-zero exit code */
-     TERMINATED,        /**< The process was successfully terminated by this library */
+     TERMINATED,        /**< The process was successfully terminated by this
+                             library but it's state is currently unknown */
    };
 
   /**

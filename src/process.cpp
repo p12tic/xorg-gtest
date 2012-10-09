@@ -131,9 +131,15 @@ bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
     int status;
     int pid = waitpid(Pid(), &status, WNOHANG);
 
-    if (pid == Pid())
-      return true;
-    else if (pid == -1)
+    if (pid == Pid()) {
+      if (WIFEXITED(status)) {
+        d_->state = WEXITSTATUS(status) ? FINISHED_FAILURE : FINISHED_SUCCESS;
+        return true;
+      } else if (WIFSIGNALED(status)) {
+        d_->state = FINISHED_FAILURE;
+        return true;
+      }
+    } else if (pid == -1)
       return errno == ECHILD;
 
       usleep(10);
@@ -171,8 +177,9 @@ bool xorg::testing::Process::KillSelf(int signal, unsigned int timeout) {
       bool wait_success = true;
 
       wait_success = WaitForExit(timeout);
-      if (!wait_success)
-        return false;
+      if (wait_success)
+        d_->pid = -1;
+      return wait_success;
     }
     d_->pid = -1;
   }
