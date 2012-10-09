@@ -308,6 +308,7 @@ void xorg::testing::XServer::Start(const std::string &program) {
   /* add SIGUSR1 to the signal mask */
   sigemptyset(&sig_mask);
   sigaddset(&sig_mask, SIGUSR1);
+  sigaddset(&sig_mask, SIGCHLD);
   if (sigprocmask(SIG_BLOCK, &sig_mask, NULL)) {
     err_msg.append("Failed to set signal mask: ");
     err_msg.append(std::strerror(errno));
@@ -337,16 +338,19 @@ void xorg::testing::XServer::Start(const std::string &program) {
       raise(SIGSTOP);
 
     /* wait for SIGUSR1 from XServer */
-    if (SIGUSR1 != sigtimedwait(&sig_mask, NULL, &sig_timeout)) {
-      if (errno == EAGAIN) {
-        err_msg.append("XServer startup timed out: ");
-      } else {
+    int recv_sig = sigtimedwait(&sig_mask, NULL, &sig_timeout);
+    if (recv_sig == SIGCHLD) {
+      GetState();
+    } else if (recv_sig != SIGUSR1 && errno != EAGAIN) {
         err_msg.append("Error while waiting for XServer startup: ");
-      }
-      err_msg.append(std::strerror(errno));
-      throw std::runtime_error(err_msg);
+        err_msg.append(std::strerror(errno));
+        throw std::runtime_error(err_msg);
     }
   }
+
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGCHLD);
+  sigprocmask(SIG_UNBLOCK, &sig_mask, NULL);
 }
 
 bool xorg::testing::XServer::Terminate(unsigned int timeout) {
