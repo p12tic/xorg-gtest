@@ -6,6 +6,8 @@
 #include <gtest/gtest.h>
 #include <xorg/gtest/xorg-gtest.h>
 
+#include <stdexcept>
+
 using namespace xorg::testing;
 
 TEST(Process, StartWithNULLArg)
@@ -141,6 +143,90 @@ TEST(Process, KillExitStatus)
   p.Start(TEST_ROOT_DIR "process-test-helper", NULL);
   p.Kill(1000);
   ASSERT_EQ(p.GetState(), Process::FINISHED_FAILURE);
+}
+
+TEST(Process, DoubleStart)
+{
+  struct timespec sig_timeout = {0, 5000000L};
+
+  SCOPED_TRACE("TESTCASE: starting a process after it has been started\n"
+               "fails. Re-starting a process succeeds\n");
+
+  /* Process double-started must fail */
+  Process p;
+  p.Start("echo", "-n", NULL);
+  try {
+    p.Start("echo", "-n", NULL);;
+    FAIL() << "Expected exception";
+  } catch (std::runtime_error &e) {
+  }
+  p.Terminate(1000);
+  /* we sent it a SIGTERM, counts as failure */
+  ASSERT_EQ(p.GetState(), Process::FINISHED_FAILURE);
+
+  sigset_t sig_mask;
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGCHLD);
+  sigaddset(&sig_mask, SIGUSR1);
+  sigprocmask(SIG_BLOCK, &sig_mask, 0);
+
+  /* restart job after a failed one, must succeed */
+  try {
+    p.Start("echo", "-n", NULL);
+  } catch (std::runtime_error &e) {
+    FAIL();
+  }
+
+  ASSERT_EQ(sigtimedwait(&sig_mask, NULL, &sig_timeout), SIGCHLD);
+  ASSERT_EQ(p.GetState(), Process::FINISHED_SUCCESS);
+
+  /* restart job after successful one, must succeed */
+  try {
+    p.Start("echo", "-n", NULL);
+  } catch (std::runtime_error &e) {
+    FAIL();
+  }
+  ASSERT_EQ(sigtimedwait(&sig_mask, NULL, &sig_timeout), SIGCHLD);
+  ASSERT_EQ(p.GetState(), Process::FINISHED_SUCCESS);
+
+  /* job that must be killed, followed by job */
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGUSR1);
+  p.Start(TEST_ROOT_DIR "process-test-helper", NULL);
+  sigtimedwait(&sig_mask, NULL, &sig_timeout);
+  ASSERT_EQ(p.GetState(), Process::RUNNING);
+  p.Kill(100);
+  ASSERT_EQ(p.GetState(), Process::FINISHED_FAILURE);
+
+  /* restart job after successful one, must succeed */
+  try {
+    p.Start("echo", "-n", NULL);
+  } catch (std::runtime_error &e) {
+    FAIL();
+  }
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGCHLD);
+  ASSERT_EQ(sigtimedwait(&sig_mask, NULL, &sig_timeout), SIGCHLD);
+  ASSERT_EQ(p.GetState(), Process::FINISHED_SUCCESS);
+
+  /* job that fails to terminate, starting another one must fail */
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGUSR1);
+  p.Start(TEST_ROOT_DIR "process-test-helper", NULL);
+  sigtimedwait(&sig_mask, NULL, &sig_timeout);
+  ASSERT_EQ(p.GetState(), Process::RUNNING);
+  ASSERT_FALSE(p.Terminate(100));
+
+  try {
+    p.Start("echo", "-n", NULL);
+    FAIL() << "exception expected";
+  } catch (std::runtime_error &e) {
+  }
+
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGCHLD);
+  sigaddset(&sig_mask, SIGUSR1);
+  sigprocmask(SIG_UNBLOCK, &sig_mask, 0);
 }
 
 int main(int argc, char *argv[]) {
