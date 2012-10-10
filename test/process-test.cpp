@@ -12,7 +12,7 @@ using namespace xorg::testing;
 
 TEST(Process, StartWithNULLArg)
 {
-  SCOPED_TRACE("TESTCASE: invocation of 'ls' with no arguments");
+  SCOPED_TRACE("\nTESTCASE: invocation of 'ls' with no arguments");
   Process p;
   p.Start("ls", NULL);
   ASSERT_GT(p.Pid(), 0);
@@ -20,7 +20,7 @@ TEST(Process, StartWithNULLArg)
 
 TEST(Process, StartWithNULLTerminatedArg)
 {
-  SCOPED_TRACE("TESTCASE: invocation of 'ls' with NULL-terminated argument list");
+  SCOPED_TRACE("\nTESTCASE: invocation of 'ls' with NULL-terminated argument list");
 
   Process p;
   p.Start("ls", "-l", NULL);
@@ -29,7 +29,7 @@ TEST(Process, StartWithNULLTerminatedArg)
 
 TEST(Process, ExitCodeSuccess)
 {
-  SCOPED_TRACE("TESTCASE: invocation of 'echo -n', check for success exit status");
+  SCOPED_TRACE("\nTESTCASE: invocation of 'echo -n', check for success exit status");
 
   Process p;
   ASSERT_EQ(p.GetState(), Process::NONE);
@@ -49,7 +49,7 @@ TEST(Process, ExitCodeSuccess)
 
 TEST(Process, ExitCodeFailure)
 {
-  SCOPED_TRACE("TESTCASE: an invalid invocation of 'ls', check for error exit status");
+  SCOPED_TRACE("\nTESTCASE: an invalid invocation of 'ls', check for error exit status");
   Process p;
   ASSERT_EQ(p.GetState(), Process::NONE);
 
@@ -69,7 +69,7 @@ TEST(Process, ExitCodeFailure)
 
 TEST(Process, ChildTearDown)
 {
-  SCOPED_TRACE("TESTCASE: ensure child process dies when parent does");
+  SCOPED_TRACE("\nTESTCASE: ensure child process dies when parent does");
 
   int pipefd[2];
   ASSERT_NE(pipe(pipefd), -1);
@@ -112,7 +112,7 @@ TEST(Process, ChildTearDown)
 
 TEST(Process, TerminationFailure)
 {
-  SCOPED_TRACE("TESTCASE: if Process::Terminate() fails to terminate the \n"
+  SCOPED_TRACE("\nTESTCASE: if Process::Terminate() fails to terminate the \n"
                "child process, kill must terminate it it instead");
 
   sigset_t sig_mask;
@@ -137,7 +137,7 @@ TEST(Process, TerminationFailure)
 
 TEST(Process, KillExitStatus)
 {
-  SCOPED_TRACE("TESTCASE: a child process killed must have a state of\n"
+  SCOPED_TRACE("\nTESTCASE: a child process killed must have a state of\n"
                "FINISHED_FAILURE");
   Process p;
   p.Start(TEST_ROOT_DIR "process-test-helper", NULL);
@@ -149,7 +149,7 @@ TEST(Process, DoubleStart)
 {
   struct timespec sig_timeout = {0, 5000000L};
 
-  SCOPED_TRACE("TESTCASE: starting a process after it has been started\n"
+  SCOPED_TRACE("\nTESTCASE: starting a process after it has been started\n"
                "fails. Re-starting a process succeeds\n");
 
   /* Process double-started must fail */
