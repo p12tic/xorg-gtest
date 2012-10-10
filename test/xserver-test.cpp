@@ -4,7 +4,6 @@
 #include <sys/wait.h>
 #include <fstream>
 
-#include <gtest/gtest.h>
 #include <xorg/gtest/xorg-gtest.h>
 
 using namespace xorg::testing;
