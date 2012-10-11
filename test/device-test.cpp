@@ -7,7 +7,7 @@ using namespace xorg::testing;
 
 TEST(DEVICE, DeviceNode)
 {
-  SCOPED_TRACE("TESTCASE: Device node is /dev/input/eventX");
+  XORG_TESTCASE("Device node is /dev/input/eventX");
 
   xorg::testing::evemu::Device d(TEST_ROOT_DIR "PIXART-USB-OPTICAL-MOUSE.desc");
 
@@ -16,8 +16,8 @@ TEST(DEVICE, DeviceNode)
 
 TEST(Device, InotifyWait)
 {
-  SCOPED_TRACE("TESTCASE: device node can never be empty.\n"
-               "This test may show false positives");
+  XORG_TESTCASE("device node can never be empty.\n"
+                "This test may show false positives");
 
   xorg::testing::evemu::Device d(TEST_ROOT_DIR "PIXART-USB-OPTICAL-MOUSE.desc");
 

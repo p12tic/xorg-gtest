@@ -33,3 +33,9 @@
 #ifdef HAVE_EVEMU
 #include "evemu/xorg-gtest-device.h"
 #endif
+
+#define XORG_TESTCASE(message) \
+  SCOPED_TRACE("\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n" \
+               "TESTCASE:\n" \
+               message \
+               "\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
