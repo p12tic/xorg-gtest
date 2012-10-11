@@ -25,6 +25,9 @@
  *
  ******************************************************************************/
 
+#ifndef __XORG_GTEST_H
+#define __XORG_GTEST_H
+
 #include "xorg-gtest-environment.h"
 #include "xorg-gtest-process.h"
 #include "xorg-gtest-xserver.h"
@@ -39,3 +42,5 @@
                "TESTCASE:\n" \
                message \
                "\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+
+#endif
