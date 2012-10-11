@@ -10,7 +10,7 @@ using namespace xorg::testing;
 
 TEST(XServer, LogRemoval)
 {
-  SCOPED_TRACE("TESTCASE: X server startup and log file removal on success and error");
+  XORG_TESTCASE("X server startup and log file removal on success and error");
   std::string logfile = "/tmp/xorg-testing-xserver_____________.log";
 
   /* make sure a previous failed test didn't leave it around */
@@ -56,8 +56,8 @@ TEST(XServer, LogRemoval)
 
 TEST(XServer, WaitForSIGUSR1)
 {
-  SCOPED_TRACE("TESTCASE: XOpenDisplay() following server.Start() must\n"
-               "succeed as we wait for the SIGUSR1 signal\n");
+  XORG_TESTCASE("XOpenDisplay() following server.Start() must\n"
+                "succeed as we wait for the SIGUSR1 signal\n");
   for (int i = 0; i < 20; i++) {
     XServer server;
     server.SetOption("-logfile", "/tmp/xorg-testing-xserver-sigusr1.log");
