@@ -164,18 +164,108 @@ bool xorg::testing::XServer::WaitForEventOfType(::Display *display, int type, in
     return false;
 }
 
+static XIEventMask* set_hierarchy_mask(::Display *display,
+                                       int *nmasks_out,
+                                       bool *was_set,
+                                       bool *was_created)
+{
+    XIEventMask *masks;
+    int nmasks;
+    bool mask_toggled = false;
+    bool new_mask_created = false;
+    XIEventMask *all_devices_mask = NULL;
+
+    masks = XIGetSelectedEvents(display, DefaultRootWindow(display), &nmasks);
+
+    /* masks is in a quirky data format (one chunk of memory). Change into a
+       format easier to manipulate. */
+
+    /* extra one, in case we have zero masks or no XIAllDevices mask */
+    XIEventMask *new_masks = new XIEventMask[nmasks + 1];
+    for (int i = 0; i < nmasks; i++) {
+      XIEventMask *m = &new_masks[i];
+      *m = masks[i];
+
+      if (masks[i].deviceid == XIAllDevices) {
+        all_devices_mask = m;
+        if (masks[i].mask_len < XIMaskLen(XI_HierarchyChanged)) {
+          m->mask_len = XIMaskLen(XI_HierarchyChanged);
+          mask_toggled = true;
+        } else
+          mask_toggled = !XIMaskIsSet(m->mask, XI_HierarchyChanged);
+      }
+
+      m->mask = new unsigned char[m->mask_len]();
+      memcpy(m->mask, masks[i].mask, masks[i].mask_len);
+
+      if (mask_toggled && m->deviceid == XIAllDevices)
+        XISetMask(m->mask, XI_HierarchyChanged);
+    }
+
+    if (!all_devices_mask) {
+      all_devices_mask = &new_masks[nmasks++];
+      all_devices_mask->deviceid = XIAllDevices;
+      all_devices_mask->mask_len = XIMaskLen(XI_HierarchyChanged);
+      all_devices_mask->mask = new unsigned char[all_devices_mask->mask_len]();
+      XISetMask(all_devices_mask->mask, XI_HierarchyChanged);
+      new_mask_created = true;
+    }
+
+    XFree(masks);
+    masks = NULL;
+
+    if (new_mask_created || mask_toggled) {
+      XISelectEvents(display, DefaultRootWindow(display), new_masks, nmasks);
+      XFlush(display);
+    }
+
+    *was_set = mask_toggled;
+    *was_created = new_mask_created;
+    *nmasks_out = nmasks;
+
+    return new_masks;
+}
+
+static void unset_hierarchy_mask(::Display *display,
+                                 XIEventMask *masks, int nmasks,
+                                 bool was_set, bool was_created)
+{
+    if (was_set || was_created) {
+      if (was_set) {
+        for (int i = 0; i < nmasks; i++) {
+          if (masks[i].deviceid == XIAllDevices)
+            XIClearMask(masks[i].mask, XI_HierarchyChanged);
+        }
+      } else if (was_created)
+        masks[nmasks - 1].mask_len = 0;
+      XISelectEvents(display, DefaultRootWindow(display), masks, nmasks);
+      XFlush(display);
+    }
+
+    for (int i = 0; i < nmasks; i++)
+      delete[] masks[i].mask;
+    delete[] masks;
+}
+
 bool xorg::testing::XServer::WaitForDevice(::Display *display, const std::string &name,
                                            time_t timeout)
 {
     int opcode;
     int event_start;
     int error_start;
+    bool device_found = false;
 
     if (!XQueryExtension(display, "XInputExtension", &opcode, &event_start,
                          &error_start))
         throw std::runtime_error("Failed to query XInput extension");
 
-    while (WaitForEventOfType(display, GenericEvent, opcode,
+    XIEventMask *masks;
+    int nmasks;
+    bool mask_set, mask_created;
+    masks = set_hierarchy_mask(display, &nmasks, &mask_set, &mask_created);
+
+    while (!device_found &&
+           WaitForEventOfType(display, GenericEvent, opcode,
                               XI_HierarchyChanged, timeout)) {
         XEvent event;
         if (XNextEvent(display, &event) != Success)
@@ -194,7 +284,7 @@ bool xorg::testing::XServer::WaitForDevice(::Display *display, const std::string
             continue;
         }
 
-        bool device_found = false;
+        device_found = false;
         for (int i = 0; i < hierarchy_event->num_info; i++) {
             if (!(hierarchy_event->info[i].flags & XIDeviceEnabled))
                 continue;
@@ -215,10 +305,12 @@ bool xorg::testing::XServer::WaitForDevice(::Display *display, const std::string
         XFreeEventData(display, xcookie);
 
         if (device_found)
-            return true;
+          break;
     }
 
-    return false;
+    unset_hierarchy_mask(display, masks, nmasks, mask_set, mask_created);
+
+    return device_found;
 }
 
 void xorg::testing::XServer::WaitForConnections(void) {

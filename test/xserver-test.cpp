@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include <xorg/gtest/xorg-gtest.h>
+#include <X11/extensions/XInput2.h>
 
 using namespace xorg::testing;
 
@@ -70,6 +71,125 @@ TEST(XServer, WaitForSIGUSR1)
     server.Terminate(500);
   }
 }
+
+static void assert_masks_equal(Display *dpy)
+{
+  int nmasks_before;
+  XIEventMask *masks_before;
+  int nmasks_after;
+  XIEventMask *masks_after;
+
+  masks_before = XIGetSelectedEvents(dpy, DefaultRootWindow(dpy), &nmasks_before);
+  XServer::WaitForDevice(dpy, "not actually waiting for device", 1);
+  masks_after = XIGetSelectedEvents(dpy, DefaultRootWindow(dpy), &nmasks_after);
+
+  ASSERT_EQ(nmasks_before, nmasks_after);
+
+  for (int i = 0; i < nmasks_before; i++) {
+    ASSERT_EQ(masks_before[i].deviceid, masks_after[i].deviceid);
+    ASSERT_EQ(masks_before[i].mask_len, masks_after[i].mask_len);
+    ASSERT_EQ(memcmp(masks_before[i].mask, masks_after[i].mask, masks_before[i].mask_len), 0);
+  }
+
+  XFree(masks_before);
+  XFree(masks_after);
+
+}
+
+TEST(XServer, WaitForDeviceEventMask)
+{
+  XORG_TESTCASE("The event mask is left as-is by WaitForDevice");
+
+  XServer server;
+  server.SetOption("-logfile", "/tmp/Xorg-WaitForDevice.log");
+  server.SetOption("-noreset", "");
+  server.Start();
+  ASSERT_EQ(server.GetState(), Process::RUNNING);
+  ::Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
+  ASSERT_TRUE(dpy != NULL);
+  int major = 2, minor = 0;
+  XIQueryVersion(dpy, &major, &minor);
+
+  /* empty mask */
+  assert_masks_equal(dpy);
+
+  /* device specific mask */
+  XIEventMask m;
+  m.deviceid = 2;
+  m.mask_len = 1;
+  m.mask = new unsigned char[m.mask_len]();
+  XISetMask(m.mask, XI_Motion);
+  XISelectEvents(dpy, DefaultRootWindow(dpy), &m, 1);
+
+  assert_masks_equal(dpy);
+  delete m.mask;
+
+  /* XIAllDevices mask with short mask */
+  m.deviceid = XIAllDevices;
+  m.mask_len = 1;
+  m.mask = new unsigned char[m.mask_len]();
+  XISetMask(m.mask, XI_Motion);
+  XISelectEvents(dpy, DefaultRootWindow(dpy), &m, 1);
+
+  assert_masks_equal(dpy);
+  delete m.mask;
+
+  /* XIAllDevices mask with hierarchy bit not set */
+  m.deviceid = XIAllDevices;
+  m.mask_len = XIMaskLen(XI_HierarchyChanged);
+  m.mask = new unsigned char[m.mask_len]();
+  XISetMask(m.mask, XI_Motion);
+  XISelectEvents(dpy, DefaultRootWindow(dpy), &m, 1);
+
+  assert_masks_equal(dpy);
+  delete m.mask;
+
+  /* XIAllDevices mask with hierarchy bit set */
+  m.deviceid = XIAllDevices;
+  m.mask_len = XIMaskLen(XI_HierarchyChanged);
+  m.mask = new unsigned char[m.mask_len]();
+  XISetMask(m.mask, XI_HierarchyChanged);
+  XISelectEvents(dpy, DefaultRootWindow(dpy), &m, 1);
+
+  assert_masks_equal(dpy);
+  delete m.mask;
+}
+
+#ifdef HAVE_EVEMU
+TEST(XServer, WaitForExistingDevice)
+{
+  XORG_TESTCASE("WaitForDevice() returns true for already existing device");
+
+  xorg::testing::evemu::Device d(TEST_ROOT_DIR "PIXART-USB-OPTICAL-MOUSE.desc");
+
+  XServer server;
+  server.SetOption("-logfile", "/tmp/Xorg-WaitForDevice.log");
+  server.SetOption("-noreset", "");
+  server.Start();
+  ASSERT_EQ(server.GetState(), Process::RUNNING);
+  ::Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
+  ASSERT_TRUE(dpy != NULL);
+
+  ASSERT_TRUE(XServer::WaitForDevice(dpy, "PIXART USB OPTICAL MOUSE", 1000));
+}
+
+TEST(XServer, WaitForNewDevice)
+{
+  XORG_TESTCASE("WaitForDevice() waits for newly created dvice");
+
+  XServer server;
+  server.SetOption("-logfile", "/tmp/Xorg-WaitForDevice.log");
+  server.SetOption("-noreset", "");
+  server.Start();
+  ASSERT_EQ(server.GetState(), Process::RUNNING);
+  ::Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
+  ASSERT_TRUE(dpy != NULL);
+
+  xorg::testing::evemu::Device d(TEST_ROOT_DIR "PIXART-USB-OPTICAL-MOUSE.desc");
+
+  ASSERT_TRUE(XServer::WaitForDevice(dpy, "PIXART USB OPTICAL MOUSE", 1000));
+}
+#endif
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
