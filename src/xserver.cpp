@@ -264,6 +264,15 @@ bool xorg::testing::XServer::WaitForDevice(::Display *display, const std::string
     bool mask_set, mask_created;
     masks = set_hierarchy_mask(display, &nmasks, &mask_set, &mask_created);
 
+    XIDeviceInfo *info;
+    int ndevices;
+
+    info = XIQueryDevice(display, XIAllDevices, &ndevices);
+    for (int i = 0; !device_found && i < ndevices; i++) {
+      device_found = (name.compare(info[i].name) == 0);
+    }
+    XIFreeDeviceInfo(info);
+
     while (!device_found &&
            WaitForEventOfType(display, GenericEvent, opcode,
                               XI_HierarchyChanged, timeout)) {
