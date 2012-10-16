@@ -13,6 +13,6 @@ using namespace xorg::testing;
  */
 TEST_F(Test, DummyXorgServerTest) {
 
-  EXPECT_NE(0, DefaultRootWindow(Display()));
+  EXPECT_NE((Window)None, DefaultRootWindow(Display()));
 
 }
