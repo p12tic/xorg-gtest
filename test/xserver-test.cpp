@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <fstream>
+#include <stdexcept>
 
 #include <xorg/gtest/xorg-gtest.h>
 
@@ -70,6 +71,22 @@ TEST(XServer, WaitForSIGUSR1)
     server.Terminate(500);
   }
 }
+
+TEST(XServer, IOErrorException)
+{
+  ASSERT_THROW({
+  XServer server;
+  server.SetOption("-logfile", "/tmp/xorg-io-error-test.log");
+  server.SetOption("-noreset", "");
+  server.Start();
+  ASSERT_EQ(server.GetState(), Process::RUNNING);
+  ::Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
+  ASSERT_TRUE(dpy != NULL);
+  close(ConnectionNumber(dpy));
+  XSync(dpy, False);
+  }, XIOError);
+}
+
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);

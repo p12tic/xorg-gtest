@@ -33,9 +33,27 @@
 #include <gtest/gtest.h>
 #include <xorg/gtest/xorg-gtest.h>
 #include <X11/Xlib.h>
+#include <stdexcept>
 
 namespace xorg {
 namespace testing {
+
+/**
+ * @class XIOError
+ *
+ * Exception thrown if the display connection encounters an IO error and
+ * calls the XIOErrorHandler function.
+ *
+ * This exception requires an XIOErrorHandler to be registered.
+ * XServer::Start() will register this error handler. For tests that do not
+ * use the provided XServer object, call XServer::RegisterXIOErrorHandler()
+ * instead.
+ */
+class XIOError : public std::runtime_error {
+public:
+  /** Create a new XIOError with the given message */
+  XIOError(const std::string& msg) : std::runtime_error(msg) {}
+};
 
 /**
  * @class XServer xorg-gtest-xserver.h xorg/gtest/xorg-gtest-xserver.h
@@ -55,6 +73,9 @@ namespace testing {
  *     std::cerr << "Problem killing server" << std::endl;
  * }
  * @endcode
+ *
+ * Once a XServer is started, a default XIOErrorHandler is installed and
+ * subsequent IO errors on the display connection will throw an XIOError.
  */
 class XServer : public xorg::testing::Process {
   public:
@@ -220,6 +241,19 @@ class XServer : public xorg::testing::Process {
      * @return Whether an event is available
      */
     static bool WaitForEventOfType(::Display *display, int type, int extension, int evtype, time_t timeout = 1000);
+
+    /**
+     * Install a default XIOErrorHandler. That error handler will throw an
+     * xorg::testing::XIOError when encountered.
+     *
+     * This function is called automatically by XServer::Start(). Usually,
+     * you will not need to call this function unless your test does not
+     * instantiate and Start() an XServer object.
+     *
+     * This function will only install a new error handler if the currently
+     * installed XIOErrorHandler is not the default handler used by Xlib.
+     */
+    static void RegisterXIOErrorHandler();
 
   private:
     struct Private;
