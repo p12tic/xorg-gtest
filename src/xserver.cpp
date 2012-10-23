@@ -419,7 +419,7 @@ void xorg::testing::XServer::Start(const std::string &program) {
   std::string err_msg;
 
   sigset_t sig_mask;
-  struct timespec sig_timeout = {1, 0}; /* 1 sec + 0 nsec */
+  struct timespec sig_timeout = {3, 0}; /* 3 sec + 0 nsec */
 
   /* add SIGUSR1 to the signal mask */
   sigemptyset(&sig_mask);
