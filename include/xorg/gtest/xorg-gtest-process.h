@@ -112,10 +112,31 @@ class Process {
   Process();
 
   /**
+   * Fork manually. Usually, fork() is called as part of Start() but for
+   * use-cases where the parent process and the child process need special
+   * processing before the child is replaced by an execvp call Fork() may be
+   * called manually.
+   *
+   * A process may only be forked once.
+   *
+   * The state of both the parent and the child after a Fork() is
+   * Process::RUNNING. If Fork() is called directly, Start() may only be
+   * called on the child process.
+   *
+   * @throws std::runtime_error on failure.
+   *
+   * @return The pid of the child, or 0 for the child process.
+   */
+  pid_t Fork();
+
+  /**
    * Starts a program as a child process.
    *
    * See 'man execvp' for further information on the elements in
    * the vector.
+   *
+   * If Fork() was called previously, Start() may only be called on the child
+   * process.
    *
    * @param program The program to start.
    * @param args Vector of arguments passed to the program.
@@ -131,6 +152,9 @@ class Process {
    * Starts a program as a child process.
    *
    * See 'man execvp' for further information on the variadic argument list.
+   *
+   * If Fork() was called previously, Start() may only be called on the child
+   * process.
    *
    * @param program The program to start.
    * @param args Variadic list of arguments passed to the program. This list
@@ -149,6 +173,9 @@ class Process {
    * Takes a variadic list of arguments passed to the program. This list
    * must end with NULL.
    * See 'man execvp' for further information on the variadic argument list.
+   *
+   * If Fork() was called previously, Start() may only be called on the child
+   * process.
    *
    * @param program The program to start.
    *

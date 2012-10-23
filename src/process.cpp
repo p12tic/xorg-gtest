@@ -66,12 +66,11 @@ enum xorg::testing::Process::State xorg::testing::Process::GetState() {
   return d_->state;
 }
 
-void xorg::testing::Process::Start(const std::string &program, const std::vector<std::string> &argv) {
+pid_t xorg::testing::Process::Fork() {
   if (d_->pid != -1)
-    throw std::runtime_error("Attempting to start an already started process");
+    throw std::runtime_error("A process may only be forked once");
 
   d_->pid = fork();
-
   if (d_->pid == -1) {
     d_->state = ERROR;
     throw std::runtime_error("Failed to fork child process");
@@ -85,7 +84,19 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
 #ifdef __linux
     prctl(PR_SET_PDEATHSIG, SIGTERM);
 #endif
+  }
 
+  d_->state = RUNNING;
+  return d_->pid;
+}
+
+void xorg::testing::Process::Start(const std::string &program, const std::vector<std::string> &argv) {
+  if (d_->pid == -1)
+    d_->pid = Fork();
+  else if (d_->pid > 0)
+    throw std::runtime_error("Start() may only be called on the child process");
+
+  if (d_->pid == 0) { /* Child */
     std::vector<char*> args;
     std::vector<std::string>::const_iterator it;
 

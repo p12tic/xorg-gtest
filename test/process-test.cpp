@@ -229,6 +229,41 @@ TEST(Process, DoubleStart)
   sigprocmask(SIG_UNBLOCK, &sig_mask, 0);
 }
 
+TEST(Process, ForkedParentStart)
+{
+  XORG_TESTCASE("Fork() and calling Start() on the parent causes an exception");
+  Process p;
+  if (p.Fork() > 0) {
+    ASSERT_GT(p.Pid(), 0);
+    ASSERT_EQ(p.GetState(), Process::RUNNING);
+    ASSERT_THROW({ p.Start("ls", NULL); }, std::runtime_error);
+  }
+}
+
+TEST(Process, ForkedChildStart)
+{
+  XORG_TESTCASE("Fork() and calling Start() executes the process");
+  Process p;
+  if (p.Fork() == 0) {
+    ASSERT_EQ(p.GetState(), Process::RUNNING);
+    p.Start("ls", NULL);
+    ASSERT_GT(p.Pid(), 0);
+  }
+}
+
+TEST(Process, ForkedChildDoubleStart)
+{
+  XORG_TESTCASE("Fork() and calling Start() twice causes an exception");
+  Process p;
+  if (p.Fork() == 0) {
+    ASSERT_EQ(p.GetState(), Process::RUNNING);
+    p.Start("ls", NULL);
+    ASSERT_THROW({
+        p.Start("ls", NULL);
+    }, std::runtime_error);
+  }
+}
+
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
