@@ -45,6 +45,7 @@
 #include <fstream>
 
 #include <X11/Xlib.h>
+#include <X11/Xlibint.h>
 #include <X11/extensions/XInput2.h>
 
 struct xorg::testing::XServer::Private {
@@ -396,6 +397,20 @@ const std::string& xorg::testing::XServer::GetVersion(void) {
   return d_->version;
 }
 
+static int _x_io_error_handler(Display *dpy)
+{
+  throw xorg::testing::XIOError("Connection to X Server lost. Possible server crash.");
+}
+
+void xorg::testing::XServer::RegisterXIOErrorHandler()
+{
+  XIOErrorHandler old_handler;
+  old_handler = XSetIOErrorHandler(_x_io_error_handler);
+
+  if (old_handler != _XDefaultIOError)
+    XSetIOErrorHandler(old_handler);
+}
+
 void xorg::testing::XServer::Start(const std::string &program) {
   TestStartup();
 
@@ -452,6 +467,8 @@ void xorg::testing::XServer::Start(const std::string &program) {
   sigemptyset(&sig_mask);
   sigaddset(&sig_mask, SIGCHLD);
   sigprocmask(SIG_UNBLOCK, &sig_mask, NULL);
+
+  RegisterXIOErrorHandler();
 }
 
 bool xorg::testing::XServer::Terminate(unsigned int timeout) {

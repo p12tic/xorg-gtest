@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <fstream>
+#include <stdexcept>
 
 #include <xorg/gtest/xorg-gtest.h>
 #include <X11/extensions/XInput2.h>
@@ -190,6 +191,21 @@ TEST(XServer, WaitForNewDevice)
   ASSERT_TRUE(XServer::WaitForDevice(dpy, "PIXART USB OPTICAL MOUSE", 1000));
 }
 #endif
+
+TEST(XServer, IOErrorException)
+{
+  ASSERT_THROW({
+  XServer server;
+  server.SetOption("-logfile", "/tmp/xorg-io-error-test.log");
+  server.SetOption("-noreset", "");
+  server.Start();
+  ASSERT_EQ(server.GetState(), Process::RUNNING);
+  ::Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
+  ASSERT_TRUE(dpy != NULL);
+  close(ConnectionNumber(dpy));
+  XSync(dpy, False);
+  }, XIOError);
+}
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
