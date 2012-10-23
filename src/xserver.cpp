@@ -430,42 +430,60 @@ void xorg::testing::XServer::Start(const std::string &program) {
     err_msg.append(std::strerror(errno));
     throw std::runtime_error(err_msg);
   }
-  /* set SIGUSR1 handler to SIG_IGN, XServer tests for this and will
-   * send SIGUSR1 when ready */
-  if (SIG_ERR == signal(SIGUSR1, SIG_IGN)) {
-    err_msg.append("Failed to set signal handler: ");
+
+  pid_t pid = Fork();
+  if (pid == 0) {
+    /* set SIGUSR1 handler to SIG_IGN, XServer tests for this and will
+     * send SIGUSR1 when ready */
+    sighandler_t old_handler;
+    old_handler = signal(SIGUSR1, SIG_IGN);
+    if (old_handler == SIG_ERR) {
+      err_msg.append("Failed to set signal handler: ");
+      err_msg.append(std::strerror(errno));
+      throw std::runtime_error(err_msg);
+    }
+
+    /* unblock for the child process so the server receives SIGUSR1, needed
+       for VT switching */
+    sigemptyset(&sig_mask);
+    sigaddset(&sig_mask, SIGUSR1);
+    if (sigprocmask(SIG_UNBLOCK, &sig_mask, NULL)) {
+      err_msg.append("Failed to unblock signal mask: ");
+      err_msg.append(std::strerror(errno));
+      throw std::runtime_error(err_msg);
+    }
+
+    args.push_back(std::string(GetDisplayString()));
+
+    for (it = d_->options.begin(); it != d_->options.end(); it++) {
+      args.push_back(it->first);
+      if (!it->second.empty())
+        args.push_back(it->second);
+    }
+
+    Process::Start(program.empty() ? d_->path_to_server : program, args);
+    /* noreturn */
+
+  }
+
+  /* parent */
+  char *sleepwait = getenv("XORG_GTEST_XSERVER_SIGSTOP");
+  if (sleepwait)
+    raise(SIGSTOP);
+
+  /* wait for SIGUSR1 from XServer */
+  int recv_sig = sigtimedwait(&sig_mask, NULL, &sig_timeout);
+  if (recv_sig == SIGCHLD) {
+    GetState();
+  } else if (recv_sig != SIGUSR1 && errno != EAGAIN) {
+    err_msg.append("Error while waiting for XServer startup: ");
     err_msg.append(std::strerror(errno));
     throw std::runtime_error(err_msg);
   }
 
-  args.push_back(std::string(GetDisplayString()));
-
-  for (it = d_->options.begin(); it != d_->options.end(); it++) {
-    args.push_back(it->first);
-    if (!it->second.empty())
-      args.push_back(it->second);
-  }
-
-  Process::Start(program.empty() ? d_->path_to_server : program, args);
-
-  if (Pid() > 0) {
-    char *sleepwait = getenv("XORG_GTEST_XSERVER_SIGSTOP");
-    if (sleepwait)
-      raise(SIGSTOP);
-
-    /* wait for SIGUSR1 from XServer */
-    int recv_sig = sigtimedwait(&sig_mask, NULL, &sig_timeout);
-    if (recv_sig == SIGCHLD) {
-      GetState();
-    } else if (recv_sig != SIGUSR1 && errno != EAGAIN) {
-        err_msg.append("Error while waiting for XServer startup: ");
-        err_msg.append(std::strerror(errno));
-        throw std::runtime_error(err_msg);
-    }
-  }
-
   sigemptyset(&sig_mask);
   sigaddset(&sig_mask, SIGCHLD);
+  sigaddset(&sig_mask, SIGUSR1);
   sigprocmask(SIG_UNBLOCK, &sig_mask, NULL);
 
   RegisterXIOErrorHandler();
