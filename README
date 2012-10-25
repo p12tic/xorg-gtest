@@ -78,6 +78,10 @@ Environment variables
 ---------------------
 XORG_GTEST_XSERVER_SIGSTOP
   If set, an XServer object will raise a SIGSTOP signal after startup.
+XORG_GTEST_XSERVER_KEEPALIVE
+  If set, the XServer object will ignore calls to Terminate() or Kill().
+  This is useful for debugging a server without having the test terminate
+  the process while still looking at gdb output.
 XORG_GTEST_CHILD_STDOUT
   If set to any value, Process::Start() will _not_ close stdout/stdin/stderr
   for the forked child.

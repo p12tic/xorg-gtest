@@ -433,6 +433,11 @@ void xorg::testing::XServer::Start(const std::string &program) {
 
   pid_t pid = Fork();
   if (pid == 0) {
+#ifdef __linux
+    if (getenv("XORG_GTEST_XSERVER_KEEPALIVE"))
+      prctl(PR_SET_PDEATHSIG, 0);
+#endif
+
     /* set SIGUSR1 handler to SIG_IGN, XServer tests for this and will
      * send SIGUSR1 when ready */
     sighandler_t old_handler;
@@ -490,6 +495,9 @@ void xorg::testing::XServer::Start(const std::string &program) {
 }
 
 bool xorg::testing::XServer::Terminate(unsigned int timeout) {
+  if (getenv("XORG_GTEST_XSERVER_KEEPALIVE"))
+    return true;
+
   if (!Process::Terminate(timeout)) {
     std::cerr << "Warning: Failed to terminate Xorg server: "
               << std::strerror(errno) << "\n";
@@ -499,6 +507,9 @@ bool xorg::testing::XServer::Terminate(unsigned int timeout) {
 }
 
 bool xorg::testing::XServer::Kill(unsigned int timeout) {
+  if (getenv("XORG_GTEST_XSERVER_KEEPALIVE"))
+    return true;
+
   if (!Process::Kill(timeout)) {
     std::cerr << "Warning: Failed to kill Xorg server: "
               << std::strerror(errno) << "\n";

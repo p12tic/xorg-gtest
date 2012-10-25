@@ -207,6 +207,73 @@ TEST(XServer, IOErrorException)
   }, XIOError);
 }
 
+TEST(XServer, KeepAlive)
+{
+  XORG_TESTCASE("If XORG_GTEST_XSERVER_KEEPALIVE is set,\n"
+                "XServer::Terminate() and XServer::Kill() have no "
+                "effect");
+
+  int pipefd[2];
+  ASSERT_NE(pipe(pipefd), -1);
+
+  if (fork() == 0) {
+    close(pipefd[0]);
+
+    ASSERT_EQ(setenv("XORG_GTEST_XSERVER_KEEPALIVE", "1", 1), 0);
+    ASSERT_TRUE(getenv("XORG_GTEST_XSERVER_KEEPALIVE") != NULL);
+
+    XServer server;
+    server.SetOption("-logfile", "/tmp/Xorg-keepalive.log");
+    server.SetOption("-noreset", "");
+    server.Start();
+    ASSERT_EQ(server.GetState(), Process::RUNNING);
+    ::Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
+    ASSERT_TRUE(dpy != NULL);
+
+    server.Terminate();
+    ASSERT_EQ(server.GetState(), Process::RUNNING);
+    server.Kill();
+    ASSERT_EQ(server.GetState(), Process::RUNNING);
+
+    char *buffer;
+    ASSERT_GT(asprintf(&buffer, "%d", server.Pid()), 0);
+    ASSERT_EQ(write(pipefd[1], buffer, strlen(buffer)), (int)strlen(buffer));
+    close(pipefd[1]);
+    free(buffer);
+    return;
+  }
+
+  sigset_t sig_mask;
+  sigemptyset(&sig_mask);
+  sigaddset(&sig_mask, SIGCHLD);
+  struct timespec tv = { 1, 0 };
+  sigprocmask(SIG_BLOCK, &sig_mask, NULL);
+
+  /* parent */
+  close(pipefd[1]);
+
+  char buffer[20] = {0};
+  ASSERT_GT(read(pipefd[0], buffer, sizeof(buffer)), 0);
+  close(pipefd[0]);
+
+  /* wait for forked child to die */
+  ASSERT_EQ(sigtimedwait(&sig_mask, NULL, &tv), SIGCHLD);
+
+  pid_t server_pid = atoi(buffer);
+
+  /* server must still be running, kill it */
+  ASSERT_EQ(kill(server_pid, 0), 0);
+  kill(server_pid, SIGTERM);
+
+  int i = 0;
+
+  while(kill(server_pid, 0) == 0 && i++ < 10)
+    usleep(50000);
+
+  ASSERT_EQ(kill(server_pid, 0), -1);
+  ASSERT_EQ(errno, ESRCH);
+}
+
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
