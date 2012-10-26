@@ -397,6 +397,7 @@ const std::string& xorg::testing::XServer::GetVersion(void) {
   return d_->version;
 }
 
+static int _x_io_error_handler(Display *dpy) _X_NORETURN;
 static int _x_io_error_handler(Display *dpy)
 {
   throw xorg::testing::XIOError("Connection to X Server lost. Possible server crash.");
