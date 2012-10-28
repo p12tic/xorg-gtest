@@ -30,7 +30,8 @@ test_programs = process-test \
 		device-test
 
 noinst_PROGRAMS = $(test_programs) \
-		  process-test-helper
+		  process-test-helper \
+		  xserver-test-helper
 noinst_DATA = PIXART-USB-OPTICAL-MOUSE.desc
 
 GTEST_CPPFLAGS=-I$(top_srcdir)/gtest/include -I$(top_srcdir)/gtest
@@ -56,6 +57,9 @@ process_test_helper_CPPFLAGS = $(AM_CPPFLAGS)
 xserver_test_SOURCES = xserver-test.cpp
 xserver_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
 xserver_test_LDADD =  $(tests_libraries)
+
+xserver_test_helper_SOURCES = xserver-test-helper.cpp
+xserver_test_helper_CPPFLAGS = $(AM_CPPFLAGS)
 
 device_test_SOURCES = device-test.cpp
 device_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include

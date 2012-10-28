@@ -204,6 +204,16 @@ class XServer : public xorg::testing::Process {
     void SetOption(const std::string &key, const std::string &value = "");
 
     /**
+     * Remove a previously set option.
+     *
+     * If an option was set through SetOption(), remove the option again. If
+     * the specified option has never been set, do nothing.
+     *
+     * @param [in] option Commandline option to remove
+     */
+    void RemoveOption(const std::string &option);
+
+    /**
      * Wait for a specific device to be added to the server.
      *
      * @param [in] display The X display connection

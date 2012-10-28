@@ -529,6 +529,10 @@ void xorg::testing::XServer::SetOption(const std::string &key, const std::string
   d_->options[key] = value;
 }
 
+void xorg::testing::XServer::RemoveOption(const std::string &option) {
+  d_->options.erase(option);
+}
+
 const std::string& xorg::testing::XServer::GetLogFilePath() {
   return d_->options["-logfile"];
 }

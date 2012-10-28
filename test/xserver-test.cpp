@@ -274,6 +274,18 @@ TEST(XServer, KeepAlive)
   ASSERT_EQ(errno, ESRCH);
 }
 
+TEST(XServer, RemoveOption)
+{
+  XServer server;
+  server.SetOption("-fail", "yes");
+  server.Start(TEST_ROOT_DIR "/xserver-test-helper");
+  ASSERT_EQ(server.GetState(), Process::FINISHED_FAILURE);
+
+  server.RemoveOption("-fail");
+  server.Start(TEST_ROOT_DIR "/xserver-test-helper");
+  ASSERT_EQ(server.GetState(), Process::FINISHED_SUCCESS);
+}
+
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

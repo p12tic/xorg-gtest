@@ -1,4 +1,5 @@
 process-test
 process-test-helper
 xserver-test
+xserver-test-helper
 device-test
