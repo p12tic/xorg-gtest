@@ -42,8 +42,14 @@
 
 #include <X11/Xlib.h>
 
+#include "defines.h"
+
 struct xorg::testing::Environment::Private {
-  Private() : display(-1) {
+  Private() : path_to_conf(DUMMY_CONF_PATH),
+              path_to_log_file(DEFAULT_XORG_LOGFILE),
+              path_to_server(DEFAULT_XORG_SERVER),
+              display(DEFAULT_DISPLAY)
+  {
   }
   std::string path_to_conf;
   std::string path_to_log_file;
@@ -99,12 +105,9 @@ void xorg::testing::Environment::SetDisplayNumber(int display_num)
 }
 
 void xorg::testing::Environment::SetUp() {
-  if (d_->display >= 0)
-    d_->server.SetDisplayNumber(d_->display);
-  if (d_->path_to_log_file.length())
-    d_->server.SetOption("-logfile", d_->path_to_log_file);
-  if (d_->path_to_conf.length())
-    d_->server.SetOption("-config", d_->path_to_log_file);
+  d_->server.SetDisplayNumber(d_->display);
+  d_->server.SetOption("-logfile", d_->path_to_log_file);
+  d_->server.SetOption("-config", d_->path_to_conf);
   d_->server.Start(d_->path_to_server);
 
   Process::SetEnv("DISPLAY", d_->server.GetDisplayString(), true);

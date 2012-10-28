@@ -55,7 +55,8 @@ process_test_helper_SOURCES = process-test-helper.cpp
 process_test_helper_CPPFLAGS = $(AM_CPPFLAGS)
 
 xserver_test_SOURCES = xserver-test.cpp
-xserver_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
+xserver_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include \
+			-DDUMMY_CONF_PATH="\"$(top_srcdir)/data/xorg/gtest/dummy.conf\""
 xserver_test_LDADD =  $(tests_libraries)
 
 xserver_test_helper_SOURCES = xserver-test-helper.cpp

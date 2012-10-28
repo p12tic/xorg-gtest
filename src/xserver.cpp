@@ -52,9 +52,6 @@ struct xorg::testing::XServer::Private {
   Private()
       : display_number(DEFAULT_DISPLAY),
         path_to_server(DEFAULT_XORG_SERVER) {
-
-    options["-config"] = DUMMY_CONF_PATH;
-    options["-logfile"] = DEFAULT_XORG_LOGFILE;
   }
 
   unsigned int display_number;

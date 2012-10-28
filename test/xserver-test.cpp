@@ -20,6 +20,7 @@ TEST(XServer, LogRemoval)
 
   XServer server;
   server.SetOption("-logfile", logfile);
+  server.SetOption("-config", DUMMY_CONF_PATH);
   server.Start();
   server.Terminate(3000);
   server.RemoveLogFile();
@@ -63,6 +64,7 @@ TEST(XServer, WaitForSIGUSR1)
   for (int i = 0; i < 20; i++) {
     XServer server;
     server.SetOption("-logfile", "/tmp/xorg-testing-xserver-sigusr1.log");
+    server.SetOption("-config", DUMMY_CONF_PATH);
     server.SetOption("-noreset", "");
     server.Start();
     ASSERT_EQ(server.GetState(), Process::RUNNING);
@@ -103,6 +105,7 @@ TEST(XServer, WaitForDeviceEventMask)
 
   XServer server;
   server.SetOption("-logfile", "/tmp/Xorg-WaitForDevice.log");
+  server.SetOption("-config", DUMMY_CONF_PATH);
   server.SetOption("-noreset", "");
   server.Start();
   ASSERT_EQ(server.GetState(), Process::RUNNING);
@@ -165,6 +168,7 @@ TEST(XServer, WaitForExistingDevice)
 
   XServer server;
   server.SetOption("-logfile", "/tmp/Xorg-WaitForDevice.log");
+  server.SetOption("-config", DUMMY_CONF_PATH);
   server.SetOption("-noreset", "");
   server.Start();
   ASSERT_EQ(server.GetState(), Process::RUNNING);
@@ -180,6 +184,7 @@ TEST(XServer, WaitForNewDevice)
 
   XServer server;
   server.SetOption("-logfile", "/tmp/Xorg-WaitForDevice.log");
+  server.SetOption("-config", DUMMY_CONF_PATH);
   server.SetOption("-noreset", "");
   server.Start();
   ASSERT_EQ(server.GetState(), Process::RUNNING);
@@ -197,6 +202,7 @@ TEST(XServer, IOErrorException)
   ASSERT_THROW({
   XServer server;
   server.SetOption("-logfile", "/tmp/xorg-io-error-test.log");
+  server.SetOption("-config", DUMMY_CONF_PATH);
   server.SetOption("-noreset", "");
   server.Start();
   ASSERT_EQ(server.GetState(), Process::RUNNING);
@@ -224,6 +230,7 @@ TEST(XServer, KeepAlive)
 
     XServer server;
     server.SetOption("-logfile", "/tmp/Xorg-keepalive.log");
+    server.SetOption("-config", DUMMY_CONF_PATH);
     server.SetOption("-noreset", "");
     server.Start();
     ASSERT_EQ(server.GetState(), Process::RUNNING);
@@ -278,6 +285,7 @@ TEST(XServer, RemoveOption)
 {
   XServer server;
   server.SetOption("-fail", "yes");
+  server.SetOption("-logfile", "/tmp/Xorg-remove-option.log");
   server.Start(TEST_ROOT_DIR "/xserver-test-helper");
   ASSERT_EQ(server.GetState(), Process::FINISHED_FAILURE);
 
