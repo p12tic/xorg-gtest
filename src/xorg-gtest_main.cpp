@@ -60,7 +60,7 @@ xorg::testing::Environment* environment = NULL;
 static void signal_handler(int signum) {
   if (environment)
     environment->Kill();
-  
+
   /* This will call the default handler because we used SA_RESETHAND */
   raise(signum);
 }
