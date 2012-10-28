@@ -88,7 +88,7 @@ class XServer : public xorg::testing::Process {
      *
      * @param [in] program Path to the XServer binary
      */
-    void Start(const std::string &program = "");
+    virtual void Start(const std::string &program = "");
 
     /**
      * Terminates this server process. Will signal the server to terminate
