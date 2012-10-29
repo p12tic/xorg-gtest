@@ -201,7 +201,7 @@ class XServer : public xorg::testing::Process {
      * @param [in] key Commandline option
      * @param [in] value Option value (if any)
      */
-    void SetOption(const std::string &key, const std::string &value);
+    void SetOption(const std::string &key, const std::string &value = "");
 
     /**
      * Wait for a specific device to be added to the server.
