@@ -53,11 +53,19 @@ libxorg_gtest_main_a_CPPFLAGS = \
 	-I$(top_srcdir)
 libxorg_gtest_main_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 
-noinst_PROGRAMS = xorg-gtest-environment-example
+noinst_PROGRAMS = xorg-gtest-environment-example xorg-gtest-example
 
 if ENABLE_XORG_GTEST_TESTS
 TESTS = $(noinst_PROGRAMS)
 endif
+xorg_gtest_example_SOURCES = xorg-gtest-example.cpp
+xorg_gtest_example_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
+xorg_gtest_example_LDADD = \
+                           libgtest.a \
+                           libxorg-gtest.a \
+			   -lpthread \
+			   $(X11_LIBS) \
+			   $(EVEMU_LIBS)
 
 xorg_gtest_environment_example_SOURCES = xorg-gtest-environment-example.cpp
 
