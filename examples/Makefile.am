@@ -42,7 +42,7 @@ libxorg_gtest_a_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir) \
-	-DDUMMY_CONF_PATH="\"$(top_srcdir)/data/xorg/gtest/dummy.conf\""
+	-DDUMMY_CONF_PATH="\"$(abs_top_srcdir)/data/xorg/gtest/dummy.conf\""
 libxorg_gtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 
 # build xorg-gtest's main as separate lib for those that need it
