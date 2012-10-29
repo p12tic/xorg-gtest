@@ -240,7 +240,7 @@ TEST(XServer, KeepAlive)
     ASSERT_EQ(write(pipefd[1], buffer, strlen(buffer)), (int)strlen(buffer));
     close(pipefd[1]);
     free(buffer);
-    return;
+    exit(0);
   }
 
   sigset_t sig_mask;
