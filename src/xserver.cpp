@@ -489,6 +489,10 @@ void xorg::testing::XServer::Start(const std::string &program) {
   sigaddset(&sig_mask, SIGUSR1);
   sigprocmask(SIG_UNBLOCK, &sig_mask, NULL);
 
+  /* Ignore SIGUSR1, it's triggered on server regeneration. Tests that need
+   * to handle SIGUSR1 will have to install their own signal handler anyways */
+  signal(SIGUSR1 ,SIG_IGN);
+
   RegisterXIOErrorHandler();
 }
 
