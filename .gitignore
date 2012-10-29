@@ -78,4 +78,4 @@ core
 #
 doc/api
 doc/Doxyfile
-examples/xorg-gtest-example
+examples/xorg-gtest-environment-example
