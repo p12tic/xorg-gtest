@@ -13,7 +13,7 @@ using namespace xorg::testing;
 TEST(XServer, LogRemoval)
 {
   XORG_TESTCASE("X server startup and log file removal on success and error");
-  std::string logfile = "/tmp/xorg-testing-xserver_____________.log";
+  std::string logfile = LOGFILE_DIR "/xorg-testing-xserver_____________.log";
 
   /* make sure a previous failed test didn't leave it around */
   unlink(logfile.c_str());
@@ -63,7 +63,7 @@ TEST(XServer, WaitForSIGUSR1)
                 "succeed as we wait for the SIGUSR1 signal\n");
   for (int i = 0; i < 20; i++) {
     XServer server;
-    server.SetOption("-logfile", "/tmp/xorg-testing-xserver-sigusr1.log");
+    server.SetOption("-logfile", LOGFILE_DIR "/xorg-testing-xserver-sigusr1.log");
     server.SetOption("-config", DUMMY_CONF_PATH);
     server.SetOption("-noreset", "");
     server.Start();
@@ -104,7 +104,7 @@ TEST(XServer, WaitForDeviceEventMask)
   XORG_TESTCASE("The event mask is left as-is by WaitForDevice");
 
   XServer server;
-  server.SetOption("-logfile", "/tmp/Xorg-WaitForDevice.log");
+  server.SetOption("-logfile", LOGFILE_DIR "/Xorg-WaitForDevice.log");
   server.SetOption("-config", DUMMY_CONF_PATH);
   server.SetOption("-noreset", "");
   server.Start();
@@ -167,7 +167,7 @@ TEST(XServer, WaitForExistingDevice)
   xorg::testing::evemu::Device d(TEST_ROOT_DIR "PIXART-USB-OPTICAL-MOUSE.desc");
 
   XServer server;
-  server.SetOption("-logfile", "/tmp/Xorg-WaitForDevice.log");
+  server.SetOption("-logfile", LOGFILE_DIR "/Xorg-WaitForDevice.log");
   server.SetOption("-config", DUMMY_CONF_PATH);
   server.SetOption("-noreset", "");
   server.Start();
@@ -183,7 +183,7 @@ TEST(XServer, WaitForNewDevice)
   XORG_TESTCASE("WaitForDevice() waits for newly created dvice");
 
   XServer server;
-  server.SetOption("-logfile", "/tmp/Xorg-WaitForDevice.log");
+  server.SetOption("-logfile", LOGFILE_DIR "/Xorg-WaitForDevice.log");
   server.SetOption("-config", DUMMY_CONF_PATH);
   server.SetOption("-noreset", "");
   server.Start();
@@ -201,7 +201,7 @@ TEST(XServer, IOErrorException)
 {
   ASSERT_THROW({
   XServer server;
-  server.SetOption("-logfile", "/tmp/xorg-io-error-test.log");
+  server.SetOption("-logfile", LOGFILE_DIR "/xorg-io-error-test.log");
   server.SetOption("-config", DUMMY_CONF_PATH);
   server.SetOption("-noreset", "");
   server.Start();
@@ -229,7 +229,7 @@ TEST(XServer, KeepAlive)
     ASSERT_TRUE(getenv("XORG_GTEST_XSERVER_KEEPALIVE") != NULL);
 
     XServer server;
-    server.SetOption("-logfile", "/tmp/Xorg-keepalive.log");
+    server.SetOption("-logfile", LOGFILE_DIR "/Xorg-keepalive.log");
     server.SetOption("-config", DUMMY_CONF_PATH);
     server.SetOption("-noreset", "");
     server.Start();
@@ -285,7 +285,7 @@ TEST(XServer, RemoveOption)
 {
   XServer server;
   server.SetOption("-fail", "yes");
-  server.SetOption("-logfile", "/tmp/Xorg-remove-option.log");
+  server.SetOption("-logfile", LOGFILE_DIR "/Xorg-remove-option.log");
   server.Start(TEST_ROOT_DIR "/xserver-test-helper");
   ASSERT_EQ(server.GetState(), Process::FINISHED_FAILURE);
 

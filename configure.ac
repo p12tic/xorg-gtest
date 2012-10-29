@@ -26,6 +26,12 @@ XORG_ENABLE_INTEGRATION_TESTS([yes])
 XORG_WITH_DOXYGEN
 
 PKG_CHECK_MODULES(X11, x11 xi)
+
+AC_ARG_WITH(logfile-dir, [AS_HELP_STRING([--with-logfile-dir=/tmp]),
+                          [Base path for log files used as defaults and during tests (default: /tmp)]],
+                         [LOGFILE_DIR="$withval"], [LOGFILE_DIR="/tmp"])
+AC_DEFINE_DIR(LOGFILE_DIR, LOGFILE_DIR, [Log file path])
+AC_SUBST(DUMMY_CONF_PATH, ['${LOGFILE_DIR}'])
  
 # Check if we should include support for evemu
 AC_ARG_WITH([evemu],
