@@ -50,8 +50,15 @@ void xorg::testing::Test::SetUp() {
     dpy = d_->display_string.c_str();
 
   d_->display = XOpenDisplay(dpy);
-  if (!d_->display)
-    throw std::runtime_error("Failed to open connection to display");
+  if (!d_->display) {
+    std::stringstream ss;
+    ss << "Failed to open connection to display";
+    if (dpy != NULL) ss << " " << dpy;
+    ss << ".\nThis usually means that your X server did not start properly.\n";
+    ss << "Check the log file, or set XORG_GTEST_CHILD_STDOUT to see the server's\n"
+          "error messages when starting.";
+    throw std::runtime_error(ss.str());
+  }
 }
 
 void xorg::testing::Test::TearDown() {
