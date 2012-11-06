@@ -394,6 +394,40 @@ const std::string& xorg::testing::XServer::GetVersion(void) {
   return d_->version;
 }
 
+static int _x_error_handler(Display *dpy, XErrorEvent *err)
+{
+  std::stringstream error;
+  switch(err->error_code) {
+    case BadRequest: error << "BadRequest"; break;
+    case BadValue: error << "BadValue"; break;
+    case BadWindow: error << "BadWindow"; break;
+    case BadPixmap: error << "BadPixmap"; break;
+    case BadAtom: error << "BadAtom"; break;
+    case BadCursor: error << "BadCursor"; break;
+    case BadFont: error << "BadFont"; break;
+    case BadMatch: error << "BadMatch"; break;
+    case BadDrawable: error << "BadDrawable"; break;
+    case BadAccess: error << "BadAccess"; break;
+    case BadAlloc: error << "BadAlloc"; break;
+    case BadColor: error << "BadColor"; break;
+    case BadGC: error << "BadGC"; break;
+    case BadIDChoice: error << "BadIDChoice"; break;
+    case BadName: error << "BadName"; break;
+    case BadLength: error << "BadLength"; break;
+    case BadImplementation: error << "BadImplementation"; break;
+    default:
+      error << err->error_code;
+      break;
+  }
+
+  ADD_FAILURE() << "XError received: " << error.str() << ", request " <<
+    (int)err->request_code << "(" << (int)err->minor_code << "), detail: "
+    << err->resourceid << "\nThis error handler is likely to be triggered "
+    "more than once.\nCheck the first error for the real error";
+  return 0;
+}
+
+
 static int _x_io_error_handler(Display *dpy) _X_NORETURN;
 static int _x_io_error_handler(Display *dpy)
 {
@@ -407,6 +441,15 @@ void xorg::testing::XServer::RegisterXIOErrorHandler()
 
   if (old_handler != _XDefaultIOError)
     XSetIOErrorHandler(old_handler);
+}
+
+void xorg::testing::XServer::RegisterXErrorHandler()
+{
+  XErrorHandler old_handler;
+  old_handler = XSetErrorHandler(_x_error_handler);
+
+  if (old_handler != _XDefaultError)
+    XSetErrorHandler(old_handler);
 }
 
 void xorg::testing::XServer::Start(const std::string &program) {
@@ -494,6 +537,7 @@ void xorg::testing::XServer::Start(const std::string &program) {
   signal(SIGUSR1 ,SIG_IGN);
 
   RegisterXIOErrorHandler();
+  RegisterXErrorHandler();
 }
 
 bool xorg::testing::XServer::Terminate(unsigned int timeout) {

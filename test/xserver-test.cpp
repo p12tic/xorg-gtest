@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 #include <xorg/gtest/xorg-gtest.h>
+#include <gtest/gtest-spi.h>
 #include <X11/extensions/XInput2.h>
 
 using namespace xorg::testing;
@@ -211,6 +212,78 @@ TEST(XServer, IOErrorException)
   close(ConnectionNumber(dpy));
   XSync(dpy, False);
   }, XIOError);
+}
+
+TEST(XServer, ErrorHandler)
+{
+  XORG_TESTCASE("Start a server, trigger a BadColor error and expect a "
+                 "failure from the default error handler\n");
+
+  pid_t pid = fork();
+
+  if (pid == 0) {
+    EXPECT_NONFATAL_FAILURE({
+      XServer server;
+      server.SetOption("-logfile", LOGFILE_DIR "/xorg-error-handler-test.log");
+      server.SetOption("-config", DUMMY_CONF_PATH);
+      server.SetOption("-noreset", "");
+      server.Start();
+      ASSERT_EQ(server.GetState(), Process::RUNNING);
+      ::Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
+      ASSERT_TRUE(dpy != NULL);
+      XColor color;
+      XQueryColor(dpy, 0, &color);
+      XSync(dpy, False);
+    }, "BadColor");
+    exit(0);
+  }
+
+  /* if the Xlib default error handler triggers, child calls exit(1) */
+  int status;
+  ASSERT_EQ(waitpid(pid, &status, 0), pid);
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(WEXITSTATUS(status), 0);
+}
+
+static bool error_handler_triggered = false;
+
+static int _test_error_handler(Display *dpy, XErrorEvent *error) {
+  error_handler_triggered = true;
+  if (error->error_code != BadColor)
+    ADD_FAILURE() << "Error handler triggered with wrong error code\n";
+  return 0;
+}
+
+TEST(XServer, NondefaultErrorHandler)
+{
+  XORG_TESTCASE("Set a custom error handler, start a server, trigger a "
+                "BadColor error and expect the custom error handler to be "
+                "triggered\n");
+
+  pid_t pid = fork();
+
+  if (pid == 0) {
+    XSetErrorHandler(_test_error_handler);
+
+    XServer server;
+    server.SetOption("-logfile", LOGFILE_DIR "/xorg-error-handler-test.log");
+    server.SetOption("-config", DUMMY_CONF_PATH);
+    server.SetOption("-noreset", "");
+    server.Start();
+    ASSERT_EQ(server.GetState(), Process::RUNNING);
+    ::Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
+    ASSERT_TRUE(dpy != NULL);
+    XColor color;
+    XQueryColor(dpy, 0, &color);
+    XSync(dpy, False);
+    exit(error_handler_triggered ? 0 : 1);
+  }
+
+  /* if the Xlib default error handler triggers, child calls exit(1) */
+  int status;
+  ASSERT_EQ(waitpid(pid, &status, 0), pid);
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(WEXITSTATUS(status), 0);
 }
 
 TEST(XServer, KeepAlive)

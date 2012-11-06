@@ -265,6 +265,19 @@ class XServer : public xorg::testing::Process {
      */
     static void RegisterXIOErrorHandler();
 
+    /**
+     * Install a default XErrorHandler. That error handler will cause a test
+     * failure if called.
+     *
+     * This function is called automatically by XServer::Start(). Usually,
+     * you will not need to call this function unless your test does not
+     * instantiate and Start() an XServer object.
+     *
+     * This function will only install a new error handler if the currently
+     * installed XErrorHandler is not the default handler used by Xlib.
+     */
+    static void RegisterXErrorHandler();
+
   private:
     struct Private;
     std::auto_ptr<Private> d_;
