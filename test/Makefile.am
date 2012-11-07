@@ -32,7 +32,7 @@ test_programs = process-test \
 noinst_PROGRAMS = $(test_programs) \
 		  process-test-helper \
 		  xserver-test-helper
-noinst_DATA = PIXART-USB-OPTICAL-MOUSE.desc
+dist_noinst_DATA = PIXART-USB-OPTICAL-MOUSE.desc
 
 GTEST_CPPFLAGS=-I$(top_srcdir)/gtest/include -I$(top_srcdir)/gtest
 
