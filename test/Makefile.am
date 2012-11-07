@@ -56,7 +56,7 @@ process_test_helper_CPPFLAGS = $(AM_CPPFLAGS)
 
 xserver_test_SOURCES = xserver-test.cpp
 xserver_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include \
-			-DDUMMY_CONF_PATH="\"$(top_srcdir)/data/xorg/gtest/dummy.conf\""
+			-DDUMMY_CONF_PATH="\"$(abs_top_srcdir)/data/xorg/gtest/dummy.conf\""
 xserver_test_LDADD =  $(tests_libraries)
 
 xserver_test_helper_SOURCES = xserver-test-helper.cpp
@@ -79,7 +79,7 @@ libxorg_gtest_a_CPPFLAGS = \
 	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir) \
-	-DDUMMY_CONF_PATH="\"$(top_srcdir)/data/xorg/gtest/dummy.conf\""
+	-DDUMMY_CONF_PATH="\"$(abs_top_srcdir)/data/xorg/gtest/dummy.conf\""
 libxorg_gtest_a_CXXFLAGS = $(AM_CXXFLAGS)
 
 if ENABLE_XORG_GTEST_TESTS
