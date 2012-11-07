@@ -22,4 +22,4 @@
 # SOFTWARE.
 #
 
-nobase_include_HEADERS = gtest/gtest.h
+nobase_include_HEADERS = gtest/gtest.h gtest/gtest-spi.h
