@@ -1,3 +1,6 @@
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include <errno.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -263,6 +266,112 @@ TEST(Process, ForkedChildDoubleStart)
     }, std::runtime_error);
   }
 }
+
+class ProcessValgrindWrapper : public ::testing::Test,
+                               public ::testing::WithParamInterface<std::string> {
+public:
+  virtual void SetUp() {
+    CheckForValgrind();
+  }
+
+  virtual void CheckForValgrind() {
+    Process valgrind;
+
+    /* check if valgrind actually exists */
+    valgrind.Start("valgrind", "--version", NULL);
+    int status;
+    ASSERT_EQ(waitpid(valgrind.Pid(), &status, 0), valgrind.Pid());
+    ASSERT_TRUE(WIFEXITED(status));
+    ASSERT_EQ(WEXITSTATUS(status), 0) << "valgrind failed to start\n";
+  }
+};
+
+TEST_P(ProcessValgrindWrapper, ValgrindWrapper)
+{
+  XORG_TESTCASE("Use the valgrind wrapper to start valgrind");
+
+  std::string executable = GetParam();
+
+  /* now set the env and fire up valgrind */
+  setenv("XORG_GTEST_USE_VALGRIND", executable.c_str(), 1);
+  Process p;
+  p.Start("ls", NULL);
+  unsetenv("XORG_GTEST_USE_VALGRIND");
+
+  /* Check /proc/<pid>/comm to make sure valgrind
+     was started. But comm takes a while to update, it's first our binary
+     then valgrind, then memcheck-amd64 (or whatever applies)
+  */
+  char buff[1024] = {0};
+  char fname[128];
+  sprintf(fname, "/proc/%d/comm", p.Pid());
+
+  do {
+    FILE *fp = fopen(fname, "r");
+    ASSERT_TRUE(fp);
+    fgets(buff, sizeof(buff), fp);
+    fclose(fp);
+  } while(strstr(buff, program_invocation_short_name));
+
+  if (executable.compare("valgrind") == 0)
+    ASSERT_TRUE(strstr(buff, "memcheck") || strstr(buff, "valgrind"));
+  else
+    ASSERT_TRUE(strstr(buff, executable.c_str()));
+}
+
+class ProcessValgrindArgsWrapper : public ProcessValgrindWrapper {};
+
+TEST_P(ProcessValgrindArgsWrapper, ValgrindWrapperWithArgs)
+{
+  XORG_TESTCASE("Use the valgrind wrapper with additional args to start valgrind");
+
+  std::string vargs = GetParam();
+  std::vector<std::string> valgrind_args;
+  char *all_args = strdup(vargs.c_str());
+  char *tok = strtok(all_args, " ");
+  while(tok) {
+    valgrind_args.push_back(std::string(tok));
+    tok = strtok(NULL, " ");
+  }
+  free(all_args);
+
+  /* now set the env and fire up valgrind */
+  setenv("XORG_GTEST_USE_VALGRIND", vargs.c_str(), 1);
+  Process p;
+  p.Start(TEST_ROOT_DIR "process-test-helper", NULL);
+  unsetenv("XORG_GTEST_USE_VALGRIND");
+
+  ASSERT_EQ(p.GetState(), Process::RUNNING);
+
+  char buff[1024] = {0};
+  char fname[128];
+  sprintf(fname, "/proc/%d/cmdline", p.Pid());
+
+  do {
+    FILE *fp = fopen(fname, "r");
+    ASSERT_TRUE(fp);
+    fgets(buff, sizeof(buff), fp);
+    fclose(fp);
+  } while(strstr(buff, program_invocation_short_name));
+
+  const char * arg = buff + strlen(buff) + 1;
+  std::vector<std::string>::const_iterator it = valgrind_args.begin();
+
+  it++; /* first one is "valgrind" */
+
+  while(strlen(arg) && it != valgrind_args.end()) {
+    ASSERT_EQ(it->compare(arg), 0);
+    arg += strlen(arg) + 1;
+    it++;
+  }
+
+  ASSERT_EQ(it, valgrind_args.end());
+  p.Kill(100);
+}
+
+INSTANTIATE_TEST_CASE_P(, ProcessValgrindWrapper, ::testing::Values("valgrind", "ls"));
+INSTANTIATE_TEST_CASE_P(, ProcessValgrindArgsWrapper,
+                        ::testing::Values("valgrind --leak-check=full", "valgrind -q --trace-children=yes", "valgrind "));
 
 int main(int argc, char *argv[]) {
   testing::InitGoogleTest(&argc, argv);

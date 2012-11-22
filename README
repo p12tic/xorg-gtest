@@ -85,3 +85,7 @@ XORG_GTEST_XSERVER_KEEPALIVE
 XORG_GTEST_CHILD_STDOUT
   If set to any value, Process::Start() will _not_ close stdout/stdin/stderr
   for the forked child.
+XORG_GTEST_USE_VALGRIND
+  Set to the valgrind command to use when starting a process. Options must
+  be space-separated, e.g. "valgrind --leak-check=full --someotherarg"
+  Not limited to valgrind, you can specify any executable here.

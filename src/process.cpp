@@ -100,13 +100,22 @@ void xorg::testing::Process::Start(const std::string &program, const std::vector
     std::vector<char*> args;
     std::vector<std::string>::const_iterator it;
 
+    char *valgrind = getenv("XORG_GTEST_USE_VALGRIND");
+    if (valgrind) {
+      char *tok = strtok(valgrind, " ");
+      while(tok) {
+        args.push_back(strdup(tok));
+        tok = strtok(NULL, " ");
+      }
+    }
+
     args.push_back(strdup(program.c_str()));
 
     for (it = argv.begin(); it != argv.end(); it++)
       args.push_back(strdup(it->c_str()));
     args.push_back(NULL);
 
-    execvp(program.c_str(), &args[0]);
+    execvp(args[0], &args[0]);
 
     d_->state = ERROR;
     throw std::runtime_error("Failed to start process");
