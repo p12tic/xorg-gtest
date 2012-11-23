@@ -250,7 +250,7 @@ class XServer : public xorg::testing::Process {
      *
      * @return Whether an event is available
      */
-    static bool WaitForEventOfType(::Display *display, int type, int extension, int evtype, time_t timeout = 1000);
+    static bool WaitForEventOfType(::Display *display, int type, int extension = -1, int evtype = -1, time_t timeout = 1000);
 
     /**
      * Install a default XIOErrorHandler. That error handler will throw an
