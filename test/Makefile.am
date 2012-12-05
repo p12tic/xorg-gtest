@@ -36,8 +36,8 @@ dist_noinst_DATA = PIXART-USB-OPTICAL-MOUSE.desc
 
 GTEST_CPPFLAGS=-I$(top_srcdir)/gtest/include -I$(top_srcdir)/gtest
 
-AM_CPPFLAGS = $(GTEST_CPPFLAGS)
-AM_CXXFLAGS = $(BASE_CXXFLAGS) \
+AM_CPPFLAGS = $(GTEST_CPPFLAGS) $(BASE_CPPFLAGS)
+AM_CXXFLAGS = $(BASE_CXXFLAGS) $(BASE_CPPFLAGS) \
 	      -DTEST_ROOT_DIR=\"$(abs_top_srcdir)/test/\"
 
 tests_libraries = \
@@ -48,14 +48,14 @@ tests_libraries = \
 	$(EVEMU_LIBS)
 
 process_test_SOURCES = process-test.cpp
-process_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
+process_test_CPPFLAGS = -I$(top_srcdir)/include $(AM_CPPFLAGS)
 process_test_LDADD =  $(tests_libraries)
 
 process_test_helper_SOURCES = process-test-helper.cpp
 process_test_helper_CPPFLAGS = $(AM_CPPFLAGS)
 
 xserver_test_SOURCES = xserver-test.cpp
-xserver_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include \
+xserver_test_CPPFLAGS = -I$(top_srcdir)/include $(AM_CPPFLAGS) \
 			-DDUMMY_CONF_PATH="\"$(abs_top_srcdir)/data/xorg/gtest/dummy.conf\""
 xserver_test_LDADD =  $(tests_libraries)
 

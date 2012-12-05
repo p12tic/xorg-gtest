@@ -51,6 +51,8 @@ AS_IF([test "x$have_evemu" = xyes], [AC_DEFINE([HAVE_EVEMU])])
 AC_SUBST(SOURCEDIR, ['${prefix}/src/xorg-gtest'])
 AC_SUBST(DUMMY_CONF_PATH, ['${datarootdir}/xorg/gtest/dummy.conf'])
 
+AC_SUBST(BASE_CPPFLAGS, ['$(X11_CFLAGS) $(EVEMU_CFLAGS)'])
+
 # Check if we can build integration tests
 AS_IF([test "x$enable_integration_tests" != xno],
       [AC_MSG_CHECKING([for X.org server])]

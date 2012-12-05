@@ -39,18 +39,18 @@ libgtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 # build xorg-gtest as static lib
 libxorg_gtest_a_SOURCES = $(top_srcdir)/src/xorg-gtest-all.cpp
 libxorg_gtest_a_CPPFLAGS = \
-	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir) \
+	$(AM_CPPFLAGS) \
 	-DDUMMY_CONF_PATH="\"$(abs_top_srcdir)/data/xorg/gtest/dummy.conf\""
 libxorg_gtest_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 
 # build xorg-gtest's main as separate lib for those that need it
 libxorg_gtest_main_a_SOURCES = $(top_srcdir)/src/xorg-gtest_main.cpp
 libxorg_gtest_main_a_CPPFLAGS = \
-	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/include \
-	-I$(top_srcdir)
+	-I$(top_srcdir) \
+	$(AM_CPPFLAGS)
 libxorg_gtest_main_a_CXXFLAGS = $(GTEST_CXXFLAGS) $(AM_CXXFLAGS)
 
 noinst_PROGRAMS = xorg-gtest-environment-example xorg-gtest-example
@@ -59,7 +59,7 @@ if ENABLE_XORG_GTEST_TESTS
 TESTS = $(noinst_PROGRAMS)
 endif
 xorg_gtest_example_SOURCES = xorg-gtest-example.cpp
-xorg_gtest_example_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
+xorg_gtest_example_CPPFLAGS = -I$(top_srcdir)/include $(AM_CPPFLAGS)
 xorg_gtest_example_LDADD = \
                            libgtest.a \
                            libxorg-gtest.a \
@@ -69,7 +69,7 @@ xorg_gtest_example_LDADD = \
 
 xorg_gtest_environment_example_SOURCES = xorg-gtest-environment-example.cpp
 
-xorg_gtest_environment_example_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
+xorg_gtest_environment_example_CPPFLAGS = -I$(top_srcdir)/include $(AM_CPPFLAGS)
 
 xorg_gtest_environment_example_LDADD = \
 	libgtest.a \
