@@ -315,6 +315,8 @@ TEST(XServer, KeepAlive)
     server.Kill();
     ASSERT_EQ(server.GetState(), Process::RUNNING);
 
+    unsetenv("XORG_GTEST_XSERVER_KEEPALIVE");
+
     char *buffer;
     ASSERT_GT(asprintf(&buffer, "%d", server.Pid()), 0);
     ASSERT_EQ(write(pipefd[1], buffer, strlen(buffer)), (int)strlen(buffer));
