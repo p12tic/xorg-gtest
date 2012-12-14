@@ -358,10 +358,15 @@ TEST(XServer, KeepAlive)
 
 TEST(XServer, RemoveOption)
 {
+  int i = 0;
   XServer server;
   server.SetOption("-fail", "yes");
   server.SetOption("-logfile", LOGFILE_DIR "/Xorg-remove-option.log");
   server.Start(TEST_ROOT_DIR "/xserver-test-helper");
+
+  while(i++ < 10 && server.GetState() == Process::RUNNING)
+    usleep(50000);
+
   ASSERT_EQ(server.GetState(), Process::FINISHED_FAILURE);
 
   server.RemoveOption("-fail");
