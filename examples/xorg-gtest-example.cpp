@@ -81,6 +81,7 @@ public:
     server.RemoveLogFile();
   }
 protected:
+  /** The X server instance */
   XServer server;
 };
 

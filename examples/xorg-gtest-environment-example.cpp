@@ -91,6 +91,7 @@ public:
   }
 
 protected:
+  /** Example property that we'll use in the test */
   Atom example_prop;
 };
 
