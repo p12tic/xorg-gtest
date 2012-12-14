@@ -263,7 +263,8 @@ TEST(XServer, NondefaultErrorHandler)
   pid_t pid = fork();
 
   if (pid == 0) {
-    XSetErrorHandler(_test_error_handler);
+    XErrorHandler old_handler;
+    old_handler = XSetErrorHandler(_test_error_handler);
 
     XServer server;
     server.SetOption("-logfile", LOGFILE_DIR "/xorg-error-handler-test.log");
@@ -276,6 +277,7 @@ TEST(XServer, NondefaultErrorHandler)
     XColor color;
     XQueryColor(dpy, 0, &color);
     XSync(dpy, False);
+    XSetErrorHandler(old_handler);
     exit(error_handler_triggered ? 0 : 1);
   }
 
