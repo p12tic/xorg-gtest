@@ -176,8 +176,12 @@ bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
       d_->state = FINISHED_FAILURE;
     }
     return true;
-  } else
+  } else {
+    /* prevent callers from getting odd erros if they check for errno */
+    if (pid == 0)
+      errno = 0;
     return (pid == -1 && errno == ECHILD);
+  }
 }
 
 bool xorg::testing::Process::KillSelf(int signal, unsigned int timeout) {
