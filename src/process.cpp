@@ -155,18 +155,15 @@ bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
     struct timespec sig_timeout = {timeout / 1000,
                                    (timeout % 1000) * 1000000L};
 
-    if (sigtimedwait(&sig_mask, NULL, &sig_timeout) != SIGCHLD && errno != EAGAIN) {
-      SCOPED_TRACE("INFO: Failure waiting for SIGCHLD: " +
-                   std::string(strerror(errno)) + ". I slept instead.");
+    if (sigtimedwait(&sig_mask, NULL, &sig_timeout) != SIGCHLD && errno != EAGAIN)
       usleep(timeout * 1000);
-    }
 
     if (!sigismember(&sig_mask, SIGCHLD)) {
       if (sigprocmask(SIG_UNBLOCK, &sig_mask, NULL) == -1)
-        SCOPED_TRACE("WARNING: Failed to unblock SIGCHLD. Tests may behave funny.\n");
+        std::cout << "WARNING: Failed to unblock SIGCHLD. Tests may behave funny.\n";
     }
+
   } else { /* oops, can't wait for SIGCHLD, sleep instead */
-    SCOPED_TRACE("INFO: Failed to set SIGCHLD mask, sleeping instead.\n");
     usleep(timeout * 1000);
   }
 
