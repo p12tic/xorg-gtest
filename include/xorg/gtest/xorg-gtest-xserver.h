@@ -101,7 +101,7 @@ class XServer : public xorg::testing::Process {
      * @returns true if termination succeeded and, if a timout is given, the
      *          process shut down within that timeout. false otherwise.
      */
-    virtual bool Terminate(unsigned int timeout = 1000);
+    virtual bool Terminate(unsigned int timeout = 2000);
 
     /**
      * Kills the server. With a vengeance.
@@ -113,7 +113,7 @@ class XServer : public xorg::testing::Process {
      * @returns true if kill succeeded and, if a timout is given, the
      *          process shut down within that timeout. false otherwise.
      */
-    virtual bool Kill(unsigned int timeout = 1000);
+    virtual bool Kill(unsigned int timeout = 2000);
 
     /**
      * Remove the log file used by this server. By default, this function
