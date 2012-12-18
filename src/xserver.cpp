@@ -108,7 +108,7 @@ bool xorg::testing::XServer::WaitForEvent(::Display *display, time_t timeout)
 
         struct timeval timeval = {
             static_cast<time_t>(timeout / 1000),
-            static_cast<time_t>(timeout % 1000),
+            static_cast<time_t>(timeout % 1000) * 1000,
         };
 
         int ret;
