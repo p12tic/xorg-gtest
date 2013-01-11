@@ -236,6 +236,27 @@ void xorg::testing::evemu::Device::PlayOne(int type, int code, int value, bool s
   }
 }
 
+bool xorg::testing::evemu::Device::HasEvent(int type, int code)
+{
+    return evemu_has_event(d_->device, type, code);
+}
+
+bool xorg::testing::evemu::Device::GetAbsData(int code, int *min, int *max, int *fuzz, int *flat, int *resolution)
+{
+    if (!HasEvent(EV_ABS, code))
+        return false;
+
+    *min = evemu_get_abs_minimum(d_->device, code);
+    *max = evemu_get_abs_maximum(d_->device, code);
+    if (fuzz)
+        *fuzz = evemu_get_abs_fuzz(d_->device, code);
+    if (flat)
+        *flat = evemu_get_abs_flat(d_->device, code);
+    if (resolution)
+        *resolution = evemu_get_abs_resolution(d_->device, code);
+    return true;
+}
+
 const std::string& xorg::testing::evemu::Device::GetDeviceNode(void) {
   if (d_->device_node.empty())
     GuessDeviceNode(d_->ctime);
