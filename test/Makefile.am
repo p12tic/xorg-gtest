@@ -63,7 +63,7 @@ xserver_test_helper_SOURCES = xserver-test-helper.cpp
 xserver_test_helper_CPPFLAGS = $(AM_CPPFLAGS)
 
 device_test_SOURCES = device-test.cpp
-device_test_CPPFLAGS = $(AM_CPPFLAGS) -I$(top_srcdir)/include
+device_test_CPPFLAGS = -I$(top_srcdir)/include $(AM_CPPFLAGS)
 device_test_LDADD =  $(tests_libraries)
 
 check_LIBRARIES = libgtest.a libxorg-gtest.a
@@ -76,9 +76,9 @@ libgtest_a_CXXFLAGS = $(AM_CXXFLAGS)
 # build xorg-gtest as static lib
 libxorg_gtest_a_SOURCES = $(top_srcdir)/src/xorg-gtest-all.cpp
 libxorg_gtest_a_CPPFLAGS = \
-	$(AM_CPPFLAGS) \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir) \
+	$(AM_CPPFLAGS) \
 	-DDUMMY_CONF_PATH="\"$(abs_top_srcdir)/data/xorg/gtest/dummy.conf\""
 libxorg_gtest_a_CXXFLAGS = $(AM_CXXFLAGS)
 
