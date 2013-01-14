@@ -5,7 +5,7 @@
 
 using namespace xorg::testing;
 
-TEST(DEVICE, DeviceNode)
+TEST(Device, DeviceNode)
 {
   XORG_TESTCASE("Device node is /dev/input/eventX");
 
