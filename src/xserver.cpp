@@ -436,19 +436,27 @@ static int _x_io_error_handler(Display *dpy)
 
 void xorg::testing::XServer::RegisterXIOErrorHandler()
 {
-  XIOErrorHandler old_handler;
-  old_handler = XSetIOErrorHandler(_x_io_error_handler);
+  XIOErrorHandler old_handler, def_handler;
 
-  if (old_handler != _XDefaultIOError)
+  old_handler = XSetIOErrorHandler(NULL);
+  def_handler = XSetIOErrorHandler(_x_io_error_handler);
+
+  if (old_handler != def_handler &&
+      old_handler != _XDefaultIOError &&
+      old_handler != _x_io_error_handler)
     XSetIOErrorHandler(old_handler);
 }
 
 void xorg::testing::XServer::RegisterXErrorHandler()
 {
-  XErrorHandler old_handler;
-  old_handler = XSetErrorHandler(_x_error_handler);
+  XErrorHandler old_handler, def_handler;
 
-  if (old_handler != _XDefaultError)
+  old_handler = XSetErrorHandler(NULL);
+  def_handler = XSetErrorHandler(_x_error_handler);
+
+  if (old_handler != def_handler &&
+      old_handler != _XDefaultError &&
+      old_handler != _x_error_handler)
     XSetErrorHandler(old_handler);
 }
 
