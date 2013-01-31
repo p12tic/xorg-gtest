@@ -152,8 +152,9 @@ bool xorg::testing::Process::WaitForExit(unsigned int timeout) {
   sigaddset(&sig_mask, SIGCHLD);
 
   if (sigprocmask(SIG_BLOCK, &sig_mask, &old_mask) == 0) {
-    struct timespec sig_timeout = {timeout / 1000,
-                                   (timeout % 1000) * 1000000L};
+    long tv_secs = timeout / 1000;
+    long tv_usecs = (timeout % 1000) * 1000000L;
+    struct timespec sig_timeout = { tv_secs, tv_usecs };
 
     if (sigtimedwait(&sig_mask, NULL, &sig_timeout) != SIGCHLD && errno != EAGAIN)
       usleep(timeout * 1000);
