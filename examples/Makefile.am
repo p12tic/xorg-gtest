@@ -59,7 +59,10 @@ if ENABLE_XORG_GTEST_TESTS
 TESTS = $(noinst_PROGRAMS)
 endif
 xorg_gtest_example_SOURCES = xorg-gtest-example.cpp
-xorg_gtest_example_CPPFLAGS = -I$(top_srcdir)/include $(AM_CPPFLAGS)
+xorg_gtest_example_CPPFLAGS = \
+	-I$(top_srcdir)/include \
+	$(AM_CPPFLAGS) \
+	-DDUMMY_CONF_PATH="\"$(abs_top_srcdir)/data/xorg/gtest/dummy.conf\""
 xorg_gtest_example_LDADD = \
                            libgtest.a \
                            libxorg-gtest.a \

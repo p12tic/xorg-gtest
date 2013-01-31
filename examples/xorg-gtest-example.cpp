@@ -24,6 +24,7 @@ using namespace xorg::testing;
 TEST(XServer, StartServer) {
   XServer server;
   server.SetOption("-logfile", LOGFILE_DIR "/xserver-startserver.log");
+  server.SetOption("-config",  DUMMY_CONF_PATH);
   server.Start();
 
   ASSERT_EQ(server.GetState(), Process::RUNNING);
@@ -40,6 +41,7 @@ TEST(XServer, StartServer) {
 TEST(XServer, DisplayConnection) {
   XServer server;
   server.SetOption("-logfile", LOGFILE_DIR "/xserver-display-connection.log");
+  server.SetOption("-config",  DUMMY_CONF_PATH);
   server.Start();
 
   Display *dpy = XOpenDisplay(server.GetDisplayString().c_str());
@@ -69,6 +71,7 @@ public:
     log << ".log";
 
     server.SetOption("-logfile", log.str());
+    server.SetOption("-config",  DUMMY_CONF_PATH);
     server.Start();
 
     /* set up Display() */
