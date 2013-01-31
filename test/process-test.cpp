@@ -355,6 +355,15 @@ TEST_P(ProcessValgrindArgsWrapper, ValgrindWrapperWithArgs)
   } while(strstr(buff, program_invocation_short_name));
 
   const char * arg = buff + strlen(buff) + 1;
+
+  /* accommodate the case that valgrind has a shell script wrapper */
+  if (0 == strcmp(buff, "/bin/sh")) {
+    if (0 == strcmp(arg, "-e")) {
+      arg += strlen(arg) + 1;
+    }
+    arg += strlen(arg) + 1;
+  }
+
   std::vector<std::string>::const_iterator it = valgrind_args.begin();
 
   it++; /* first one is "valgrind" */
