@@ -102,6 +102,31 @@ class Device {
    */
   const std::string& GetDeviceNode(void);
 
+  /**
+   * Check if a device supports a specific event.
+   *
+   * @param [in] type Type of the event (EV_REL, EV_ABS, ...)
+   * @param [in] code Event code (ABS_X, REL_Y, ...)
+   *
+   * @return true if this device supports this event or false otherwise.
+   */
+  bool HasEvent(int type, int code);
+
+  /**
+   * Retrieve data about an absolute axis on this device.
+   *
+   * @param [in] code The axis to query (e.g. ABS_X)
+   * @param [out] min Min value for this axis
+   * @param [out] max Max value for this axis
+   * @param [out] fuzz Fuzz value for this axis
+   * @param [out] flat Flat value for this axis
+   * @param [out] resolution Resolution of this axis
+   *
+   * @return false if this device doesn't have this axis, or true on success
+   */
+  bool GetAbsData(int code, int *min, int *max, int *fuzz = NULL, int *flat = NULL, int *resolution = NULL);
+
+
  private:
   struct Private;
   std::auto_ptr<Private> d_;
