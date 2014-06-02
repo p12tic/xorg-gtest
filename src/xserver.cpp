@@ -416,7 +416,7 @@ static int _x_error_handler(Display *dpy, XErrorEvent *err)
     case BadLength: error << "BadLength"; break;
     case BadImplementation: error << "BadImplementation"; break;
     default:
-      error << err->error_code;
+      error << "code: " << err->error_code;
       break;
   }
 
