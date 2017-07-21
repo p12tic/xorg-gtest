@@ -2,7 +2,7 @@ prefix=@prefix@
 includedir=@includedir@
 sourcedir=@SOURCEDIR@
 datarootdir=@datarootdir@
-CPPflags=-I${includedir} -I${includedir}/xorg -I${sourcedir} -D'DUMMY_CONF_PATH=\"@DUMMY_CONF_PATH@\"' -D'LOGFILE_DIR=\"@LOGFILE_DIR@\"'
+CPPflags=-I${includedir} -I${includedir}/xorg -I${sourcedir} -DDUMMY_CONF_PATH=\"@DUMMY_CONF_PATH@\" -DLOGFILE_DIR=\"@LOGFILE_DIR@\"
 
 Name: xorg-gtest
 Description: X.org Google Test Environment
