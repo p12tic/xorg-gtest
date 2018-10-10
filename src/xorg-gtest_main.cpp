@@ -91,7 +91,6 @@ static void setup_signal_handlers() {
     SIGSTKFLT,
     SIGIO,
     SIGPWR,
-    SIGUNUSED,
   };
 
   struct sigaction action;
