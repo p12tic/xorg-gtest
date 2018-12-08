@@ -2,7 +2,7 @@
 AC_PREREQ([2.60])
 AC_INIT([X.org Testing Environment for Google Test],
         [0.7.1],
-        [],
+        [https://gitlab.freedesktop.org/xorg/test/xorg-gtest/issues],
         [xorg-gtest])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_MACRO_DIR([m4])
