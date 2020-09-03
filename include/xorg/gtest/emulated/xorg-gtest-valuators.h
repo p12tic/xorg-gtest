@@ -2,7 +2,7 @@
  *
  * X testing environment - Google Test environment feat. dummy x server
  *
- * Copyright (C) 2011, 2012 Canonical Ltd.
+ * Copyright (C) 2020 Povilas Kanapickas <povilas@radix.lt>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,25 +25,43 @@
  *
  ******************************************************************************/
 
-#ifndef __XORG_GTEST_H
-#define __XORG_GTEST_H
+#ifndef XORG_GTEST_EMULATED_VALUATORS_H_
+#define XORG_GTEST_EMULATED_VALUATORS_H_
 
-#include "xorg-gtest-environment.h"
-#include "xorg-gtest-process.h"
-#include "xorg-gtest-xserver.h"
-#include "xorg-gtest-test.h"
+#include <memory>
+#include <string>
 
-#ifdef HAVE_EVEMU
-#include "evemu/xorg-gtest-device.h"
-#endif
+#include <xorg/emulated-events.h>
 
-#include "emulated/xorg-gtest-device.h"
-#include "emulated/xorg-gtest-valuators.h"
+namespace xorg {
+namespace testing {
+namespace emulated {
 
-#define XORG_TESTCASE(message) \
-  SCOPED_TRACE("\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n" \
-               "TESTCASE:\n" \
-               message \
-               "\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+/**
+ * A class that represents the valuator values sent to the X server.
+ * The axes are hardcoded according to the current implementation of the xf86-input-emulated
+ * input driver.
+ */
 
-#endif
+class Valuators {
+ public:
+  Valuators();
+  Valuators(const Valuators& other);
+  Valuators& operator=(const Valuators& other);
+  ~Valuators();
+
+  Valuators& Set(unsigned axis, double value);
+  Valuators& SetUnaccel(unsigned axis, double value_accel, double value_unaccel);
+
+  void RetrieveValuatorData(EmulatedValuatorData* out) const;
+
+ private:
+  struct Private;
+  std::unique_ptr<Private> d_;
+};
+
+} // namespace emulated
+} // namespace testing
+} // namespace xorg
+
+#endif // XORG_GTEST_EMULATED_VALUATORS_H_

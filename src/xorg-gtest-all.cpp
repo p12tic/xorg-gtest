@@ -33,3 +33,7 @@
 #ifdef HAVE_EVEMU
 #include "src/device.cpp"
 #endif
+
+#include "src/emulated-device.cpp"
+#include "src/emulated-driver-connection.cpp"
+#include "src/valuators.cpp"

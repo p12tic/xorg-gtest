@@ -28,5 +28,8 @@ nobase_include_HEADERS = \
 	xorg/gtest/xorg-gtest-process.h \
 	xorg/gtest/xorg-gtest-test.h \
 	xorg/gtest/xorg-gtest-xserver.h \
+	xorg/gtest/emulated/xorg-gtest-device.h \
+	xorg/gtest/emulated/xorg-gtest-valuators.h \
+	xorg/gtest/emulated/xorg-gtest-driver-connection.h \
 	xorg/gtest/evemu/xorg-gtest-device.h \
 	xorg/gtest/xorg-gtest.h

@@ -27,8 +27,11 @@
 libxorg_gtest_sources = \
 	environment.cpp \
 	device.cpp \
+	emulated-device.cpp \
+	emulated-driver-connection.cpp \
 	process.cpp \
 	test.cpp \
+	valuators.cpp \
 	xserver.cpp \
 	xorg-gtest-all.cpp
 
