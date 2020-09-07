@@ -41,6 +41,7 @@ AC_ARG_WITH([evemu],
             [with_evemu=check])
 
 PKG_CHECK_MODULES(EVEMU, [evemu >= 1.0.10] , [have_evemu=yes], [have_evemu=no])
+PKG_CHECK_MODULES(XI, xi)
 
 AS_IF([test "x$with_evemu" == xyes && test "x$have_evemu" != xyes],
       AC_MSG_ERROR([package 'evemu' not found]))

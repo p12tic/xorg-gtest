@@ -2,7 +2,7 @@
  *
  * X testing environment - Google Test environment feat. dummy x server
  *
- * Copyright (C) 2011, 2012 Canonical Ltd.
+ * Copyright (C) 2020 Povilas Kanapickas <povilas@radix.lt>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +25,43 @@
  *
  ******************************************************************************/
 
-#include "src/environment.cpp"
-#include "src/process.cpp"
-#include "src/xserver.cpp"
-#include "src/test.cpp"
+#ifndef XORG_GTEST_EMULATED_VALUATORS_H_
+#define XORG_GTEST_EMULATED_VALUATORS_H_
 
-#ifdef HAVE_EVEMU
-#include "src/device.cpp"
-#endif
+#include <memory>
+#include <string>
 
-#include "src/emulated-device.cpp"
-#include "src/emulated-driver-connection.cpp"
-#include "src/valuators.cpp"
+#include <xorg/emulated-events.h>
+
+namespace xorg {
+namespace testing {
+namespace emulated {
+
+/**
+ * A class that represents the valuator values sent to the X server.
+ * The axes are hardcoded according to the current implementation of the xf86-input-emulated
+ * input driver.
+ */
+
+class Valuators {
+ public:
+  Valuators();
+  Valuators(const Valuators& other);
+  Valuators& operator=(const Valuators& other);
+  ~Valuators();
+
+  Valuators& Set(unsigned axis, double value);
+  Valuators& SetUnaccel(unsigned axis, double value_accel, double value_unaccel);
+
+  void RetrieveValuatorData(EmulatedValuatorData* out) const;
+
+ private:
+  struct Private;
+  std::unique_ptr<Private> d_;
+};
+
+} // namespace emulated
+} // namespace testing
+} // namespace xorg
+
+#endif // XORG_GTEST_EMULATED_VALUATORS_H_

@@ -37,10 +37,13 @@
 #include "evemu/xorg-gtest-device.h"
 #endif
 
+#include "emulated/xorg-gtest-device.h"
+#include "emulated/xorg-gtest-valuators.h"
+
 #define XORG_TESTCASE(message) \
   SCOPED_TRACE("\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n" \
                "TESTCASE:\n" \
                message \
-               "\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n");
+               "\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::\n")
 
 #endif

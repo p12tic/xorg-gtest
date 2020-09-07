@@ -46,6 +46,15 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xlibint.h>
+
+// undef macros with frequencly used names which are defined in Xlibint.h
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
+
 #include <X11/extensions/XInput2.h>
 
 struct xorg::testing::XServer::Private {
